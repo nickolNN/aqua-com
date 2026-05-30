@@ -1,86 +1,127 @@
 # Aqua CRM - Agent Instructions & Project Documentation
 
 ## Project Overview
-Aqua CRM is a customer relationship management system with a focus on task management, activity tracking, contacts, and companies. The project is designed to be stack-agnostic, with documentation providing examples for common frameworks (React/Node).
 
-## Core Features
+Aqua CRM is a customer relationship management system with task management, activity tracking, contacts, and companies. Uses Go backend with Gin/GORM and React frontend with Redux Toolkit.
 
-### Task Management
-- Create, update, and track tasks
-- Task statuses (e.g., `todo`, `in-progress`, `done`, `blocked`)
-- Task priorities (e.g., `low`, `medium`, `high`, `urgent`)
-- Task dependencies (predecessors/successors)
-- Due date tracking
-- Assignment to contacts/users
+## Tech Stack
 
-### Activity Tracking
-- Log activities (calls, emails, meetings, notes)
-- Timeline views for visualizing activity
-- Automatic activity capture from integrations
-- Activity types: `call`, `email`, `meeting`, `note`, `task`, `custom`
-- Timestamps and categorization
-
-### Contacts & Companies
-- Contact database with rich profiles
-- Company organization and grouping
-- Relationship mapping (contacts ↔ companies)
-- Custom fields support
+| Layer | Technology |
+|-------|------------|
+| Backend | Go + Gin + GORM |
+| Frontend | React 19 + TypeScript + Redux Toolkit + React Query |
+| Database | PostgreSQL |
+| Cache | Redis |
+| Styling | Tailwind CSS + shadcn/ui |
+| Build | pnpm |
 
 ## Project Structure
 
 ```
 aqua-crm/
-├── AGENTS.md          # This file - agent instructions & project docs
 ├── docs/
-│   ├── FEATURES.md    # Detailed feature documentation
-│   └── ARCHITECTURE.md # Architecture overview
-└── src/
-    ├── backend/       # Backend code (API, models, services)
-    └── frontend/      # Frontend code (components, views, stores)
+│   ├── ARCHITECTURE.md  # Architecture overview
+│   ├── DEVELOPMENT.md   # Development guide
+│   └── FEATURES.md     # Feature documentation
+├── src/
+│   ├── backend/        # Go backend (Gin + GORM)
+│   │   ├── src/
+│   │   │   ├── config/      # Configuration
+│   │   │   ├── routes/      # API routes
+│   │   │   ├── controllers/ # Request handlers
+│   │   │   ├── services/    # Business logic
+│   │   │   ├── models/      # GORM models
+│   │   │   ├── repositories/ # Data access
+│   │   │   ├── middleware/  # Middleware
+│   │   │   ├── migrations/  # Database migrations
+│   │   │   └── seeds/     # Database seeding
+│   │   ├── tests/        # Go tests
+│   │   └── main.go      # Entry point
+│   └── frontend/        # React frontend
+│       ├── src/
+│       │   ├── components/   # React components
+│       │   ├── views/       # Page components
+│       │   ├── stores/      # Redux stores
+│       │   ├── api/         # React Query API layer
+│       │   └── styles/      # Tailwind CSS
+│       └── tests/         # Jest tests
+└── plans/            # Development plans
 ```
-
-## Development Conventions
-
-### Git Conventions
-- Use feature branches: `feature/<description>` or `fix/<description>`
-- Conventional commits: `<type>(<scope>): <description>`
-  - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-- Branch protection on `main`
-
-### Testing
-- Run tests before committing: `npm test` (or equivalent)
-- Aim for high coverage on core features (tasks, contacts, activities)
-
-### Code Style
-- Follow consistent naming conventions (kebab-case for files, camelCase for variables)
-- Use TypeScript for type safety where possible
-- Document API endpoints and components
 
 ## Commands & Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm test` | Run tests |
+| `npm run serve` | Start dev server (backend + frontend) |
 | `npm run build` | Build project |
-| `npm run lint` | Lint code |
-| `npm run serve` | Start dev server |
+| `npm run lint` | Run linter |
+| `npm run lint:fix` | Run linter and fix |
+| `go test ./...` | Run backend tests |
+| `go test -cover ./...` | Run backend tests with coverage |
+| `pnpm test` | Run frontend tests |
+| `golangci-lint run` | Run Go linter |
 
-## Architecture Guidelines
-- Use RESTful or GraphQL APIs for backend communication
-- Follow separation of concerns (models, views, controllers)
-- Keep components modular and reusable
-- Use environment variables for configuration
-- Document API responses with OpenAPI/Swagger
+## Agent Roles
+
+- **Frontend tasks**: frontend-specialist agent (React, TypeScript, Redux, Tailwind)
+- **Backend tasks**: code agent (Go, Gin, GORM, PostgreSQL)
+
+## Review Process
+
+All code goes through three stages:
+
+### Stage 1: Code Skeptic
+- Question decisions: Why this approach? Simpler alternative?
+- Identify edge cases and design flaws
+
+### Stage 2: Code Simplifier
+- Remove unnecessary complexity
+- Follow KISS principle
+
+### Stage 3: Code Reviewer
+- Verify code quality and naming conventions
+- Check 100% test coverage
+- Validate API response format
+- Confirm lint compliance
+- Check security practices
+
+## Testing Requirements
+
+- **100% unit test coverage required for all code**
+- Backend: Go table-driven tests (`go test ./...`)
+- Frontend: Jest with React Testing Library
+- Run coverage after each change: `go test -cover ./...`
+- Run lint before committing: `golangci-lint run` / `pnpm lint`
+
+## Key Conventions
+
+- **Branch naming**: `feature/<desc>` or `fix/<desc>`
+- **Commit messages**: conventional commits (`feat/tasks: add task dependencies`)
+- **Naming**: kebab-case for files, camelCase for variables
+- **API format**: All responses follow documented JSON format
+- **Auth**: JWT via `Authorization: Bearer <token>` header
+- **Security**: parameterized queries, CSRF protection, rate limiting
 
 ## API Conventions
-- Use standard HTTP status codes
-- Return JSON responses with consistent structure:
-  ```json
-  {
-    "success": true,
-    "data": {},
-    "error": null
-  }
-  ```
-- Use pagination for list endpoints
-- Use filters and sorting query parameters
+
+All API responses follow this format:
+```json
+{
+  "success": true,
+  "data": {},
+  "error": null
+}
+```
+
+## Plans
+
+## Plan & Orchestration
+
+Refer to `plans/PLAN_PROGRESS.md` as the entry point for orchestrator agents. Track progress by checking off individual steps in the plan.
+
+- Follow phase order: Foundation → Auth → Contacts → Tasks → Activities → Dashboard → Search → Frontend → Testing → Deployment
+- Complete steps within each phase before moving to the next
+- Each agent must request approval from human before proceeding to the next task:
+  - Show UI preview for front-end tasks
+  - Show unit-test results for backend tasks
+  - Wait for human approval before continuing to the next step
