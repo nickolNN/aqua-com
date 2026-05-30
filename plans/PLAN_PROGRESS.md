@@ -83,6 +83,50 @@ This file tracks the progress of all phases and steps across the 10-phase develo
 
 ---
 
+## Verification Rules
+
+### Step Completion
+
+A step is complete when:
+1. All sub-items in the step plan file are implemented
+2. Unit tests written before implementation (TDD where possible)
+3. Code compiles and builds without errors
+4. Tests pass with full coverage where possible
+5. No lint errors remain
+6. Human has approved the step
+
+### Phase Completion
+
+A phase is complete when:
+- All steps in the phase are marked complete
+- Build passes: `go build ./...` / `npm run build`
+- Tests pass: `go test -cover ./...` / `pnpm test -- --coverage`
+- No lint errors: `golangci-lint run` / `pnpm lint`
+- Human approves the phase completion
+
+### Plan Completion
+
+A plan is complete when:
+- All phases are marked complete in this file
+- All steps within each phase pass verification checks
+- Final review by human confirms all requirements met
+
+### Pre-Step Verification
+
+Before each step begins:
+1. Confirm previous step's completeness (or initial step)
+2. Check if any prerequisites are met
+3. Verify build is clean (no pending errors)
+
+### Quality Gates
+
+- **Per-Phase Gates**: Build + tests + lint + human approval before proceeding to next phase
+- **Per-Step Gates**: Each step must pass build + tests + lint before marking complete
+- **Test-First**: Write unit tests before implementation code wherever possible
+- **Incremental Delivery**: Each phase delivers a working, testable subset of functionality
+
+---
+
 ## Legend
 
 | Tag | Meaning |

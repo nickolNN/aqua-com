@@ -16,7 +16,8 @@
     "test:coverage": "jest --coverage",
     "migrations:generate": "cd src/backend && npm run migrations:generate",
     "migrations:run": "cd src/backend && npm run migrations:run",
-    "seed": "cd src/backend && npm run seed"
+    "seed": "cd src/backend && npm run seed",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "eslint": "^8.50.0",
