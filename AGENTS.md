@@ -32,12 +32,11 @@ Aqua CRM is a customer relationship management system with a focus on task manag
 aqua-crm/
 ├── AGENTS.md          # This file - agent instructions & project docs
 ├── docs/
-│   └── FEATURES.md    # Detailed feature documentation
-├── src/
-│   ├── backend/       # Backend code (API, models, services)
-│   └── frontend/      # Frontend code (components, views, stores)
-└── docs/
-    └── ARCHITECTURE.md # Architecture overview
+│   ├── FEATURES.md    # Detailed feature documentation
+│   └── ARCHITECTURE.md # Architecture overview
+└── src/
+    ├── backend/       # Backend code (API, models, services)
+    └── frontend/      # Frontend code (components, views, stores)
 ```
 
 ## Development Conventions
