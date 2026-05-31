@@ -12,7 +12,9 @@ export function AuthLayout() {
           <h1 className="text-2xl font-bold text-gray-900">Aqua CRM</h1>
           <p className="mt-2 text-sm text-gray-600">Sign in to your account</p>
         </div>
-        <Outlet />
+        <div className="rounded-md border border-gray-200 bg-white p-8 shadow-sm">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -1,33 +1,126 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '@/api/authApi';
-import { setUser } from '@/stores/authSlice';
-import { useDispatch } from 'react-redux';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+
+interface FormData {
+  email: string;
+  password: string;
+}
+
+interface FormErrors {
+  email?: string;
+  password?: string;
+}
 
 export function LoginView() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [loginMutation] = useLoginMutation();
+  const [formData, setFormData] = useState<FormData>({
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string>('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (field: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
+    setIsLoading(true);
+    setServerError('');
+
     try {
-      const result = await loginMutation({ email, password }).unwrap();
-      dispatch(setUser(result.user));
-    } catch (err) {
-      console.error('Login failed:', err);
+      const result = await loginMutation({
+        email: formData.email,
+        password: formData.password,
+      }).unwrap();
+
+      localStorage.setItem('token', result.token);
+      navigate('/');
+    } catch (err: unknown) {
+      const error = err as { message?: string; response?: { data?: { message?: string } } };
+      setServerError(error.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
-        <h1>Login</h1>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {serverError && (
+        <div className="rounded-md border border-red-500 bg-red-50 p-3 text-sm text-red-800">
+          {serverError}
+        </div>
+      )}
+      <div className="space-y-2">
+        <label htmlFor="email" className="text-sm font-medium text-gray-700">
+          Email
+        </label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          value={formData.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          className={errors.email ? 'border-red-500' : ''}
+        />
+        {errors.email && (
+          <p className="text-xs text-red-500">{errors.email}</p>
+        )}
+      </div>
+      <div className="space-y-2">
+        <label htmlFor="password" className="text-sm font-medium text-gray-700">
+          Password
+        </label>
+        <Input
+          id="password"
+          type="password"
+          placeholder="Enter your password"
+          value={formData.password}
+          onChange={(e) => handleChange('password', e.target.value)}
+          className={errors.password ? 'border-red-500' : ''}
+        />
+        {errors.password && (
+          <p className="text-xs text-red-500">{errors.password}</p>
+        )}
+      </div>
+      <div className="flex items-center justify-between">
+        <Link to="/password-reset" className="text-sm text-blue-600 hover:underline">
+          Forgot password?
+        </Link>
+      </div>
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? 'Signing in...' : 'Sign in'}
+      </Button>
+      <p className="text-center text-sm text-gray-600">
+        Don&apos;t have an account?{' '}
+        <Link to="/register" className="text-blue-600 hover:underline">
+          Register
+        </Link>
+      </p>
+    </form>
   );
 }

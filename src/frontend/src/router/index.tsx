@@ -1,6 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { AuthLayout, MainLayout } from '@/components/layout';
 import { LoginView } from '@/views/LoginView';
+import { RegisterView } from '@/views/RegisterView';
+import { PasswordResetView } from '@/views/PasswordResetView';
+import { PrivateRoute } from '@/components/PrivateRoute';
 import { DashboardView } from '@/views/DashboardView';
 import { ContactsView } from '@/views/ContactsView';
 import { CompaniesView } from '@/views/CompaniesView';
@@ -15,10 +18,22 @@ export const router = createBrowserRouter([
         path: '/login',
         element: <LoginView />,
       },
+      {
+        path: '/register',
+        element: <RegisterView />,
+      },
+      {
+        path: '/password-reset',
+        element: <PasswordResetView />,
+      },
     ],
   },
   {
-    element: <MainLayout />,
+    element: (
+      <PrivateRoute>
+        <MainLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: '/',

@@ -33,9 +33,46 @@ export const authSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+    loginSuccess: (state, action: PayloadAction<AuthUser>) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+      state.isLoading = false;
+    },
+    loginFailure: (state) => {
+      state.isLoading = false;
+    },
+    logoutSuccess: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.error = null;
+    },
   },
 });
 
-export const { setUser, clearUser, setLoading, setError } = authSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  setLoading,
+  setError,
+  loginSuccess,
+  loginFailure,
+  logoutSuccess,
+} = authSlice.actions;
+
 export const authReducer = authSlice.reducer;
+
+// Selectors
+export const selectAuthUser = (state: { auth: AuthState }): AuthUser | null =>
+  state.auth.user;
+
+export const selectIsAuthenticated = (state: { auth: AuthState }): boolean =>
+  state.auth.isAuthenticated;
+
+export const selectAuthLoading = (state: { auth: AuthState }): boolean =>
+  state.auth.isLoading;
+
+export const selectAuthError = (state: { auth: AuthState }): string | null =>
+  state.auth.error;
+
 export const useAuth = () => authSlice;
