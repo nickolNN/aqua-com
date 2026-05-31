@@ -4,9 +4,13 @@ import { BrowserRouter, RouterProvider } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { router } from './router';
 import { store, persistor } from './store';
+import { setMockMode } from './api';
 import { ThemeProvider } from './components/ThemeContext';
 import { AuthProvider } from './components/AuthContext';
 import './styles/tailwind.css';
+
+// Enable mock mode for all RTK Query requests
+setMockMode(true);
 
 const root = document.getElementById('root');
 if (root) {
