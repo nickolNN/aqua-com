@@ -1,13 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
+import GlobalSearchBar from './GlobalSearchBar';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setTheme } from '@/stores/settingsSlice';
 
 /**
  * MainLayout component provides the main application layout with sidebar, header, and content area.
- * Uses Redux to manage theme state.
+ * Includes global search bar for searching across all entity types.
  */
 export function MainLayout() {
   const theme = useSelector((state: { settings: { theme: string } }) => state.settings.theme);
@@ -71,9 +72,9 @@ export function MainLayout() {
 
       {/* Main content area */}
       <div className="flex-1">
-        {/* Header */}
+        {/* Header with global search bar */}
         <Header title="Aqua CRM">
-          <span className="text-sm text-muted-foreground">Welcome</span>
+          <GlobalSearchBar />
         </Header>
 
         {/* Main content */}

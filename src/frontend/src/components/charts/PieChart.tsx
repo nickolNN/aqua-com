@@ -48,7 +48,7 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
               const segments = Object.entries(data)
                 .sort(([, a], [, b]) => b - a)
                 .slice(0, 5);
-              let angle = 0;
+              const angle = 0;
               return segments.map(([label, value], index) => {
                 const percentage = total > 0 ? (value / total) * 100 : 0;
                 const sweep = (percentage / 100) * 360;
