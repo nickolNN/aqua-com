@@ -13,6 +13,7 @@ import { CompanyDetailView } from '@/views/CompanyDetailView';
 import { CompanyForm } from '@/views/CompanyForm';
 import { TasksView } from '@/views/TasksView';
 import { ActivitiesView } from '@/views/ActivitiesView';
+import { ReportsView } from '@/views/ReportsView';
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,8 @@ export const router = createBrowserRouter([
       // Activities
       { path: '/activities', element: <ActivitiesView /> },
       { path: '/activities/:contactId', element: <ActivitiesView /> },
+      // Reports
+      { path: '/reports', element: <ReportsView /> },
     ],
   },
 ]);

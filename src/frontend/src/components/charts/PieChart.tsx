@@ -1,0 +1,118 @@
+// =====================================================
+// PieChart Component
+// =====================================================
+// Renders a donut chart for displaying data distributions.
+// Uses pure CSS with Tailwind for styling.
+// =====================================================
+
+interface PieChartProps {
+  data: Record<string, number>;
+  title: string;
+  colorPalette?: string[];
+}
+
+const defaultColorPalette = [
+  'bg-blue-500',
+  'bg-green-500',
+  'bg-yellow-500',
+  'bg-purple-500',
+  'bg-pink-500',
+  'bg-indigo-500',
+  'bg-teal-500',
+  'bg-orange-500',
+];
+
+const colorMap: Record<string, string> = {
+  'bg-blue-500': '#3b82f6',
+  'bg-green-500': '#10b981',
+  'bg-yellow-500': '#eab308',
+  'bg-purple-500': '#a855f7',
+  'bg-pink-500': '#ec4899',
+  'bg-indigo-500': '#6366f1',
+  'bg-teal-500': '#14b8a6',
+  'bg-orange-500': '#f97316',
+};
+
+export function PieChart({ data, title, colorPalette: customPalette }: PieChartProps) {
+  const palette = customPalette || defaultColorPalette;
+  const total = Object.values(data).reduce((sum, val) => sum + val, 0);
+
+  return (
+    <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+      <h3 className="text-sm font-semibold text-gray-900 mb-3">{title}</h3>
+      <div className="flex items-center gap-4">
+        {/* Donut chart visualization */}
+        <div className="relative w-24 h-24 shrink-0">
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            {(() => {
+              const segments = Object.entries(data)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 5);
+              let angle = 0;
+              return segments.map(([label, value], index) => {
+                const percentage = total > 0 ? (value / total) * 100 : 0;
+                const sweep = (percentage / 100) * 360;
+                const color = palette[index % palette.length];
+                const colorValue = colorMap[color] || '#3b82f6';
+
+                const startRad = ((angle - 90) * Math.PI) / 180;
+                const endRad = (((angle + sweep) - 90) * Math.PI) / 180;
+
+                const cx = 50;
+                const cy = 50;
+                const r = 40;
+
+                const x1 = cx + r * Math.cos(startRad);
+                const y1 = cy + r * Math.sin(startRad);
+                const x2 = cx + r * Math.cos(endRad);
+                const y2 = cy + r * Math.sin(endRad);
+
+                const largeArc = sweep > 180 ? 1 : 0;
+
+                return (
+                  <path
+                    key={label}
+                    d={`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`}
+                    fill={colorValue}
+                    stroke="white"
+                    strokeWidth={2}
+                  />
+                );
+              });
+            })()}
+          </svg>
+          {/* Center circle for donut effect */}
+          <div className="absolute inset-3 bg-white rounded-full" />
+        </div>
+        {/* Legend */}
+        <div className="flex-1 space-y-1">
+          {Object.entries(data)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 5)
+            .map(([label, value], index) => {
+              const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${palette[index % palette.length]}`} />
+                  <span className="text-sm text-gray-700 capitalize">
+                    {formatLabel(label)} ({value})
+                  </span>
+                  <span className="text-sm text-gray-500 ml-auto">
+                    ({percentage}%)
+                  </span>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function formatLabel(label: string): string {
+  return label
+    .replace(/_/g, ' ')
+    .split(/[\s_-]/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
