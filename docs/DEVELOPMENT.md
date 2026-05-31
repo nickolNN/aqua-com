@@ -18,13 +18,8 @@ This document provides detailed development guidelines for Aqua CRM, covering lo
 ### Installation Steps
 
 1. Clone the repository
-2. Install backend dependencies: `go mod tidy`
-3. Install frontend dependencies: `pnpm install`
-4. Copy environment variables: `cp .env.example .env`
-5. Configure `.env` with your database credentials
-6. Run migrations: `go run src/backend/cmd/migrate`
-7. Seed the database (optional): `go run src/backend/cmd/seed`
-8. Start Redis: `docker compose up redis -d`
+2. Install frontend dependencies: `pnpm install`
+3. Copy environment variables: `cp .env.example .env`
 
 ### Environment Variables
 
@@ -32,11 +27,8 @@ See `.env.example` for available options. Key variables:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `DATABASE_URL` | Database connection string | `postgresql://user:pass@localhost:5432/aqua_crm` |
-| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
 | `JWT_SECRET` | Secret key for JWT signing | `your-secret-key-here` |
-| `API_HOST` | API server host | `localhost` |
-| `API_PORT` | API server port | `3000` |
+| `VITE_API_URL` | API server URL | `http://localhost:3000` |
 | `NODE_ENV` | Environment name | `development` |
 
 ## Running the Application
@@ -44,93 +36,71 @@ See `.env.example` for available options. Key variables:
 ### Start Development Server
 
 ```bash
-# Start backend (Go + Gin)
-cd src/backend && go run src/main.go
-
-# Start frontend (React + Redux + React Query)
-cd src/frontend && pnpm dev
+# Start frontend (React + Redux + RTK Query)
+pnpm dev
 ```
 
-This will start both the backend API and frontend dev server.
+This will start the frontend dev server with mock data via MSW.
 
 ### Build for Production
 
 ```bash
-# Build backend
-go build -o bin/server src/main.go
-
 # Build frontend
-cd src/frontend && pnpm build
+pnpm build
 ```
 
 ## Testing
 
-### Run Backend Tests
-
-```bash
-cd src/backend && go test ./...
-```
-
 ### Run Frontend Tests
 
 ```bash
-cd src/frontend && pnpm test
+pnpm test
 ```
 
 ### Run Tests with Coverage
 
 ```bash
-cd src/backend && go test -cover ./...
-cd src/frontend && pnpm test -- --coverage
+pnpm test -- --coverage
 ```
 
 ### Testing Conventions
 
-- Write unit tests for models and utility functions
-- Write integration tests for API endpoints
-- Write end-to-end tests for critical user flows (task creation, contact management)
+- Write unit tests for utilities and hooks
+- Write component tests using React Testing Library
+- Write integration tests for API endpoints with MSW
 - Aim for high coverage on core features (tasks, contacts, activities)
-- Use Go testing package for backend tests (table-driven tests preferred)
 - Use React Testing Library for frontend component tests
 
 ## Database Migrations
 
-### Generate Migration
+The database migrations are managed by the backend (Go + GORM). After starting the backend, migrations are available through the API.
+
+### Running Migrations
 
 ```bash
-cd src/backend && go run src/cmd/migrate-generate main.go
-```
-
-### Run Migrations
-
-```bash
-cd src/backend && go run src/cmd/migrate/main.go up
+# Run migrations via backend API
+curl -X POST http://localhost:3000/api/migrations
 ```
 
 ### Seeding
 
 ```bash
-cd src/backend && go run src/cmd/seed/main.go
+# Seed data via backend API
+curl -X POST http://localhost:3000/api/seed
 ```
 
 ## Linting & Formatting
 
-### Backend (Go)
+### Frontend Linting
 
 ```bash
-cd src/backend && golangci-lint run
-```
-
-### Frontend (React)
-
-```bash
-cd src/frontend && pnpm lint
+pnpm lint
 ```
 
 ### Auto-fix Lint Issues
 
 ```bash
-cd src/frontend && pnpm lint:fix
+pnpm lint:fix
 ```
 
 ## Development Workflow
@@ -161,52 +131,43 @@ Example: `feat(tasks): add task dependency tracking`
 ### Code Review Checklist
 
 - [ ] Code follows naming conventions
-- [ ] All tests pass (Go + frontend)
-- [ ] No linting errors (golangci-lint + frontend ESLint)
-- [ ] API responses follow standard format
-- [ ] Input validation on all endpoints
-- [ ] Database migrations are reversible
-- [ ] Security considerations addressed (SQL injection, XSS, CSRF)
-- [ ] Documentation updated
+- **All tests pass**
+- **No linting errors** (ESLint + TypeScript)
+- **API responses follow standard format**
+- **Input validation on all endpoints**
+- **Security considerations addressed** (XSS, CSRF)
+- **Documentation updated**
 
 ## Project Structure
-
-### Backend Structure
-
-```
-src/backend/
-├── src/
-│   ├── config/          # Configuration files
-│   ├── routes/          # API route definitions (Gin routes)
-│   ├── controllers/     # Request handlers (Gin handlers)
-│   ├── services/        # Business logic
-│   ├── models/          # Data models (GORM models)
-│   ├── repositories/    # Data access layer
-│   ├── middleware/      # Gin middleware
-│   ├── migrations/      # Database migrations
-│   ├── seeds/           # Database seeding
-│   └── main.go          # Entry point
-├── tests/               # Backend tests (Go)
-├── go.mod               # Go module dependencies
-└── go.sum               # Go checksums
-```
 
 ### Frontend Structure
 
 ```
-src/frontend/
-├── src/
-│   ├── components/      # React components (shadcn/ui)
-│   ├── views/           # Page components
-│   ├── stores/          # Redux store (Redux Toolkit)
-│   ├── api/             # API client (React Query)
-│   ├── styles/          # Tailwind CSS styles
-│   ├── App.tsx          # App entry point
-│   └── main.tsx         # React entry point
-├── tests/               # Frontend tests (Jest + React Testing Library)
-├── package.json         # Frontend dependencies
-└── tsconfig.json        # TypeScript configuration
+src/
+├── api/                 # API layer (RTK Query endpoints)
+├── components/          # React components
+│   ├── ui/              # Reusable UI primitives
+│   ├── layout/        # Layout components (Sidebar, Header)
+│   ├── tasks/         # Task-specific components
+│   ├── activity/      # Activity-specific components
+│   └── search/        # Search components
+├── hooks/             # Custom React hooks
+├── i18n/              # Internationalization
+├── lib/               # Utility libraries
+├── mock-data/         # Mock data generators and schemas
+├── mock-msw/          # MSW handlers for intercepting API calls
+├── router/            # React Router configuration
+├── store/             # Redux store configuration
+├── stores/            # Redux slices (individual domain slices)
+├── styles/            # Tailwind CSS styles
+├── types/             # TypeScript type definitions
+├── utils/             # Utility functions
+├── views/             # Page-level view components
+├── main.tsx           # Application entry point
+└── index.html         # HTML entry point
 ```
+
+**Store vs Stores**: `src/store/` contains Redux store configuration (index.ts, store.ts), while `src/stores/` contains individual Redux slices (tasksSlice.ts, contactsSlice.ts, etc.).
 
 ## API Documentation
 
@@ -266,18 +227,14 @@ docker compose up -d
 This will start:
 - PostgreSQL database
 - Redis cache
-- Backend service
-- Frontend dev server
 
 ### CI/CD (Jenkins)
 
 Jenkins pipeline runs the following checks on each commit:
 
-1. Go build and vet
-2. Go tests with coverage
-3. Frontend build
-4. Frontend tests
-5. ESLint checks
+1. Frontend build
+2. Frontend tests
+3. ESLint checks
 
 ## Contributing
 
@@ -300,9 +257,8 @@ Jenkins pipeline runs the following checks on each commit:
 
 ### Common Issues
 
-- **Database connection errors**: Verify DATABASE_URL is correct
+- **Database connection errors**: Verify DATABASE_URL is correct and backend is running
 - **Redis connection errors**: Verify REDIS_URL is correct and Redis is running
-- **Migration errors**: Check migration files for syntax errors
 - **Tests failing**: Check test logs for specific failures
-- **Linting errors**: Run `golangci-lint` and frontend lint commands to auto-fix
-- **Build errors**: Ensure all dependencies are installed (`go mod tidy` / `pnpm install`)
+- **Linting errors**: Run `pnpm lint:fix` to auto-fix lint issues
+- **Build errors**: Ensure all dependencies are installed (`pnpm install`)

@@ -1,3 +1,33 @@
+# Dependencies
 node_modules/
-*.tsbuildinfo
+
+# Build outputs
 dist/
+dist-*
+
+# TypeScript
+*.tsbuildinfo
+*.tsbuildinfo.b
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+
+# Logs
+*.log
