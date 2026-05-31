@@ -1,12 +1,13 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storage from 'redux-persist/es/storage';
 import { api } from '@/api';
 import {
   authReducer,
   contactsReducer,
   companiesReducer,
   tasksReducer,
+  kanbanReducer,
   activitiesReducer,
   dashboardReducer,
   searchReducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   contacts: contactsReducer,
   companies: companiesReducer,
   tasks: tasksReducer,
+  kanban: kanbanReducer,
   activities: activitiesReducer,
   dashboard: dashboardReducer,
   search: searchReducer,

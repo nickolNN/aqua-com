@@ -3,28 +3,49 @@ import type { Task } from '@/types/entities';
 
 export interface TasksState {
   tasks: Task[];
-  selected: Task | null;
+  selectedTask: Task | null;
   isLoading: boolean;
   error: string | null;
+  filters: {
+    status: string;
+    priority: string;
+    search: string;
+  };
 }
 
 const initialState: TasksState = {
   tasks: [],
-  selected: null,
+  selectedTask: null,
   isLoading: false,
   error: null,
+  filters: {
+    status: '',
+    priority: '',
+    search: '',
+  },
 };
 
 export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    setTasks: (state, action) => { state.tasks = action.payload; },
-    setSelectedTask: (state, action) => { state.selected = action.payload; },
-    setTasksLoading: (state, action) => { state.isLoading = action.payload; },
-    setError: (state, action) => { state.error = action.payload; },
+    setTasks: (state, action) => {
+      state.tasks = action.payload;
+    },
+    setSelectedTask: (state, action) => {
+      state.selectedTask = action.payload;
+    },
+    setTasksLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    setFilters: (state, action) => {
+      state.filters = { ...state.filters, ...action.payload };
+    },
   },
 });
 
-export const { setTasks, setSelectedTask, setTasksLoading } = tasksSlice.actions;
+export const { setTasks, setSelectedTask, setTasksLoading, setError, setFilters } = tasksSlice.actions;
 export const tasksReducer = tasksSlice.reducer;

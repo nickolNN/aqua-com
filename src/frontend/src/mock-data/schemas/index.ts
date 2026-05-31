@@ -47,6 +47,13 @@ export interface TaskSchema {
   priority: 'low' | 'medium' | 'high' | 'urgent';
   due_date?: string;
   assigned_to?: string;
+  parent_task_id?: string;
+  subtask_count: number;
+  dependencies: Array<{
+    predecessor_task_id: string;
+    successor_task_id: string;
+    dependency_type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
+  }>;
   created_by: string;
   created_at: string;
   updated_at: string;

@@ -204,6 +204,13 @@ export function generateTask(): TaskSchema {
     priority,
     due_date: status !== 'completed' ? generateDate(1, 30) : undefined,
     assigned_to: Math.random() > 0.3 ? generateUuid() : undefined,
+    parent_task_id: Math.random() > 0.7 ? generateUuid() : undefined,
+    subtask_count: Math.random() > 0.7 ? Math.floor(Math.random() * 5) + 1 : 0,
+    dependencies: Math.random() > 0.6 ? [{
+      predecessor_task_id: generateUuid(),
+      successor_task_id: generateUuid(),
+      dependency_type: randomChoice(['finish_to_start', 'start_to_start', 'finish_to_finish', 'start_to_finish']),
+    }] : [],
     created_by: generateUuid(),
     created_at: generateDate(Math.floor(Math.random() * 90)),
     updated_at: generateDate(Math.floor(Math.random() * 30)),

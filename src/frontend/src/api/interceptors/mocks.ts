@@ -103,19 +103,34 @@ export function interceptMockRequest(
     return true;
   }
 
-  // Handle tasks endpoints
+  // Handle tasks endpoints - GET single task by ID
+  if (url.startsWith('/tasks/') && url.split('/').length === 3 && method === 'GET') {
+    return generateTask();
+  }
+  // Handle tasks endpoints - list tasks
   if (url === '/tasks' && method === 'GET') {
     return generateTasks(10);
   }
+  // Handle tasks endpoints - create task
   if (url === '/tasks' && _body && method === 'POST') {
     const newTask = generateTask();
     return newTask;
   }
+  // Handle tasks endpoints - update task
   if (url === '/tasks' && _body && method === 'PUT') {
     const updatedTask = generateTask();
     return updatedTask;
   }
+  // Handle tasks endpoints - delete task
   if (url.startsWith('/tasks/') && method === 'DELETE') {
+    return true;
+  }
+
+  // Handle task dependency endpoints
+  if (url.startsWith('/tasks/') && url.endsWith('/dependencies') && method === 'POST') {
+    return { predecessor_task_id: 'task-1', dependency_type: 'finish_to_start' };
+  }
+  if (url.match(/^\/tasks\/[^/]+\/dependencies\/[^/]+$/) && method === 'DELETE') {
     return true;
   }
 
