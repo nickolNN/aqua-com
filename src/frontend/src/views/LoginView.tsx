@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '@/api/authApi';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { loginSuccess } from '@/stores/authSlice';
 
 interface FormData {
   email: string;
@@ -16,6 +18,7 @@ interface FormErrors {
 
 export function LoginView() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loginMutation] = useLoginMutation();
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -58,6 +61,7 @@ export function LoginView() {
         password: formData.password,
       }).unwrap();
 
+      dispatch(loginSuccess(result));
       localStorage.setItem('token', result.token);
       navigate('/');
     } catch (err: unknown) {

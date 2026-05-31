@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useRegisterMutation } from '@/api/authApi';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { loginSuccess } from '@/stores/authSlice';
 
 interface FormData {
   name: string;
@@ -20,6 +22,7 @@ interface FormErrors {
 
 export function RegisterView() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [registerMutation] = useRegisterMutation();
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -66,13 +69,19 @@ export function RegisterView() {
     setIsLoading(true);
     setServerError('');
 
-    try {
+     try {
       await registerMutation({
         email: formData.email,
         password: formData.password,
         name: formData.name,
       }).unwrap();
-      navigate('/login');
+
+      dispatch(loginSuccess({
+        token: '',
+        user: { id: '', email: formData.email, role: '' },
+      }));
+
+      navigate('/');
     } catch (err: unknown) {
       const error = err as { message?: string; response?: { data?: { message?: string } } };
       setServerError(error.response?.data?.message || 'Registration failed. Please try again.');

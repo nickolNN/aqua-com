@@ -15,6 +15,15 @@ const initialState: AuthState = {
   error: null,
 };
 
+export interface LoginResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
+}
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -33,8 +42,13 @@ export const authSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
-    loginSuccess: (state, action: PayloadAction<AuthUser>) => {
-      state.user = action.payload;
+    loginSuccess: (state, action: PayloadAction<LoginResponse>) => {
+      state.user = {
+        id: action.payload.user.id,
+        email: action.payload.user.email,
+        role: action.payload.user.role,
+        token: action.payload.token,
+      };
       state.isAuthenticated = true;
       state.isLoading = false;
     },
