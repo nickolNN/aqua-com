@@ -8,7 +8,7 @@ const Sidebar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('h-full bg-sidebar text-sidebar-foreground', className)}
+      className={cn('h-full bg-sidebar text-sidebar-foreground border-r border-sidebar-border', className)}
       {...props}
     />
   );

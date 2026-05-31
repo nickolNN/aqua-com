@@ -18,6 +18,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.style.setProperty('--background', theme === 'dark' ? '224 71% 4%' : '0 0% 100%');
     document.documentElement.style.setProperty('--foreground', theme === 'dark' ? '213 96% 98%' : '222.2 84% 4.9%');
+    document.documentElement.style.setProperty('--radius', '0.5rem');
     localStorage.setItem('theme', theme);
   }, [theme]);
 

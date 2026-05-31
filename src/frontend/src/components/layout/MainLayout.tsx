@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/layout/Sidebar';
-import { Header } from '@/components/layout/Header';
 import GlobalSearchBar from './GlobalSearchBar';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -22,7 +21,7 @@ export function MainLayout() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-64 min-h-screen bg-sidebar text-sidebar-foreground">
+      <aside className="sticky top-0 h-screen w-64 flex flex-col border-r bg-sidebar text-sidebar-foreground">
         <Sidebar>
           <SidebarHeader logo="Aqua CRM" />
           <SidebarContent>
@@ -71,14 +70,14 @@ export function MainLayout() {
       </aside>
 
       {/* Main content area */}
-      <div className="flex-1">
-        {/* Header with global search bar */}
-        <Header title="Aqua CRM">
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Global search bar */}
+        <div className="sticky top-0 z-50 border-b bg-white px-6 py-4">
           <GlobalSearchBar />
-        </Header>
+        </div>
 
         {/* Main content */}
-        <main className="p-6">
+        <main className="flex-1 p-6">
           <Outlet />
         </main>
       </div>

@@ -151,12 +151,12 @@ export default function GlobalSearchBar() {
           if (query) performSearch(query);
         }}
         placeholder="Search contacts, tasks, companies..."
-        className="w-64 px-3 py-1.5 text-sm rounded border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none transition"
+        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-label="Global search"
       />
 
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full mt-1 left-0 w-full bg-white border border-gray-200 rounded shadow-lg z-50 max-h-80 overflow-y-auto">
+        <div className="absolute top-full mt-1 left-0 w-full border border-input bg-white rounded-md shadow-lg z-50 max-h-80 overflow-y-auto">
           <div className="p-2 text-xs text-gray-500 font-medium">
             {totalResults} result{totalResults !== 1 ? 's' : ''} found
           </div>
@@ -187,7 +187,7 @@ export default function GlobalSearchBar() {
       )}
 
       {showSavedFilters && (
-        <div className="absolute top-full mt-1 left-0 w-full bg-white border border-gray-200 rounded shadow-lg z-50 p-2">
+        <div className="absolute top-full mt-1 left-0 w-full border border-input bg-popover rounded-md p-2 shadow-lg">
           {savedFilters.map((filter) => (
             <div key={filter.id} className="flex items-center gap-2 px-2 py-1 text-sm hover:bg-gray-100">
               <button
