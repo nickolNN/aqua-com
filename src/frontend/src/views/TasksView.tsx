@@ -25,9 +25,8 @@ export function TasksView() {
     setSelectedTaskId(null);
   };
 
-  const handleNewTask = (data: TaskCreateInput) => {
+  const handleNewTask = (_data: TaskCreateInput) => {
     // In a real app, this would call the API
-    console.log('New task:', data);
     setSelectedView('list');
     setViewMode('list');
   };
@@ -92,7 +91,18 @@ export function TasksView() {
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(tasks || []).map((task: Task) => (
-              <div key={task.id} className="border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleTaskClick(task.id)}>
+              <div
+                key={task.id}
+                className="border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
+                role="button"
+                tabIndex={0}
+                onClick={() => handleTaskClick(task.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleTaskClick(task.id);
+                  }
+                }}
+              >
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{task.title}</span>
                   <span className={`text-xs px-2 py-1 rounded ${

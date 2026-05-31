@@ -35,12 +35,12 @@ export const tasksApi = api.injectEndpoints({
       invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.id }],
     }),
     // Delete a task
-    deleteTask: builder.mutation<void, string>({
+     deleteTask: builder.mutation<void, string>({
       query: (id) => ({
         url: `/tasks/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, _err, id) => [{ type: 'Task', id }],
+      invalidatesTags: (_, _err, id) => [{ type: 'Task', id }],
     }),
     // Add a task dependency
     addTaskDependency: builder.mutation<TaskDependency, { taskId: string; data: { predecessor_task_id: string; dependency_type: string } }>({
