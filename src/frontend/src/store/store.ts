@@ -1,4 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { api } from '@/api';
 import {
   authReducer,
@@ -11,18 +13,29 @@ import {
   settingsReducer,
 } from '@/stores';
 
+// Persist config
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['auth', 'settings'],
+};
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  contacts: contactsReducer,
+  companies: companiesReducer,
+  tasks: tasksReducer,
+  activities: activitiesReducer,
+  dashboard: dashboardReducer,
+  search: searchReducer,
+  settings: settingsReducer,
+  [api.reducerPath]: api.reducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    contacts: contactsReducer,
-    companies: companiesReducer,
-    tasks: tasksReducer,
-    activities: activitiesReducer,
-    dashboard: dashboardReducer,
-    search: searchReducer,
-    settings: settingsReducer,
-    [api.reducerPath]: api.reducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -32,7 +45,11 @@ export const store = configureStore({
     }).concat(api.middleware),
 });
 
+export const persistor = persistStore(store);
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export type TypedReduxDispatch = AppDispatch;
+export type TypedReduxSelector = typeof store.dispatch;
 
 export { api };

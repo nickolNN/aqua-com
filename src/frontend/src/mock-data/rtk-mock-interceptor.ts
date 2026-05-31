@@ -16,11 +16,6 @@ let mockMode = false;
  */
 export function setMockMode(enabled: boolean): void {
   mockMode = enabled;
-  if (mockMode) {
-    console.debug('[MockData] Mock mode enabled - using mock data for all API requests');
-  } else {
-    console.debug('[MockData] Mock mode disabled - using real API');
-  }
 }
 
 /**
@@ -40,7 +35,6 @@ export function initializeMockData(): void {
     getMockCompanies();
     getMockTasks();
     getMockActivities();
-    console.debug('[MockData] Initialized mock data for all entities');
   }
 }
 

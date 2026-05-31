@@ -8,7 +8,7 @@ export interface SettingsState {
 }
 
 const initialState: SettingsState = {
-  theme: 'light',
+  theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? 'light',
   language: 'en',
   preferences: {},
   isLoading: false,
@@ -18,7 +18,10 @@ export const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setTheme: (state, action) => { state.theme = action.payload; },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+      localStorage.setItem('theme', action.payload);
+    },
     setLanguage: (state, action) => { state.language = action.payload; },
     setPreferences: (state, action) => { state.preferences = action.payload; },
     setSettingsLoading: (state, action) => { state.isLoading = action.payload; },

@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { AuthLayout } from '@/views/AuthLayout';
-import { MainLayout } from '@/views/MainLayout';
+import { AuthLayout, MainLayout } from '@/components/layout';
 import { LoginView } from '@/views/LoginView';
 import { DashboardView } from '@/views/DashboardView';
 import { ContactsView } from '@/views/ContactsView';
