@@ -1,5 +1,6 @@
 // Export the main API
 export { api } from './api';
+export { setMockMode } from './interceptors';
 
 // Export individual API slices
 export { contactsApi } from './contactsApi';

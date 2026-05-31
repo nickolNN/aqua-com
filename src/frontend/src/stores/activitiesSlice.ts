@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { Activity } from '@/types/entities';
 
-interface ActivitiesState {
+export interface ActivitiesState {
   activities: Activity[];
   isLoading: boolean;
   error: string | null;

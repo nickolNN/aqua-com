@@ -1,6 +1,6 @@
 import { api } from './api';
 
-interface LoginResponse {
+export type LoginResponse = {
   token: string;
   user: {
     id: string;
@@ -9,40 +9,19 @@ interface LoginResponse {
   };
 }
 
-interface LoginRequest {
+export type LoginRequest = {
   email: string;
   password: string;
 }
 
-interface RegisterRequest {
+export type RegisterRequest = {
   email: string;
   password: string;
   name: string;
 }
 
-export const authApi = api.injectEndpoints({
-  endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
-      query: (credentials) => ({
-        url: '/auth/login',
-        method: 'POST',
-        body: credentials,
-      }),
-    }),
-    register: builder.mutation<LoginResponse, RegisterRequest>({
-      query: (data) => ({
-        url: '/auth/register',
-        method: 'POST',
-        body: data,
-      }),
-    }),
-    logout: builder.mutation<void, void>({
-      query: () => ({
-        url: '/auth/logout',
-        method: 'POST',
-      }),
-    }),
-  }),
-});
+// Re-export the auth endpoints already defined in api.ts
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation } = api;
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation } = authApi;
+// Export authApi for compatibility
+export const authApi = api;

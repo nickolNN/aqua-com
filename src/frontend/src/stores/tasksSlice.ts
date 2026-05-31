@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { Task } from '@/types/entities';
 
-interface TasksState {
+export interface TasksState {
   tasks: Task[];
   selected: Task | null;
   isLoading: boolean;

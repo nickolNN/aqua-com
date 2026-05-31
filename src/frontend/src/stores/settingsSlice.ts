@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface SettingsState {
+export interface SettingsState {
   theme: 'light' | 'dark';
   language: string;
   preferences: Record<string, unknown>;

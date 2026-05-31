@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { Company } from '@/types/entities';
 
-interface CompaniesState {
+export interface CompaniesState {
   companies: Company[];
   selected: Company | null;
   isLoading: boolean;

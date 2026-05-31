@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface DashboardState {
+export interface DashboardState {
   stats: Record<string, unknown>;
   isLoading: boolean;
   error: string | null;

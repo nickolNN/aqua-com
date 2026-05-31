@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface SearchState {
+export interface SearchState {
   query: string;
   results: Record<string, unknown>;
   isLoading: boolean;

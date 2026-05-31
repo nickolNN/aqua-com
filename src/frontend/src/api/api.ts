@@ -1,8 +1,9 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Contact, Company, Task, Activity } from '@/types/entities';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { mockBaseQuery } from './interceptors';
+
 
 // Login/Register types
-interface LoginResponse {
+export type LoginResponse = {
   token: string;
   user: {
     id: string;
@@ -10,7 +11,7 @@ interface LoginResponse {
     role: string;
   };
 }
-interface RegisterRequest {
+export type RegisterRequest = {
   email: string;
   password: string;
   name: string;
@@ -43,10 +44,7 @@ export interface QueryParams {
 // RTK Query API definition
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api',
-    credentials: 'include',
-  }),
+  baseQuery: mockBaseQuery,
   tagTypes: ['Contact', 'Company', 'Task', 'Activity', 'Auth', 'Dashboard', 'Search'],
   endpoints: (builder) => ({
     // Auth endpoints
@@ -70,138 +68,6 @@ export const api = createApi({
         method: 'POST',
       }),
     }),
-
-    // Contacts endpoints
-    getContacts: builder.query<Contact[], string>({
-      query: (search) => `/contacts${search ? `?search=${search}` : ''}`,
-      providesTags: ['Contact'],
-    }),
-    getContact: builder.query<Contact, string>({
-      query: (id) => `/contacts/${id}`,
-      providesTags: ['Contact'],
-    }),
-    createContact: builder.mutation<Contact, Partial<Contact>>({
-      query: (data) => ({
-        url: '/contacts',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: ['Contact'],
-    }),
-    updateContact: builder.mutation<Contact, { id: string; data: Partial<Contact> }>({
-      query: ({ id, data }) => ({
-        url: `/contacts/${id}`,
-        method: 'PUT',
-        body: data,
-      }),
-      invalidatesTags: ['Contact'],
-    }),
-    deleteContact: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/contacts/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Contact'],
-    }),
-
-    // Companies endpoints
-    getCompanies: builder.query<Company[], string>({
-      query: (search) => `/companies${search ? `?search=${search}` : ''}`,
-      providesTags: ['Company'],
-    }),
-    getCompany: builder.query<Company, string>({
-      query: (id) => `/companies/${id}`,
-      providesTags: ['Company'],
-    }),
-    createCompany: builder.mutation<Company, Partial<Company>>({
-      query: (data) => ({
-        url: '/companies',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: ['Company'],
-    }),
-    updateCompany: builder.mutation<Company, { id: string; data: Partial<Company> }>({
-      query: ({ id, data }) => ({
-        url: `/companies/${id}`,
-        method: 'PUT',
-        body: data,
-      }),
-      invalidatesTags: ['Company'],
-    }),
-    deleteCompany: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/companies/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Company'],
-    }),
-
-    // Tasks endpoints
-    getTasks: builder.query<Task[], string>({
-      query: (search) => `/tasks${search ? `&search=${search}` : ''}`,
-      providesTags: ['Task'],
-    }),
-    getTask: builder.query<Task, string>({
-      query: (id) => `/tasks/${id}`,
-      providesTags: ['Task'],
-    }),
-    createTask: builder.mutation<Task, Partial<Task>>({
-      query: (data) => ({
-        url: '/tasks',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: ['Task'],
-    }),
-    updateTask: builder.mutation<Task, { id: string; data: Partial<Task> }>({
-      query: ({ id, data }) => ({
-        url: `/tasks/${id}`,
-        method: 'PUT',
-        body: data,
-      }),
-      invalidatesTags: ['Task'],
-    }),
-    deleteTask: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/tasks/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Task'],
-    }),
-
-    // Activities endpoints
-    getActivities: builder.query<Activity[], string>({
-      query: (search) => `/activities${search ? `&search=${search}` : ''}`,
-      providesTags: ['Activity'],
-    }),
-    getActivity: builder.query<Activity, string>({
-      query: (id) => `/activities/${id}`,
-      providesTags: ['Activity'],
-    }),
-    createActivity: builder.mutation<Activity, Partial<Activity>>({
-      query: (data) => ({
-        url: '/activities',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: ['Activity'],
-    }),
-    updateActivity: builder.mutation<Activity, { id: string; data: Partial<Activity> }>({
-      query: ({ id, data }) => ({
-        url: `/activities/${id}`,
-        method: 'PUT',
-        body: data,
-      }),
-      invalidatesTags: ['Activity'],
-    }),
-    deleteActivity: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/activities/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Activity'],
-    }),
   }),
   keepUnusedDataFor: 5,
 });
@@ -212,28 +78,4 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  // Contacts hooks
-  useGetContactsQuery,
-  useGetContactQuery,
-  useCreateContactMutation,
-  useUpdateContactMutation,
-  useDeleteContactMutation,
-  // Companies hooks
-  useGetCompaniesQuery,
-  useGetCompanyQuery,
-  useCreateCompanyMutation,
-  useUpdateCompanyMutation,
-  useDeleteCompanyMutation,
-  // Tasks hooks
-  useGetTasksQuery,
-  useGetTaskQuery,
-  useCreateTaskMutation,
-  useUpdateTaskMutation,
-  useDeleteTaskMutation,
-  // Activities hooks
-  useGetActivitiesQuery,
-  useGetActivityQuery,
-  useCreateActivityMutation,
-  useUpdateActivityMutation,
-  useDeleteActivityMutation,
 } = api;

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { Contact } from '@/types/entities';
 
-interface ContactsState {
+export interface ContactsState {
   contacts: Contact[];
   selected: Contact | null;
   isLoading: boolean;
