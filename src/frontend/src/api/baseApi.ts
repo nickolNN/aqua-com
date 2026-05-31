@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query';
 
 export const baseApi = createApi({
-  reducerPath: 'api',
+  reducerPath: 'baseApi',
   baseQuery: fetchBaseQuery({
     baseUrl: '/api',
     credentials: 'include',

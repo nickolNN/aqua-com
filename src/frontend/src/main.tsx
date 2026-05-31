@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { BrowserRouter, RouterProvider } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { router } from './router';
 import { store, persistor } from './store';
@@ -17,13 +17,11 @@ if (root) {
   createRoot(root).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <AuthProvider>
-            <ThemeProvider>
-              <RouterProvider router={router} />
-            </ThemeProvider>
-          </AuthProvider>
-        </BrowserRouter>
+        <AuthProvider>
+          <ThemeProvider>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </AuthProvider>
       </PersistGate>
     </Provider>,
   );
