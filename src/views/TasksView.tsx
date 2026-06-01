@@ -39,7 +39,7 @@ function TaskCard({ task }: { task: { id: string; title: string; status: string;
 }
 
 export function TasksView() {
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
   const { data: tasks, isLoading } = useGetTasksQueryTyped('');
 
   if (isLoading) {

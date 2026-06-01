@@ -44,8 +44,23 @@ export const tasksSlice = createSlice({
     setFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
     },
+    updateTaskStatus: (state, action) => {
+      const { taskId, newStatus } = action.payload;
+      const task = state.tasks.find((t) => t.id === taskId);
+      if (task) {
+        task.status = newStatus as Task['status'];
+      }
+    },
   },
 });
 
-export const { setTasks, setSelectedTask, setTasksLoading, setError, setFilters } = tasksSlice.actions;
+export const {
+  setTasks,
+  setSelectedTask,
+  setTasksLoading,
+  setError,
+  setFilters,
+  updateTaskStatus,
+} = tasksSlice.actions;
+
 export const tasksReducer = tasksSlice.reducer;
