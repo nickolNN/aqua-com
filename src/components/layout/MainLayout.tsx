@@ -47,9 +47,12 @@ export function MainLayout() {
               type="button"
               onClick={handleThemeToggle}
               aria-label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
+              role="switch"
+              aria-checked={currentTheme === 'dark'}
+              className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
             >
-              {currentTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+              <span>{currentTheme === 'dark' ? 'dark' : 'light'}</span>
             </button>
           </SidebarFooter>
         </Sidebar>

@@ -115,7 +115,7 @@ export function CompanyForm() {
                     <SelectValue placeholder="Select industry..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Select industry...</SelectItem>
+                    <SelectItem value="none">Select industry...</SelectItem>
                     <SelectItem value="Technology">Technology</SelectItem>
                     <SelectItem value="Healthcare">Healthcare</SelectItem>
                     <SelectItem value="Finance">Finance</SelectItem>

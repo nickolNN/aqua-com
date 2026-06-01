@@ -8,8 +8,8 @@ test.describe('Dark Mode', () => {
     const initialTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(initialTheme).toBe(false);
     
-    // Click theme toggle button
-    await page.locator('button[aria-label="Switch to dark mode"]').click();
+    // Click theme toggle button (resilient selector with partial match)
+    await page.locator('button[aria-label*="dark mode"]').click();
     
     // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
@@ -24,7 +24,7 @@ test.describe('Dark Mode', () => {
     await page.goto('/');
     
     // Set dark mode
-    await page.locator('button[aria-label="Switch to dark mode"]').click();
+    await page.locator('button[aria-label*="dark mode"]').click();
     
     // Reload page
     await page.reload();
@@ -38,7 +38,7 @@ test.describe('Dark Mode', () => {
     await page.goto('/login');
     
     // Toggle dark mode
-    await page.locator('button[aria-label="Switch to dark mode"]').click();
+    await page.locator('button[aria-label*="dark mode"]').click();
     
     // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
@@ -49,7 +49,7 @@ test.describe('Dark Mode', () => {
     await page.goto('/contacts');
     
     // Toggle dark mode
-    await page.locator('button[aria-label="Switch to dark mode"]').click();
+    await page.locator('button[aria-label*="dark mode"]').click();
     
     // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
@@ -60,7 +60,7 @@ test.describe('Dark Mode', () => {
     await page.goto('/companies');
     
     // Toggle dark mode
-    await page.locator('button[aria-label="Switch to dark mode"]').click();
+    await page.locator('button[aria-label*="dark mode"]').click();
     
     // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));

@@ -3,7 +3,7 @@ import { useGetCompaniesQuery, useCreateCompanyMutation } from '@/api/companiesA
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardHeader, CardContent, CardDescription } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 export function CompaniesView() {
@@ -71,9 +71,6 @@ export function CompaniesView() {
 
       {/* Companies List */}
       <Card>
-        <CardHeader>
-          <CardDescription>Company Directory</CardDescription>
-        </CardHeader>
         <CardContent>
           {companies && companies.length > 0 ? (
             <ul className="divide-y">

@@ -3,7 +3,7 @@ import { useGetContactsQuery, useCreateContactMutation } from '@/api/contactsApi
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardHeader, CardContent, CardDescription } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 export function ContactsView() {
@@ -73,9 +73,6 @@ export function ContactsView() {
 
       {/* Contacts List */}
       <Card>
-        <CardHeader>
-          <CardDescription>Contact Directory</CardDescription>
-        </CardHeader>
         <CardContent>
         {contacts && contacts.length > 0 ? (
             <ul className="divide-y">
