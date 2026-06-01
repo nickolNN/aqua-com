@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { updateTaskStatus } from '@/stores/tasksSlice';
 import type { Task } from '@/types/entities';
-import type { AppDispatch } from '@/store/store';
+import type { AppDispatch, RootState } from '@/store/store';
 
 type KanbanColumn = 'open' | 'in_progress' | 'completed' | 'cancelled';
 
@@ -29,7 +29,7 @@ const columnColors: Record<KanbanColumn, string> = {
 
 export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks: storedTasks } = useSelector((state) => state);
+  const { tasks: storedTasks } = useSelector((state: RootState) => state);
   const draggedTaskId = useRef<string | null>(null);
 
   const getPriorityColor = (priority: string) => {
@@ -42,7 +42,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
     }
   };
 
-  const handleDragStart = (taskId: string) => {
+  const handleDragStart = (taskId: string, _e: React.DragEvent) => {
     draggedTaskId.current = taskId;
   };
 
@@ -59,7 +59,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
     if (!taskId) return;
 
     // Find task in current tasks list to get its current status
-    const task = storedTasks.tasks?.find((t) => t.id === taskId);
+const task = storedTasks?.tasks?.find((task: Task) => task.id === taskId);
     if (!task) return;
 
     // Update local state
@@ -95,7 +95,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
               <div
                 key={task.id}
                 draggable
-                onDragStart={(e) => handleDragStart(task.id)}
+                onDragStart={(e) => handleDragStart(task.id, e)}
                 className="mb-2"
               >
                 <Card
