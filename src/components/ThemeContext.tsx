@@ -18,6 +18,12 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     document.documentElement.style.setProperty('--background', theme === 'dark' ? '224 71% 4%' : '0 0% 100%');
     document.documentElement.style.setProperty('--foreground', theme === 'dark' ? '213 96% 98%' : '222.2 84% 4.9%');
+    document.documentElement.style.setProperty('--border', theme === 'dark' ? '240 3.7% 15.9%' : '224 10% 94%');
+    document.documentElement.style.setProperty('--sidebar', theme === 'dark' ? '240 10% 3.9%' : '0 0% 98%');
+    document.documentElement.style.setProperty('--sidebar-foreground', theme === 'dark' ? '213 96% 98%' : '222.2 84% 4.9%');
+    document.documentElement.style.setProperty('--sidebar-border', theme === 'dark' ? '240 3.7% 15.9%' : '224 10% 94%');
+    document.documentElement.style.setProperty('--sidebar-accent', theme === 'dark' ? '240 3.7% 15.9%' : '224 10% 94%');
+    document.documentElement.style.setProperty('--sidebar-accent-foreground', theme === 'dark' ? '213 96% 98%' : '224 10% 10%');
     document.documentElement.style.setProperty('--radius', '0.5rem');
     localStorage.setItem('theme', theme);
   }, [theme]);

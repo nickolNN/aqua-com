@@ -1,39 +1,46 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useGetTasksQueryTyped } from '@/api/tasksApi';
 import { KanbanBoard } from '@/components/tasks/KanbanBoard';
-import { TaskDetail } from '@/components/tasks/TaskDetail';
-import { TaskForm } from '@/components/tasks/TaskForm';
 import { Button } from '@/components/ui/Button';
-import type { Task, TaskCreateInput } from '@/types/entities';
 
-type ViewMode = 'list' | 'kanban' | 'form';
-type SelectedView = 'list' | 'detail';
+type ViewMode = 'list' | 'kanban';
+
+function TaskCard({ task }: { task: { id: string; title: string; status: string; description?: string; due_date?: string } }) {
+  return (
+    <Link
+      to={`/tasks/${task.id}`}
+      className="block border rounded-lg p-4 hover:shadow-md transition-shadow"
+    >
+      <div className="flex items-center justify-between">
+        <span className="font-medium">{task.title}</span>
+        <span
+          className={`text-xs px-2 py-1 rounded ${
+            task.status === 'completed'
+              ? 'bg-green-500 text-white'
+              : task.status === 'in_progress'
+                ? 'bg-yellow-500 text-white'
+                : task.status === 'cancelled'
+                  ? 'bg-gray-500 text-white'
+                  : 'bg-blue-500 text-white'
+          }`}
+        >
+          {task.status}
+        </span>
+      </div>
+      {task.description && (
+        <p className="text-sm text-gray-600 mt-2 truncate">{task.description}</p>
+      )}
+      {task.due_date && (
+        <p className="text-xs text-gray-500 mt-1">Due: {new Date(task.due_date).toLocaleDateString()}</p>
+      )}
+    </Link>
+  );
+}
 
 export function TasksView() {
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [selectedView, setSelectedView] = useState<SelectedView>('list');
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const { data: tasks, isLoading } = useGetTasksQueryTyped('');
-
-  const handleTaskClick = (taskId: string) => {
-    setSelectedTaskId(taskId);
-    setSelectedView('detail');
-  };
-
-  const handleTaskClose = () => {
-    setSelectedView('list');
-    setSelectedTaskId(null);
-  };
-
-  const handleNewTask = (_data: TaskCreateInput) => {
-    // In a real app, this would call the API
-    setSelectedView('list');
-    setViewMode('list');
-  };
-
-  const handleCancelNewTask = () => {
-    setViewMode('list');
-  };
 
   if (isLoading) {
     return <div>Loading tasks...</div>;
@@ -48,7 +55,7 @@ export function TasksView() {
             Back to List
           </Button>
         </div>
-        <KanbanBoard tasks={tasks || []} onTaskClick={handleTaskClick} />
+        <KanbanBoard tasks={tasks || []} onTaskClick={(taskId) => window.location.href = `/tasks/${taskId}`} />
       </div>
     );
   }
@@ -61,68 +68,19 @@ export function TasksView() {
           <Button variant="outline" onClick={() => setViewMode('kanban')}>
             Kanban Board
           </Button>
-          <Button onClick={() => setViewMode('form')}>
+          <Button onClick={() => (window.location.href = '/tasks/new')}>
             New Task
           </Button>
         </div>
       </div>
 
-      {selectedView === 'detail' && selectedTaskId ? (
-        <div className="max-w-4xl">
-          <Button variant="link" onClick={handleTaskClose} className="mb-4">
-            ← Back to list
-          </Button>
-          {(tasks || []).filter((task: Task) => task.id === selectedTaskId).map((task: Task) => {
-            return (
-              <div key={task.id}>
-                <TaskDetail task={task} onClose={handleTaskClose} />
-              </div>
-            );
-          })}
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {(tasks || []).map((task) => (
+            <TaskCard key={task.id} task={task} />
+          ))}
         </div>
-      ) : viewMode === 'form' ? (
-        <div className="max-w-2xl">
-          <Button variant="link" onClick={handleCancelNewTask} className="mb-4">
-            ← Back to list
-          </Button>
-          <TaskForm onSubmit={handleNewTask} onCancel={handleCancelNewTask} />
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(tasks || []).map((task: Task) => (
-              <div
-                key={task.id}
-                className="border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
-                role="button"
-                tabIndex={0}
-                onClick={() => handleTaskClick(task.id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    handleTaskClick(task.id);
-                  }
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{task.title}</span>
-                  <span className={`text-xs px-2 py-1 rounded ${
-                    task.status === 'completed' ? 'bg-green-500 text-white' :
-                    task.status === 'in_progress' ? 'bg-yellow-500 text-white' :
-                    task.status === 'cancelled' ? 'bg-gray-500 text-white' :
-                    'bg-blue-500 text-white'
-                  }`}>{task.status}</span>
-                </div>
-                {task.description && (
-                  <p className="text-sm text-gray-600 mt-2 truncate">{task.description}</p>
-                )}
-                {task.due_date && (
-                  <p className="text-xs text-gray-500 mt-1">Due: {new Date(task.due_date).toLocaleDateString()}</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

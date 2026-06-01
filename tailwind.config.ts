@@ -9,6 +9,11 @@ export default {
         border: 'hsl(var(--border))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        sidebar: 'hsl(var(--sidebar))',
+        'sidebar-foreground': 'hsl(var(--sidebar-foreground))',
+        'sidebar-border': 'hsl(var(--sidebar-border))',
+        'sidebar-accent': 'hsl(var(--sidebar-accent))',
+        'sidebar-accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
       },
       borderRadius: {
         lg: 'var(--radius)',

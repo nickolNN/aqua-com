@@ -50,7 +50,7 @@ export const tasksApi = api.injectEndpoints({
          body: data,
        }),
        invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.taskId }],
-     }),
+      }),
     // Remove a task dependency
    removeTaskDependency: builder.mutation<void, { taskId: string; dependencyId: string }>({
        query: ({ taskId, dependencyId }) => ({
@@ -58,9 +58,18 @@ export const tasksApi = api.injectEndpoints({
          method: 'DELETE',
        }),
        invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.taskId }],
-     }),
+      }),
+    // Update task status
+    updateTaskStatus: builder.mutation<Task, { id: string; data: { status: string } }>({
+      query: ({ id, data }) => ({
+        url: `/tasks/${id}/status`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.id }],
+    }),
    }),
- });
+});
 
 export const {
   useGetTasksQuery,
@@ -70,7 +79,8 @@ export const {
   useDeleteTaskMutation,
   useAddTaskDependencyMutation,
   useRemoveTaskDependencyMutation,
-} = tasksApi as Record<string, unknown>;
+  useUpdateTaskStatusMutation,
+} = tasksApi;
 
 export const useGetTasksQueryTyped = tasksApi['useGetTasksQuery'] as (arg: string) => {
   data: Task[] | undefined;
@@ -83,11 +93,12 @@ export const useGetTaskQueryTyped = tasksApi['useGetTaskQuery'] as (arg: string)
   isLoading: boolean;
 };
 export const useCreateTaskMutationTyped = tasksApi['useCreateTaskMutation'] as unknown as () => [
-  (data: TaskCreateInput) => void,
+  (data: TaskCreateInput) => Promise<{ data: Task }>,
   unknown,
+  { isSuccess: boolean },
 ];
 export const useUpdateTaskMutationTyped = tasksApi['useUpdateTaskMutation'] as unknown as () => [
-  (input: { id: string; data: TaskUpdateInput }) => void,
+  (input: { id: string; data: TaskUpdateInput }) => Promise<{ data: Task }>,
   unknown,
 ];
 export const useDeleteTaskMutationTyped = tasksApi['useDeleteTaskMutation'] as unknown as () => [
@@ -100,5 +111,9 @@ export const useAddTaskDependencyMutationTyped = tasksApi['useAddTaskDependencyM
 ];
 export const useRemoveTaskDependencyMutationTyped = tasksApi['useRemoveTaskDependencyMutation'] as unknown as () => [
   (input: { taskId: string; dependencyId: string }) => void,
+  unknown,
+];
+export const useUpdateTaskStatusMutationTyped = tasksApi['useUpdateTaskStatusMutation'] as unknown as () => [
+  (input: { id: string; data: { status: string } }) => Promise<{ data: Task }>,
   unknown,
 ];

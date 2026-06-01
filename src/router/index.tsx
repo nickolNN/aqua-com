@@ -12,6 +12,8 @@ import { CompaniesView } from '@/views/CompaniesView';
 import { CompanyDetailView } from '@/views/CompanyDetailView';
 import { CompanyForm } from '@/views/CompanyForm';
 import { TasksView } from '@/views/TasksView';
+import { TaskDetailView } from '@/views/TaskDetailView';
+import { TaskForm } from '@/views/TaskForm';
 import { ActivitiesView } from '@/views/ActivitiesView';
 import { ReportsView } from '@/views/ReportsView';
 import { SearchView } from '@/views/SearchView';
@@ -32,16 +34,15 @@ export const router = createBrowserRouter([
       // Contacts
       { path: '/contacts', element: <ContactsView /> },
       { path: '/contacts/:id', element: <ContactDetailView /> },
-      { path: '/contacts/:id', element: <ContactForm /> },
       { path: '/contacts/new', element: <ContactForm /> },
       // Companies
       { path: '/companies', element: <CompaniesView /> },
       { path: '/companies/:id', element: <CompanyDetailView /> },
-      { path: '/companies/:id', element: <CompanyForm /> },
       { path: '/companies/new', element: <CompanyForm /> },
       // Tasks
       { path: '/tasks', element: <TasksView /> },
-      { path: '/tasks/:id', element: <TasksView /> },
+      { path: '/tasks/:id', element: <TaskDetailView /> },
+      { path: '/tasks/new', element: <TaskForm /> },
       // Activities
       { path: '/activities', element: <ActivitiesView /> },
       { path: '/activities/:contactId', element: <ActivitiesView /> },
