@@ -29,7 +29,7 @@ const columnColors: Record<KanbanColumn, string> = {
 
 export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks: storedTasks } = useSelector((state: RootState) => state);
+  const storedTasks = useSelector((state: RootState) => state.tasks);
   const draggedTaskId = useRef<string | null>(null);
 
   const getPriorityColor = (priority: string) => {
