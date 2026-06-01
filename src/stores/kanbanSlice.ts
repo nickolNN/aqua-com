@@ -24,11 +24,11 @@ export const kanbanSlice = createSlice({
   name: 'kanban',
   initialState,
   reducers: {
-    updateBoardConfig: (_, action) => {
-      return { ...initialState, boardConfig: action.payload };
+    updateBoardConfig: (state, action) => {
+      state.boardConfig = { ...state.boardConfig, ...action.payload };
     },
-    reorderColumn: (_, action) => {
-      return { ...initialState, columns: action.payload };
+    reorderColumn: (state, action) => {
+      state.columns = action.payload;
     },
   },
 });

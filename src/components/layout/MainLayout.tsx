@@ -5,6 +5,7 @@ import GlobalSearchBar from './GlobalSearchBar';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setTheme } from '@/stores/settingsSlice';
+import type { RootState } from '@/store/store';
 import SidebarNavItem from './SidebarNavItem';
 import { applyTheme } from '@/stores/settingsSlice';
 import { useEffect } from 'react';
@@ -14,15 +15,15 @@ import { useEffect } from 'react';
  * Includes global search bar for searching across all entity types.
  */
 export function MainLayout() {
-  const theme = useSelector((state: { settings: { theme: string } }) => state.settings.theme);
   const dispatch = useAppDispatch();
+  const currentTheme = useSelector((state: RootState) => state.settings.theme);
 
   useEffect(() => {
-    applyTheme();
-  }, []);
+    applyTheme(currentTheme);
+  }, [currentTheme]);
 
   const handleThemeToggle = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     dispatch(setTheme(newTheme));
   };
 
@@ -45,10 +46,10 @@ export function MainLayout() {
             <button
               type="button"
               onClick={handleThemeToggle}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               className="text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
             >
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {currentTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
           </SidebarFooter>
         </Sidebar>

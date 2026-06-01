@@ -46,10 +46,9 @@ export const tasksSlice = createSlice({
     },
     updateTaskStatus: (state, action) => {
       const { taskId, newStatus } = action.payload;
-      const task = state.tasks.find((t) => t.id === taskId);
-      if (task) {
-        task.status = newStatus as Task['status'];
-      }
+      state.tasks = state.tasks.map((t) =>
+        t.id === taskId ? { ...t, status: newStatus as Task['status'] } : t
+      );
     },
   },
 });

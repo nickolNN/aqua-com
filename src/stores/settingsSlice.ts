@@ -11,8 +11,18 @@ export interface SettingsState {
 const getSystemThemePreference = (): 'light' | 'dark' =>
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
+const getThemeFromStorage = (): 'light' | 'dark' => {
+  try {
+    const stored = localStorage.getItem('theme');
+    if (stored === 'light' || stored === 'dark') return stored;
+  } catch (e) {
+    console.warn('localStorage access denied', e);
+  }
+  return getSystemThemePreference();
+};
+
 const initialState: SettingsState = {
-  theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? getSystemThemePreference(),
+  theme: typeof window !== 'undefined' ? getThemeFromStorage() : 'light',
   language: 'en',
   preferences: {},
   isLoading: false,
@@ -24,7 +34,7 @@ export const settingsSlice = createSlice({
   reducers: {
     setTheme: (state, action) => {
       state.theme = action.payload;
-      localStorage.setItem('theme', action.payload);
+      try { localStorage.setItem('theme', action.payload as 'light' | 'dark'); } catch (e) { /* ignore */ }
     },
     setLanguage: (state, action) => { state.language = action.payload; },
     setPreferences: (state, action) => { state.preferences = action.payload; },
@@ -40,7 +50,7 @@ export const selectSettingsTheme = (state: { settings: SettingsState }) => state
 export const settingsReducer = settingsSlice.reducer;
 
 // Apply theme to document element
-export const applyTheme = () => {
-  const theme = (localStorage.getItem('theme') as 'light' | 'dark') ?? getSystemThemePreference();
-  document.documentElement.classList.toggle('dark', theme === 'dark');
+export const applyTheme = (theme?: string) => {
+  const themeToApply = theme ?? (localStorage.getItem('theme') as 'light' | 'dark') ?? getSystemThemePreference();
+  document.documentElement.classList.toggle('dark', themeToApply === 'dark');
 };

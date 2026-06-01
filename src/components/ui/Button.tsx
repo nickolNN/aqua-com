@@ -1,54 +1,56 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'as'> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'secondary' | 'outline' | 'ghost' | 'link';
   size?: 'default' | 'sm' | 'lg' | 'icon';
-  as?: 'a' | 'button';
+  as?: 'a';
 }
 
-const Button = React.forwardRef<
-  HTMLButtonElement | HTMLAnchorElement,
-  ButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>
->(({ className, variant = 'default', size = 'default', as, ...rest }: any, ref) => {
-  const variantStyles: Record<string, string> = {
-    default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-    ghost: 'hover:bg-accent hover:text-accent-foreground',
-    link: 'text-primary underline-offset-4 hover:underline',
-  };
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+  ({ className, variant = 'default', size = 'default', ...rest }, ref) => {
+    const props = rest as React.AnchorHTMLAttributes<HTMLAnchorElement>;
+    const isAnchor = props.href !== undefined;
 
-  const sizeStyles: Record<string, string> = {
-    default: 'h-10 px-4 py-2',
-    sm: 'h-9 px-3',
-    lg: 'h-11 px-8',
-    icon: 'h-10 w-10',
-  };
+    const variantStyles: Record<string, string> = {
+      default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+      outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+      ghost: 'hover:bg-accent hover:text-accent-foreground',
+      link: 'text-primary underline-offset-4 hover:underline',
+    };
 
-  const buttonClasses = cn(
-    'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-    variantStyles[variant],
-    sizeStyles[size],
-    className
-  );
+    const sizeStyles: Record<string, string> = {
+      default: 'h-10 px-4 py-2',
+      sm: 'h-9 px-3',
+      lg: 'h-11 px-8',
+      icon: 'h-10 w-10',
+    };
 
-  if (as === 'a') {
-    return React.createElement('a', {
-      ref: ref as any,
-      className: buttonClasses,
-      ...rest
-    });
+    const buttonClasses = cn(
+      'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      variantStyles[variant],
+      sizeStyles[size],
+      className
+    );
+
+    if (isAnchor) {
+      return React.createElement('a', {
+                ref: ref as any,
+        className: buttonClasses,
+        ...props
+            });
+    }
+
+    return (
+      <button
+        ref={ref as any}
+        className={buttonClasses}
+        {...rest}
+      />
+    );
   }
-
-  return (
-    <button
-      ref={ref}
-      className={buttonClasses}
-      {...rest}
-    />
-  );
-});
+);
 Button.displayName = 'Button';
 
 export { Button };

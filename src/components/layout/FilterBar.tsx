@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // =====================================================
 // FilterBar Component
@@ -30,9 +30,15 @@ const ENTITY_FILTERS: Record<string, Array<{ key: string; label: string; options
 
 export default function FilterBar({ entityType, onFilterChange }: FilterBarProps) {
   const [filters, setFilters] = useState<Record<string, unknown>>({});
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [filterName, setFilterName] = useState('');
 
+  const prevFiltersRef = useRef(filters);
   useEffect(() => {
-    onFilterChange?.(filters);
+    if (JSON.stringify(prevFiltersRef.current) !== JSON.stringify(filters)) {
+      onFilterChange?.(filters);
+    }
+    prevFiltersRef.current = filters;
   }, [filters, onFilterChange]);
 
   const handleFilterChange = (key: string, value: string) => {
@@ -46,18 +52,23 @@ export default function FilterBar({ entityType, onFilterChange }: FilterBarProps
   };
 
   const handleSaveFilter = () => {
-    const filterName = prompt('Enter filter name to save:');
-    if (filterName) {
+    setFilterName('');
+    setShowSaveDialog(true);
+  };
+
+  const confirmSaveFilter = () => {
+    if (filterName.trim()) {
       const newFilter = {
         id: Date.now().toString(),
-        name: filterName,
+        name: filterName.trim(),
         type: entityType,
         criteria: { ...filters },
       };
       const savedFilters = JSON.parse(localStorage.getItem('savedFilters') || '[]');
       localStorage.setItem('savedFilters', JSON.stringify([...savedFilters, newFilter]));
-      alert(`Filter "${filterName}" saved successfully.`);
     }
+    setShowSaveDialog(false);
+    setFilterName('');
   };
 
   const filtersConfig = ENTITY_FILTERS[entityType] || [];
@@ -123,6 +134,29 @@ export default function FilterBar({ entityType, onFilterChange }: FilterBarProps
           </div>
         </div>
       </div>
+
+      {showSaveDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-4 w-80">
+            <h3 className="text-sm font-semibold mb-2">Save Filter</h3>
+            <input
+              type="text"
+              value={filterName}
+              onChange={(e) => setFilterName(e.target.value)}
+              placeholder="Filter name"
+              className="w-full text-sm rounded border border-gray-300 px-2 py-1 mb-2"
+            />
+            <div className="flex gap-2">
+              <button onClick={confirmSaveFilter} className="text-sm text-blue-600 hover:text-blue-800">
+                Save
+              </button>
+              <button onClick={() => setShowSaveDialog(false)} className="text-sm text-gray-600 hover:text-gray-800">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

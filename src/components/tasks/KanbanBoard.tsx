@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -24,7 +24,7 @@ const columnColors: Record<KanbanColumn, string> = {
   open: 'bg-blue-50 dark:bg-blue-900/20',
   in_progress: 'bg-yellow-50 dark:bg-yellow-900/20',
   completed: 'bg-green-50 dark:bg-green-900/20',
-   cancelled: 'bg-muted dark:bg-muted',
+    cancelled: 'bg-muted dark:bg-muted',
 };
 
 export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
@@ -32,7 +32,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
   const storedTasks = useSelector((state: RootState) => state.tasks);
   const draggedTaskId = useRef<string | null>(null);
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = useCallback((priority: string): string => {
     switch (priority) {
       case 'urgent': return 'bg-red-500 text-white';
       case 'high': return 'bg-orange-500 text-white';
@@ -40,7 +40,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
       case 'low': return 'bg-blue-500 text-white';
       default: return 'bg-muted text-white';
     }
-  };
+  }, []);
 
   const handleDragStart = (taskId: string, _e: React.DragEvent) => {
     draggedTaskId.current = taskId;
