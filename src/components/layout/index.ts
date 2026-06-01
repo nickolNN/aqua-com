@@ -3,5 +3,6 @@ export { MainLayout } from './MainLayout';
 export { AuthLayout } from './AuthLayout';
 // Sidebar components export
 export { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from './Sidebar';
+export { default as SidebarNavItem } from './SidebarNavItem';
 // Header component export
 export { Header } from './Header';
