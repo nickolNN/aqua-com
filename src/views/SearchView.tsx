@@ -17,6 +17,8 @@ import {
 import type { SavedFilter } from '@/stores/searchSlice';
 import { SearchResults } from '@/components/search/SearchResults';
 import FilterBar from '@/components/layout/FilterBar';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 /**
  * SearchView component provides a full-page search experience
@@ -50,44 +52,43 @@ export function SearchView() {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Search</h1>
-        <p className="text-sm text-gray-600">Search across contacts, companies, tasks, and activities</p>
+        <p className="text-sm text-muted-foreground">Search across contacts, companies, tasks, and activities</p>
       </div>
 
       {/* Search form */}
       <form onSubmit={handleSearch} className="mb-6">
         <div className="flex gap-2">
-          <input
+          <Input
             name="search"
             type="text"
             defaultValue={query}
             placeholder="Search contacts, tasks, companies..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
             aria-label="Search"
           />
-          <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+          <Button type="submit" size="sm">
             Search
-          </button>
+          </Button>
         </div>
       </form>
 
       {/* Tabs */}
       <div className="flex gap-2 mb-4">
-        <button
-          className={`px-3 py-1 rounded text-sm ${activeTab === 'search' ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-          onClick={() => setActiveTab('search')}
-        >
-          Search Results
-        </button>
-        <button
-          className={`px-3 py-1 rounded text-sm ${activeTab === 'saved' ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-          onClick={() => setActiveTab('saved')}
-        >
-          Saved Filters ({savedFilters.length})
-        </button>
-        <button
-          className={`px-3 py-1 rounded text-sm ${activeTab === 'advanced' ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-          onClick={() => setActiveTab('advanced')}
-        >
+     <button
+           className={`px-3 py-1 rounded text-sm ${activeTab === 'search' ? 'bg-muted' : 'hover:bg-muted'}`}
+           onClick={() => setActiveTab('search')}
+         >
+           Search Results
+         </button>
+         <button
+           className={`px-3 py-1 rounded text-sm ${activeTab === 'saved' ? 'bg-muted' : 'hover:bg-muted'}`}
+           onClick={() => setActiveTab('saved')}
+         >
+           Saved Filters ({savedFilters.length})
+         </button>
+         <button
+           className={`px-3 py-1 rounded text-sm ${activeTab === 'advanced' ? 'bg-muted' : 'hover:bg-muted'}`}
+           onClick={() => setActiveTab('advanced')}
+         >
           Advanced Filters
         </button>
       </div>
@@ -102,7 +103,7 @@ export function SearchView() {
       {activeTab === 'saved' && (
         <div className="space-y-2">
           {savedFilters.length === 0 && (
-            <div className="text-center py-8 text-gray-500">No saved filters yet</div>
+            <div className="text-center py-8 text-muted-foreground">No saved filters yet</div>
           )}
           {savedFilters.map((filterItem: unknown) => {
             const filter = filterItem as SavedFilter;
@@ -110,18 +111,18 @@ export function SearchView() {
               <div key={filter.id} className="flex items-center justify-between p-3 bg-white border rounded-md">
                 <div>
                   <span className="font-medium">{filter.name}</span>
-                  <span className="text-sm text-gray-500 ml-2">{JSON.stringify(filter.criteria)}</span>
+                  <span className="text-sm text-muted-foreground ml-2">{JSON.stringify(filter.criteria)}</span>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleLoadSavedFilter(filter)}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm text-primary hover:text-primary/80"
                   >
                     Load
                   </button>
                   <button
                     onClick={() => dispatch(removeSavedFilter(filter.id))}
-                    className="text-sm text-red-600 hover:text-red-800"
+                    className="text-sm text-destructive hover:text-destructive/80"
                   >
                     Delete
                   </button>
@@ -144,7 +145,7 @@ export function SearchView() {
                 }));
               }
             }}
-            className="text-sm text-blue-600 hover:text-blue-800"
+            className="text-sm text-primary hover:text-primary/80"
           >
             Save Current Search
           </button>

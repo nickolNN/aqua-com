@@ -8,6 +8,7 @@ import type { ActivityType } from '@/api/activitiesApi';
 import ActivityTimeline from '@/components/activity/ActivityTimeline';
 import ActivityFilterBar from '@/components/activity/ActivityFilterBar';
 import ActivityForm from '@/components/activity/ActivityForm';
+import { Button } from '@/components/ui/Button';
 
 export function ActivitiesView() {
   const { contactId } = useParams();
@@ -48,12 +49,9 @@ export function ActivitiesView() {
     <div className="max-w-7xl mx-auto py-6 px-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Activity Timeline</h1>
-        <button
-          onClick={() => setShowForm(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          New Activity
-        </button>
+       <Button size="sm" onClick={() => setShowForm(true)}>
+            New Activity
+          </Button>
       </div>
 
       <ActivityFilterBar

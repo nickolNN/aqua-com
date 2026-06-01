@@ -1,11 +1,23 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCreateContactMutation } from '@/api/contactsApi';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+
+interface FormErrors {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  company_id?: string;
+}
 
 export function ContactForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
+  const [errors, setErrors] = useState<FormErrors>({});
   const [createContact, { isSuccess, isLoading }] = useCreateContactMutation();
 
   const [formData, setFormData] = useState({
@@ -16,13 +28,34 @@ export function ContactForm() {
     company_id: '',
   });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (value && errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!formData.first_name?.trim()) {
+      newErrors.first_name = 'First name is required';
+    }
+    if (!formData.last_name?.trim()) {
+      newErrors.last_name = 'Last name is required';
+    }
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     try {
       await createContact(formData).unwrap();
       if (isEdit) {
@@ -38,7 +71,7 @@ export function ContactForm() {
   if (isSuccess) {
     return (
       <div className="max-w-4xl mx-auto py-6 px-4">
-        <div className="text-green-500">
+        <div className="text-primary">
           Contact {isEdit ? 'updated' : 'created'} successfully!
         </div>
       </div>
@@ -53,104 +86,113 @@ export function ContactForm() {
         </h1>
         <Link
           to={isEdit ? `/contacts/${id}` : '/contacts'}
-          className="text-blue-600 hover:text-blue-800 transition-colors"
+          className="text-primary hover:text-primary/80 transition-colors"
         >
           Cancel
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border rounded-md p-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="first_name" className="block text-sm font-medium mb-1">
-              First Name
-            </label>
-            <input
-              id="first_name"
-              name="first_name"
-              type="text"
-              value={formData.first_name}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{isEdit ? 'Edit Contact' : 'Create Contact'}</CardTitle>
+          <CardDescription>Contact details and information</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="first_name" className="block text-sm font-medium mb-1">
+                  First Name
+                </label>
+                <Input
+                  id="first_name"
+                  name="first_name"
+                  type="text"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                  className={errors.first_name ? 'border-destructive' : ''}
+                />
+                {errors.first_name && (
+                  <p className="text-xs text-destructive mt-1">{errors.first_name}</p>
+                )}
+              </div>
 
-          <div>
-            <label htmlFor="last_name" className="block text-sm font-medium mb-1">
-              Last Name
-            </label>
-            <input
-              id="last_name"
-              name="last_name"
-              type="text"
-              value={formData.last_name}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <div>
+                <label htmlFor="last_name" className="block text-sm font-medium mb-1">
+                  Last Name
+                </label>
+                <Input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                  className={errors.last_name ? 'border-destructive' : ''}
+                />
+                {errors.last_name && (
+                  <p className="text-xs text-destructive mt-1">{errors.last_name}</p>
+                )}
+              </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium mb-1">
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className={errors.email ? 'border-destructive' : ''}
+                />
+                {errors.email && (
+                  <p className="text-xs text-destructive mt-1">{errors.email}</p>
+                )}
+              </div>
 
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium mb-1">
-              Phone
-            </label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium mb-1">
+                  Phone
+                </label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
+              </div>
 
-          <div>
-            <label htmlFor="company_id" className="block text-sm font-medium mb-1">
-              Company ID
-            </label>
-            <input
-              id="company_id"
-              name="company_id"
-              type="text"
-              value={formData.company_id}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              <div>
+                <label htmlFor="company_id" className="block text-sm font-medium mb-1">
+                  Company ID
+                </label>
+                <Input
+                  id="company_id"
+                  name="company_id"
+                  type="text"
+                  value={formData.company_id}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <div className="flex gap-4">
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? 'Saving...' : (isEdit ? 'Update Contact' : 'Create Contact')}
+            </Button>
+            <Button variant="outline" as="a" href={isEdit ? `/contacts/${id}` : '/contacts'}>
+              Cancel
+            </Button>
           </div>
-        </div>
-
-        <div className="mt-6 flex gap-4">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {isLoading ? 'Saving...' : (isEdit ? 'Update Contact' : 'Create Contact')}
-          </button>
-          <Link
-            to={isEdit ? `/contacts/${id}` : '/contacts'}
-            className="px-4 py-2 border rounded-md hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </Link>
-        </div>
-      </form>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

@@ -4,6 +4,7 @@
 import { useForm } from 'react-hook-form';
 import { useCreateActivityMutation } from '@/api/activitiesApi';
 import { ACTIVITY_TYPES, type ActivityType } from '@/api/activitiesApi';
+import { Button } from '@/components/ui/Button';
 
 interface ActivityFormData {
   type: ActivityType;
@@ -35,7 +36,7 @@ export default function ActivityForm({ onClose }: ActivityFormProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded max-w-lg w-full">
+      <div className="bg-card p-6 rounded max-w-lg w-full">
         <h2 className="text-xl font-bold mb-4">Create Activity</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -53,12 +54,8 @@ export default function ActivityForm({ onClose }: ActivityFormProps) {
           <input {...register('date', { required: 'Date is required' })} type="date" />
           <input {...register('duration')} type="number" placeholder="Duration (minutes)" />
           <div className="flex gap-2">
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
-              Create
-            </button>
-            <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-200 rounded">
-              Cancel
-            </button>
+            <Button type="submit">Create</Button>
+            <Button variant="outline" onClick={onClose}>Cancel</Button>
           </div>
         </form>
       </div>

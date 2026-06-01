@@ -47,11 +47,11 @@ export function PasswordResetView() {
   if (success) {
     return (
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-900">Check your email</h2>
-        <p className="mt-2 text-sm text-gray-600">
+        <h2 className="text-xl font-semibold text-foreground">Check your email</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
           We&apos;ve sent a password reset link to {email}. Please check your email.
         </p>
-        <Link to="/login" className="mt-4 text-sm text-blue-600 hover:underline">
+        <Link to="/login" className="mt-4 text-sm text-primary hover:underline">
           Back to login
         </Link>
       </div>
@@ -61,12 +61,12 @@ export function PasswordResetView() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {serverError && (
-        <div className="rounded-md border border-red-500 bg-red-50 p-3 text-sm text-red-800">
+        <div className="rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive-foreground">
           {serverError}
         </div>
       )}
       <div className="space-y-2">
-        <label htmlFor="email" className="text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="text-sm font-medium text-foreground">
           Email
         </label>
         <Input
@@ -75,15 +75,15 @@ export function PasswordResetView() {
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={errors.email ? 'border-red-500' : ''}
+          className={errors.email ? 'border-destructive' : ''}
         />
-        {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+        {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Sending...' : 'Send reset link'}
       </Button>
-      <p className="text-center text-sm text-gray-600">
-        <Link to="/login" className="text-blue-600 hover:underline">
+      <p className="text-center text-sm text-muted-foreground">
+        <Link to="/login" className="text-primary hover:underline">
           Back to login
         </Link>
       </p>

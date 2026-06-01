@@ -38,8 +38,8 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
   const total = Object.values(data).reduce((sum, val) => sum + val, 0);
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-sm font-semibold text-gray-900 mb-3">{title}</h3>
+    <div className="p-4 bg-card rounded-lg shadow-sm border border-border">
+      <h3 className="text-sm font-semibold">{title}</h3>
       <div className="flex items-center gap-4">
         {/* Donut chart visualization */}
         <div className="relative w-24 h-24 shrink-0">
@@ -82,7 +82,7 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
             })()}
           </svg>
           {/* Center circle for donut effect */}
-          <div className="absolute inset-3 bg-white rounded-full" />
+          <div className="absolute inset-3 bg-card rounded-full" />
         </div>
         {/* Legend */}
         <div className="flex-1 space-y-1">
@@ -94,10 +94,10 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
               return (
                 <div key={label} className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${palette[index % palette.length]}`} />
-                  <span className="text-sm text-gray-700 capitalize">
+                  <span className="text-sm text-foreground capitalize">
                     {formatLabel(label)} ({value})
                   </span>
-                  <span className="text-sm text-gray-500 ml-auto">
+                  <span className="text-sm text-muted-foreground ml-auto">
                     ({percentage}%)
                   </span>
                 </div>

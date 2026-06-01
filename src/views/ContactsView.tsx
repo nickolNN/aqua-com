@@ -1,16 +1,16 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useGetContactsQuery, useCreateContactMutation } from '@/api/contactsApi';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Card, CardHeader, CardContent, CardDescription } from '@/components/ui/Card';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 export function ContactsView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [createContact] = useCreateContactMutation();
 
   const { data: contacts, isLoading, error } = useGetContactsQuery(searchTerm);
-
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   const handleCreateContact = async (e: FormEvent) => {
     e.preventDefault();
@@ -30,13 +30,19 @@ export function ContactsView() {
   };
 
   if (isLoading) {
-    return <div className="p-6">Loading contacts...</div>;
+    return (
+      <div className="max-w-7xl mx-auto py-6 px-4">
+        <Skeleton className="h-8 w-32 mb-4" size="sm" />
+        <Skeleton className="h-12 w-full mb-4" size="md" />
+        <Skeleton className="h-48 w-full" />
+      </div>
+    );
   }
 
   if (error) {
     return (
       <div className="p-6">
-        <div className="text-red-500">Error: {typeof error === 'string' ? error : 'Failed to load contacts'}</div>
+        <div className="text-destructive">Error: {typeof error === 'string' ? error : 'Failed to load contacts'}</div>
       </div>
     );
   }
@@ -45,69 +51,67 @@ export function ContactsView() {
     <div className="max-w-7xl mx-auto py-6 px-4">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Contacts</h1>
-        <Link
-          to="/contacts/new"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Create Contact
-        </Link>
+      <Button as="a" href="/contacts/new">
+           Create Contact
+         </Button>
       </div>
 
       {/* Search and Create Form */}
       <div className="mb-6 flex gap-4">
-        <input
+        <Input
           type="text"
           placeholder="Search contacts..."
           value={searchTerm}
-          onChange={handleSearch}
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchTerm(e.target.value); }}
         />
         <form onSubmit={handleCreateContact} className="flex-shrink-0">
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
+          <Button type="submit" size="sm" variant="secondary">
             Quick Add
-          </button>
+          </Button>
         </form>
       </div>
 
       {/* Contacts List */}
-      <div className="bg-white border rounded-md">
-      {contacts && contacts.length > 0 ? (
-          <ul className="divide-y">
-            {contacts.map((contact) => (
-              <li key={contact.id}>
-              <Link
-                to={`/contacts/${contact.id}`}
-                className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50 transition-colors"
-              >
-                <div>
-                  <span className="font-medium">
-                    {contact.first_name} {contact.last_name}
-                  </span>
-                  {contact.email && (
-                    <div className="text-sm text-gray-500">{contact.email}</div>
-                  )}
-                  {contact.phone && (
-                    <div className="text-sm text-gray-500">{contact.phone}</div>
-                  )}
-                  {contact.company_id && (
-                    <div className="text-sm text-gray-500">
-                      Company: {contact.company_id}
-                    </div>
-                  )}
-                </div>
-              </Link>
-            </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="p-6 text-center text-gray-500">
-            No contacts found. Create one to get started.
-          </div>
-        )}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardDescription>Contact Directory</CardDescription>
+        </CardHeader>
+        <CardContent>
+        {contacts && contacts.length > 0 ? (
+            <ul className="divide-y">
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                <Link
+                  to={`/contacts/${contact.id}`}
+                  className="flex items-center gap-4 px-4 py-3 hover:bg-muted transition-colors"
+                >
+                  <div>
+                    <span className="font-medium">
+                      {contact.first_name} {contact.last_name}
+                    </span>
+                    {contact.email && (
+                      <div className="text-sm text-muted-foreground">{contact.email}</div>
+                    )}
+                    {contact.phone && (
+                      <div className="text-sm text-muted-foreground">{contact.phone}</div>
+                    )}
+                    {contact.company_id && (
+                      <div className="text-sm text-muted-foreground">
+                        Company: {contact.company_id}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="p-6 text-center text-muted-foreground">
+              No contacts found. Create one to get started.
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

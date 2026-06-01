@@ -18,8 +18,8 @@ export function BarChart({ data, title, color = 'bg-blue-500' }: BarChartProps) 
   const [hovered, setHovered] = useState<string>('');
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-sm font-semibold text-gray-900 mb-3">{title}</h3>
+    <div className="p-4 bg-card rounded-lg shadow-sm border border-border">
+      <h3 className="text-sm font-semibold">{title}</h3>
       <div className="space-y-2">
         {Object.entries(data)
           .sort(([, a], [, b]) => b - a)
@@ -34,21 +34,21 @@ export function BarChart({ data, title, color = 'bg-blue-500' }: BarChartProps) 
                 onMouseLeave={() => setHovered('')}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-gray-700 capitalize">
+                  <span className="text-sm font-medium text-foreground capitalize">
                     {formatLabel(label)}
                   </span>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-muted-foreground">
                     {value} ({total > 0 ? ((value / total) * 100).toFixed(1) : '0'}%)
                   </span>
                 </div>
-                <div className="w-full h-3 bg-gray-200 rounded-full">
+                <div className="w-full h-3 bg-muted rounded-full">
                   <div
                     className={`h-3 rounded-full transition-all duration-300 ${color}`}
                     style={{ width: percentage }}
                   />
                 </div>
                 {hovered === label && (
-                  <div className="absolute top-0 left-0 text-xs text-gray-600 bg-white px-2 py-1 rounded shadow-sm">
+                  <div className="absolute top-0 left-0 text-xs text-muted-foreground bg-card px-2 py-1 rounded shadow-sm">
                     {formatLabel(label)}: {value}
                   </div>
                 )}

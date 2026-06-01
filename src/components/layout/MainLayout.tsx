@@ -1,4 +1,4 @@
-import { LayoutDashboard, User, Building2, CheckSquare, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, User, Building2, CheckSquare, MessageSquare, Sun, Moon } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/layout/Sidebar';
 import GlobalSearchBar from './GlobalSearchBar';
@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setTheme } from '@/stores/settingsSlice';
 import SidebarNavItem from './SidebarNavItem';
+import { applyTheme } from '@/stores/settingsSlice';
+import { useEffect } from 'react';
 
 /**
  * MainLayout component provides the main application layout with sidebar, header, and content area.
@@ -14,6 +16,10 @@ import SidebarNavItem from './SidebarNavItem';
 export function MainLayout() {
   const theme = useSelector((state: { settings: { theme: string } }) => state.settings.theme);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    applyTheme();
+  }, []);
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -37,10 +43,12 @@ export function MainLayout() {
           </SidebarContent>
           <SidebarFooter>
             <button
+              type="button"
               onClick={handleThemeToggle}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               className="text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
             >
-              {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
           </SidebarFooter>
         </Sidebar>

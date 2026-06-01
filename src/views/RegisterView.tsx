@@ -93,12 +93,12 @@ export function RegisterView() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {serverError && (
-        <div className="rounded-md border border-red-500 bg-red-50 p-3 text-sm text-red-800">
+        <div className="rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive-foreground">
           {serverError}
         </div>
       )}
       <div className="space-y-2">
-        <label htmlFor="name" className="text-sm font-medium text-gray-700">
+        <label htmlFor="name" className="text-sm font-medium text-foreground">
           Name
         </label>
         <Input
@@ -107,12 +107,12 @@ export function RegisterView() {
           placeholder="Enter your full name"
           value={formData.name}
           onChange={(e) => handleChange('name', e.target.value)}
-          className={errors.name ? 'border-red-500' : ''}
-        />
-        {errors.name && <p className="text-xs text-red-500">{errors.name}</p>}
+          className={errors.name ? 'border-destructive' : ''}
+          />
+          {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
       </div>
       <div className="space-y-2">
-        <label htmlFor="register-email" className="text-sm font-medium text-gray-700">
+       <label htmlFor="register-email" className="text-sm font-medium text-foreground">
           Email
         </label>
         <Input
@@ -121,12 +121,12 @@ export function RegisterView() {
           placeholder="Enter your email"
           value={formData.email}
           onChange={(e) => handleChange('email', e.target.value)}
-          className={errors.email ? 'border-red-500' : ''}
-        />
-        {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+          className={errors.email ? 'border-destructive' : ''}
+          />
+          {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
       </div>
       <div className="space-y-2">
-        <label htmlFor="password" className="text-sm font-medium text-gray-700">
+       <label htmlFor="password" className="text-sm font-medium text-foreground">
           Password
         </label>
         <Input
@@ -135,12 +135,12 @@ export function RegisterView() {
           placeholder="Enter your password"
           value={formData.password}
           onChange={(e) => handleChange('password', e.target.value)}
-          className={errors.password ? 'border-red-500' : ''}
-        />
-        {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+          className={errors.password ? 'border-destructive' : ''}
+          />
+          {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
       </div>
       <div className="space-y-2">
-        <label htmlFor="confirm-password" className="text-sm font-medium text-gray-700">
+        <label htmlFor="confirm-password" className="text-sm font-medium text-foreground">
           Confirm Password
         </label>
         <Input
@@ -149,18 +149,18 @@ export function RegisterView() {
           placeholder="Confirm your password"
           value={formData.confirmPassword}
           onChange={(e) => handleChange('confirmPassword', e.target.value)}
-          className={errors.confirmPassword ? 'border-red-500' : ''}
-        />
-        {errors.confirmPassword && (
-          <p className="text-xs text-red-500">{errors.confirmPassword}</p>
-        )}
+          className={errors.confirmPassword ? 'border-destructive' : ''}
+          />
+          {errors.confirmPassword && (
+            <p className="text-xs text-destructive">{errors.confirmPassword}</p>
+          )}
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Creating account...' : 'Create account'}
       </Button>
-      <p className="text-center text-sm text-gray-600">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{' '}
-        <Link to="/login" className="text-blue-600 hover:underline">
+        <Link to="/login" className="text-primary hover:underline">
           Sign in
         </Link>
       </p>

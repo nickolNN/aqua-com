@@ -7,8 +7,12 @@ export interface SettingsState {
   isLoading: boolean;
 }
 
+// Helper to check system preference
+const getSystemThemePreference = (): 'light' | 'dark' =>
+  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
 const initialState: SettingsState = {
-  theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? 'light',
+  theme: (localStorage.getItem('theme') as 'light' | 'dark') ?? getSystemThemePreference(),
   language: 'en',
   preferences: {},
   isLoading: false,
@@ -34,3 +38,9 @@ export const { setTheme, setLanguage, setPreferences, setSettingsLoading } = set
 export const selectSettingsTheme = (state: { settings: SettingsState }) => state.settings.theme;
 
 export const settingsReducer = settingsSlice.reducer;
+
+// Apply theme to document element
+export const applyTheme = () => {
+  const theme = (localStorage.getItem('theme') as 'light' | 'dark') ?? getSystemThemePreference();
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+};

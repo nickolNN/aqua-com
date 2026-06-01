@@ -6,6 +6,7 @@
 
 import { BarChart } from '@/components/charts/BarChart';
 import { PieChart } from '@/components/charts/PieChart';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { generateDashboardMetrics } from '@/mock-data/dashboard';
 
 export function DashboardView() {
@@ -15,8 +16,8 @@ export function DashboardView() {
     <div className="max-w-7xl mx-auto py-6 px-4">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">Overview of your CRM activity and performance</p>
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground">Overview of your CRM activity and performance</p>
       </div>
 
       {/* Summary Cards */}
@@ -75,38 +76,46 @@ export function DashboardView() {
       </div>
 
       {/* Recent Activity */}
-      <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Recent Activity</h3>
-        <div className="space-y-2">
-          {metrics.recent_activities.map((activity) => (
-            <div key={activity.id} className="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
-              <span className="text-sm text-gray-600">
-              {new Date(activity.date).toLocaleDateString()}
-              </span>
-              <span className="text-sm text-gray-900">
-              {activity.title}
-              </span>
-              <span className="text-xs text-gray-500 ml-auto">
-              {activity.type}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            {metrics.recent_activities.map((activity) => (
+              <div key={activity.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+                <span className="text-sm text-muted-foreground">
+                  {new Date(activity.date).toLocaleDateString()}
+                </span>
+                <span className="text-sm text-foreground">
+                  {activity.title}
+                </span>
+                <span className="text-xs text-muted-foreground ml-auto">
+                  {activity.type}
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
 function SummaryCard({ title, value, trend }: { title: string; value: number; trend?: number }) {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-      <p className="text-sm text-gray-600">{title}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
-      {trend !== undefined && (
-        <p className={`text-sm ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-          {trend > 0 ? '↑' : '↓'} {trend} vs last month
-        </p>
-      )}
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-2xl font-bold">{value}</p>
+        {trend !== undefined && (
+          <p className={`text-sm ${trend > 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {trend > 0 ? '↑' : '↓'} {trend} vs last month
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }

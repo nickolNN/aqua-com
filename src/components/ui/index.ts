@@ -6,3 +6,4 @@ export { Card } from './Card';
 export { Table } from './Table';
 export { Modal } from './Modal';
 export { Select } from './Select';
+export { Skeleton } from './Skeleton';

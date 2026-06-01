@@ -3,10 +3,25 @@ import { Link } from 'react-router-dom';
 import { useGetTasksQueryTyped } from '@/api/tasksApi';
 import { KanbanBoard } from '@/components/tasks/KanbanBoard';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 type ViewMode = 'list' | 'kanban';
 
 function TaskCard({ task }: { task: { id: string; title: string; status: string; description?: string; due_date?: string } }) {
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'secondary';
+      case 'in_progress':
+        return 'default';
+      case 'cancelled':
+        return 'outline';
+      default:
+        return 'default';
+    }
+  };
+
   return (
     <Link
       to={`/tasks/${task.id}`}
@@ -14,25 +29,15 @@ function TaskCard({ task }: { task: { id: string; title: string; status: string;
     >
       <div className="flex items-center justify-between">
         <span className="font-medium">{task.title}</span>
-        <span
-          className={`text-xs px-2 py-1 rounded ${
-            task.status === 'completed'
-              ? 'bg-green-500 text-white'
-              : task.status === 'in_progress'
-                ? 'bg-yellow-500 text-white'
-                : task.status === 'cancelled'
-                  ? 'bg-gray-500 text-white'
-                  : 'bg-blue-500 text-white'
-          }`}
-        >
+        <Badge variant={getStatusVariant(task.status)}>
           {task.status}
-        </span>
+        </Badge>
       </div>
       {task.description && (
-        <p className="text-sm text-gray-600 mt-2 truncate">{task.description}</p>
+        <p className="text-sm text-muted-foreground mt-2 truncate">{task.description}</p>
       )}
       {task.due_date && (
-        <p className="text-xs text-gray-500 mt-1">Due: {new Date(task.due_date).toLocaleDateString()}</p>
+        <p className="text-xs text-muted-foreground mt-1">Due: {new Date(task.due_date).toLocaleDateString()}</p>
       )}
     </Link>
   );
@@ -43,7 +48,12 @@ export function TasksView() {
   const { data: tasks, isLoading } = useGetTasksQueryTyped('');
 
   if (isLoading) {
-    return <div>Loading tasks...</div>;
+    return (
+      <div className="max-w-7xl mx-auto py-6 px-4">
+        <Skeleton className="h-8 w-32 mb-4" size="sm" />
+        <Skeleton className="h-64 w-full" />
+      </div>
+    );
   }
 
   if (viewMode === 'kanban') {

@@ -1,27 +1,49 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCreateCompanyMutation } from '@/api/companiesApi';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
+
+interface FormErrors {
+  name?: string;
+}
 
 export function CompanyForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
-  const [createCompany, { isSuccess, isLoading }] = useCreateCompanyMutation();
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [createCompany, { isSuccess }] = useCreateCompanyMutation();
 
   const [formData, setFormData] = useState({
-     name: isEdit ? 'Acme Corporation' : '',
-     industry: '',
-     website: '',
-     address: '',
-   });
+    name: isEdit ? 'Acme Corporation' : '',
+    industry: '',
+    website: '',
+    address: '',
+  });
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (value && errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!formData.name?.trim()) {
+      newErrors.name = 'Company name is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     try {
       await createCompany(formData).unwrap();
       if (isEdit) {
@@ -37,7 +59,7 @@ export function CompanyForm() {
   if (isSuccess) {
     return (
       <div className="max-w-4xl mx-auto py-6 px-4">
-        <div className="text-green-500">
+        <div className="text-primary">
           Company {isEdit ? 'updated' : 'created'} successfully!
         </div>
       </div>
@@ -52,95 +74,97 @@ export function CompanyForm() {
         </h1>
         <Link
           to={isEdit ? `/companies/${id}` : '/companies'}
-          className="text-blue-600 hover:text-blue-800 transition-colors"
+          className="text-primary hover:text-primary/80 transition-colors"
         >
           Cancel
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border rounded-md p-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-1">
-              Company Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{isEdit ? 'Edit Company' : 'Create Company'}</CardTitle>
+          <CardDescription>Company details and information</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium mb-1">
+                  Company Name *
+                </label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className={errors.name ? 'border-destructive' : ''}
+                />
+                {errors.name && (
+                  <p className="text-xs text-destructive mt-1">{errors.name}</p>
+                )}
+              </div>
 
-          <div>
-            <label htmlFor="industry" className="block text-sm font-medium mb-1">
-              Industry
-            </label>
-            <select
-              id="industry"
-              name="industry"
-              value={formData.industry}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select industry...</option>
-              <option value="Technology">Technology</option>
-              <option value="Healthcare">Healthcare</option>
-              <option value="Finance">Finance</option>
-              <option value="Education">Education</option>
-              <option value="Manufacturing">Manufacturing</option>
-              <option value="Retail">Retail</option>
-            </select>
-          </div>
+              <div>
+                <label htmlFor="industry" className="block text-sm font-medium mb-1">
+                  Industry
+                </label>
+                <Select value={formData.industry} onValueChange={(value) => setFormData((prev) => ({ ...prev, industry: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select industry..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Select industry...</SelectItem>
+                    <SelectItem value="Technology">Technology</SelectItem>
+                    <SelectItem value="Healthcare">Healthcare</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="Education">Education</SelectItem>
+                    <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                    <SelectItem value="Retail">Retail</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div>
-            <label htmlFor="website" className="block text-sm font-medium mb-1">
-              Website
-            </label>
-            <input
-              id="website"
-              name="website"
-              type="url"
-              value={formData.website}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <div>
+                <label htmlFor="website" className="block text-sm font-medium mb-1">
+                  Website
+                </label>
+                <Input
+                  id="website"
+                  name="website"
+                  type="url"
+                  value={formData.website}
+                  onChange={handleChange}
+                />
+              </div>
 
-          <div>
-            <label htmlFor="address" className="block text-sm font-medium mb-1">
-              Address
-            </label>
-            <input
-              id="address"
-              name="address"
-              type="text"
-              value={formData.address}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              <div>
+                <label htmlFor="address" className="block text-sm font-medium mb-1">
+                  Address
+                </label>
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <div className="flex gap-4">
+            <Button type="submit">
+              {isEdit ? 'Update Company' : 'Create Company'}
+            </Button>
+            <Button variant="outline" as="a" href={isEdit ? `/companies/${id}` : '/companies'}>
+              Cancel
+            </Button>
           </div>
-        </div>
-
-        <div className="mt-6 flex gap-4">
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {isLoading ? 'Saving...' : (isEdit ? 'Update Company' : 'Create Company')}
-          </button>
-          <Link
-            to={isEdit ? `/companies/${id}` : '/companies'}
-            className="px-4 py-2 border rounded-md hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </Link>
-        </div>
-      </form>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

@@ -1,12 +1,23 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useCreateTaskMutationTyped, useUpdateTaskMutationTyped } from '@/api/tasksApi';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Textarea } from '@/components/ui/Textarea';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
 import type { TaskCreateInput } from '@/types/entities';
+
+interface TaskFormErrors {
+  title?: string;
+  assigned_to?: string;
+}
 
 export function TaskForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
+  const [errors, setErrors] = useState<TaskFormErrors>({});
 
   const [createTask, createTaskState] = useCreateTaskMutationTyped();
   const [updateTask] = useUpdateTaskMutationTyped();
@@ -23,14 +34,27 @@ export function TaskForm() {
   });
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'title' && value) {
+      setErrors((prev) => ({ ...prev, title: undefined }));
+    }
+  };
+
+  const validate = (): boolean => {
+    const newErrors: TaskFormErrors = {};
+    if (!formData.title?.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
 
     const cleanedData: TaskCreateInput = {
       title: formData.title,
@@ -63,7 +87,7 @@ export function TaskForm() {
   if (isSuccess) {
     return (
       <div className="max-w-4xl mx-auto py-6 px-4">
-        <div className="text-green-500">
+        <div className="text-primary">
           Task {isEdit ? 'updated' : 'created'} successfully!
         </div>
       </div>
@@ -78,109 +102,113 @@ export function TaskForm() {
         </h1>
         <Link
           to={isEdit ? `/tasks/${id}` : '/tasks'}
-          className="text-blue-600 hover:text-blue-800 transition-colors"
+          className="text-primary hover:text-primary/80 transition-colors"
         >
           Cancel
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border rounded-md p-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium mb-1">
-              Title *
-            </label>
-            <input
-              id="title"
-              name="title"
-              type="text"
-              value={formData.title}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{isEdit ? 'Edit Task' : 'Create Task'}</CardTitle>
+          <CardDescription>Fill in the task details</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="title" className="block text-sm font-medium mb-1">
+                  Title *
+                </label>
+                <Input
+                  id="title"
+                  name="title"
+                  type="text"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                  className={errors.title ? 'border-destructive' : ''}
+                />
+                {errors.title && (
+                  <p className="text-xs text-destructive mt-1">{errors.title}</p>
+                )}
+              </div>
 
-          <div>
-            <label htmlFor="priority" className="block text-sm font-medium mb-1">
-              Priority
-            </label>
-            <select
-              id="priority"
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="urgent">Urgent</option>
-            </select>
-          </div>
+              <div>
+                <label htmlFor="priority" className="block text-sm font-medium mb-1">
+                  Priority
+                </label>
+                <Select value={formData.priority} onValueChange={(value) => setFormData((prev) => ({ ...prev, priority: value as 'low' | 'medium' | 'high' | 'urgent' }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div>
-            <label htmlFor="status" className="block text-sm font-medium mb-1">
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="open">Open</option>
-              <option value="in_progress">In Progress</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
-          </div>
+              <div>
+                <label htmlFor="status" className="block text-sm font-medium mb-1">
+                  Status
+                </label>
+                <Select value={formData.status} onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value as 'open' | 'in_progress' | 'completed' | 'cancelled' }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="open">Open</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-          <div>
-            <label htmlFor="assigned_to" className="block text-sm font-medium mb-1">
-              Assigned To
-            </label>
-            <input
-              id="assigned_to"
-              name="assigned_to"
-              type="text"
-              value={formData.assigned_to || ''}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+              <div>
+                <label htmlFor="assigned_to" className="block text-sm font-medium mb-1">
+                  Assigned To
+                </label>
+                <Input
+                  id="assigned_to"
+                  name="assigned_to"
+                  type="text"
+                  value={formData.assigned_to || ''}
+                  onChange={handleChange}
+                />
+              </div>
 
-          <div className="col-span-2">
-            <label htmlFor="description" className="block text-sm font-medium mb-1">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description || ''}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
-            />
-          </div>
-        </div>
-
-        <div className="mt-6 flex gap-4">
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            {isEdit ? 'Update Task' : 'Create Task'}
-          </button>
-          <Link
-            to={isEdit ? `/tasks/${id}` : '/tasks'}
-            className="px-4 py-2 border rounded-md hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </Link>
-        </div>
-      </form>
+              <div className="col-span-2">
+                <label htmlFor="description" className="block text-sm font-medium mb-1">
+                  Description
+                </label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description || ''}
+                  onChange={handleChange}
+                  rows={3}
+                />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter>
+            <div className="flex gap-4">
+              <Button type="submit">
+                {isEdit ? 'Update Task' : 'Create Task'}
+              </Button>
+              <Link
+                to={isEdit ? `/tasks/${id}` : '/tasks'}
+              >
+                Cancel
+              </Link>
+            </div>
+          </CardFooter>
+      </Card>
     </div>
   );
 }

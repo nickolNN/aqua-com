@@ -24,7 +24,7 @@ const columnColors: Record<KanbanColumn, string> = {
   open: 'bg-blue-50 dark:bg-blue-900/20',
   in_progress: 'bg-yellow-50 dark:bg-yellow-900/20',
   completed: 'bg-green-50 dark:bg-green-900/20',
-  cancelled: 'bg-gray-50 dark:bg-gray-900/20',
+   cancelled: 'bg-muted dark:bg-muted',
 };
 
 export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
@@ -38,7 +38,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
       case 'high': return 'bg-orange-500 text-white';
       case 'medium': return 'bg-yellow-500 text-white';
       case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-gray-500 text-white';
+      default: return 'bg-muted text-white';
     }
   };
 
@@ -109,10 +109,10 @@ const task = storedTasks?.tasks?.find((task: Task) => task.id === taskId);
                     </span>
                   </div>
                   {task.description && (
-                    <p className="text-sm text-gray-600 mt-2 truncate">{task.description}</p>
+                    <p className="text-sm text-muted-foreground mt-2 truncate">{task.description}</p>
                   )}
                   {task.due_date && (
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       Due: {new Date(task.due_date).toLocaleDateString()}
                     </p>
                   )}
