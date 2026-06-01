@@ -29,4 +29,8 @@ export const settingsSlice = createSlice({
 });
 
 export const { setTheme, setLanguage, setPreferences, setSettingsLoading } = settingsSlice.actions;
+
+// Selectors
+export const selectSettingsTheme = (state: { settings: SettingsState }) => state.settings.theme;
+
 export const settingsReducer = settingsSlice.reducer;
