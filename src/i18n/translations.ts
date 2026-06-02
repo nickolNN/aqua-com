@@ -11,6 +11,7 @@ export const en = {
   },
   // Auth
   auth: {
+    logout: 'Log out',
   },
   // Dashboard
   dashboard: {

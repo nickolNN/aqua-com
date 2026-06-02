@@ -1,5 +1,5 @@
-import { LayoutDashboard, User, Building2, CheckSquare, MessageSquare, Sun, Moon } from 'lucide-react';
-import { Outlet } from 'react-router-dom';
+import { LayoutDashboard, User, Building2, CheckSquare, MessageSquare, Sun, Moon, LogOut } from 'lucide-react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/layout/Sidebar';
 import GlobalSearchBar from './GlobalSearchBar';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,8 @@ import type { RootState } from '@/store/store';
 import SidebarNavItem from './SidebarNavItem';
 import { applyTheme } from '@/stores/settingsSlice';
 import { useEffect } from 'react';
+import { useLogoutMutation } from '@/api/api';
+import { logoutSuccess } from '@/stores/authSlice';
 
 /**
  * MainLayout component provides the main application layout with sidebar, header, and content area.
@@ -17,6 +19,8 @@ import { useEffect } from 'react';
 export function MainLayout() {
   const dispatch = useAppDispatch();
   const currentTheme = useSelector((state: RootState) => state.settings.theme);
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     applyTheme(currentTheme);
@@ -25,6 +29,17 @@ export function MainLayout() {
   const handleThemeToggle = () => {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     dispatch(setTheme(newTheme));
+  };
+
+  const handleLogout = async () => {
+    dispatch(logoutSuccess());
+    try {
+      await logout().unwrap();
+    } catch {
+      // ignore logout API error
+    }
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
@@ -53,6 +68,15 @@ export function MainLayout() {
             >
               {currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
               <span>{currentTheme === 'dark' ? 'dark' : 'light'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleLogout}
+              aria-label="Log out"
+              className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
+            >
+              <LogOut size={16} />
+              <span>Log out</span>
             </button>
           </SidebarFooter>
         </Sidebar>
