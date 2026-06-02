@@ -1,7 +1,7 @@
 import { defineConfig, PlaywrightTestConfig } from '@playwright/test';
 
 const config: PlaywrightTestConfig = defineConfig({
-  testDir: './src/frontend/tests/e2e',
+  testDir: './tests/e2e',
   testMatch: '**/*.spec.ts',
   use: {
     browserName: 'chromium',
@@ -20,17 +20,16 @@ const config: PlaywrightTestConfig = defineConfig({
   reporter: [['list'], ['html', { open: 'always' }]],
   webServer: [
     {
-      command: 'cd src/frontend && npm run dev',
+      command: 'pnpm dev',
       port: 3000,
-      reuseExistingServer: true,
-      timeout: 120000,
+      reuseExisting: true,
       reuseExistingServerPort: true,
-      environment: { NODE_ENV: 'test' },
+      timeout: 120000,
     },
   ],
   testIgnore: [],
-  outputDir: './src/frontend/tests/test-results',
-  snapshotDir: './src/frontend/tests/e2e/snapshots',
+  outputDir: './tests/test-results',
+  snapshotDir: './tests/e2e/snapshots',
 });
 
 export default config;

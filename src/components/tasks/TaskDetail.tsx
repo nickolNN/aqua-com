@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/Badge';
-import type { Task } from '@/types/entities';
+import type { Task, TaskSubtask, TaskDependency } from '@/types/entities';
 
 interface TaskDetailProps {
   task: Task;
@@ -7,7 +7,7 @@ interface TaskDetailProps {
 }
 
 export function TaskDetail({ task, onClose }: TaskDetailProps) {
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = (priority: string): string => {
     switch (priority) {
       case 'urgent': return 'bg-red-500 text-white';
       case 'high': return 'bg-orange-500 text-white';
@@ -17,7 +17,7 @@ export function TaskDetail({ task, onClose }: TaskDetailProps) {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string): string => {
     switch (status) {
       case 'completed': return 'bg-green-500 text-white';
       case 'in_progress': return 'bg-yellow-500 text-white';
@@ -30,7 +30,7 @@ export function TaskDetail({ task, onClose }: TaskDetailProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{task.title}</h3>
-        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">&times;</button>
+        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">×</button>
       </div>
 
       <div className="flex gap-2">
@@ -56,12 +56,42 @@ export function TaskDetail({ task, onClose }: TaskDetailProps) {
         )}
       </div>
 
+      {task.parent_task_id && (
+        <div>
+          <h4 className="font-medium mb-2">Parent Task</h4>
+          <p className="text-sm text-gray-600">{task.parent_task_id}</p>
+        </div>
+      )}
+
+      {task.subtasks && task.subtasks.length > 0 && (
+        <div>
+          <h4 className="font-medium mb-2">Subtasks</h4>
+          <ul className="space-y-2">
+            {task.subtasks.map((subtask: TaskSubtask) => (
+              <li key={subtask.id} className="text-sm text-gray-600">
+                <span className="inline-flex items-center gap-2">
+                  <Badge className={getStatusColor(subtask.status)}>
+                    {subtask.status}
+                  </Badge>
+                  <span>{subtask.title}</span>
+                  {subtask.priority && (
+                    <Badge className={getPriorityColor(subtask.priority)}>
+                      {subtask.priority}
+                    </Badge>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {task.dependencies?.length > 0 && (
         <div>
           <h4 className="font-medium mb-2">Dependencies</h4>
           <ul className="space-y-1">
-            {task.dependencies.map((dep, i) => (
-              <li key={i} className="text-sm text-gray-600">
+            {task.dependencies.map((dep: TaskDependency) => (
+              <li key={`${dep.predecessor_task_id}-${dep.dependency_type}`} className="text-sm text-gray-600">
                 {dep.dependency_type} - {dep.predecessor_task_id}
               </li>
             ))}

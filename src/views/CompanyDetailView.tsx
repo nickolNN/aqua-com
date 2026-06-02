@@ -44,7 +44,7 @@ export function CompanyDetailView() {
         <h1 className="ml-3 text-2xl font-bold">Company Details</h1>
         <div className="flex-1" />
         <Link
-            to={`/companies/${id}/`}
+            to={`/companies/${id}`}
           >
             <Button>Edit Company</Button>
           </Link>

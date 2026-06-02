@@ -4,7 +4,8 @@
 // Intercepts RTK Query requests and returns mock data instead of real API calls.
 // =====================================================
 
-import { generateContacts, generateCompanies, generateTasks, generateActivities, generateContact, generateCompany, generateTask, generateActivity } from '../generators';
+import { generateContacts, generateCompanies, generateActivities, generateContact, generateCompany, generateActivity } from '../generators';
+import * as persistence from '../persistence/index';
 
 /**
  * Handle a GET request for mock data
@@ -50,7 +51,7 @@ export function handleCreateMockRequest(url: string, body: Record<string, unknow
 
   if (!entity) return null;
 
-  const result = addEntityToStore(entity, body);
+  const result = persistence.addEntityToStore(entity as 'tasks', body);
   return result;
 }
 
@@ -66,7 +67,7 @@ export function handleUpdateMockRequest(url: string, body: Record<string, unknow
   const entity = pathSegments.find((seg) => ['contacts', 'companies', 'tasks', 'activities'].includes(seg));
   if (!entity) return null;
 
-  return updateEntityInStore(entity, id, body);
+  return persistence.updateEntityInStore(entity as 'tasks', id, body);
 }
 
 /**
@@ -81,7 +82,7 @@ export function handleDeleteMockRequest(url: string): boolean {
   const entity = pathSegments.find((seg) => ['contacts', 'companies', 'tasks', 'activities'].includes(seg));
   if (!entity) return false;
 
-  return deleteEntityFromStore(entity, id);
+  return persistence.deleteEntityFromStore(entity as 'tasks', id);
 }
 
 /**
@@ -137,10 +138,11 @@ export function getMockCompanies(): Record<string, unknown>[] {
 }
 
 /**
- * Get mock tasks
+ * Get mock tasks with localStorage persistence
  */
 export function getMockTasks(): Record<string, unknown>[] {
-  return generateTasks(10) as unknown as Record<string, unknown>[];
+  const storedData = persistence.getMockDataWithPersistence('tasks');
+  return (storedData || []) as unknown as Record<string, unknown>[];
 }
 
 /**
@@ -151,8 +153,8 @@ export function getMockActivities(): Record<string, unknown>[] {
 }
 
 /**
-  * Search entities by term
-  */
+   * Search/filter entities by term
+   */
 function searchEntities(_entity: string, term: string, data: Record<string, unknown>[]): Record<string, unknown>[] {
   return data.filter((item) => {
     const itemStr = JSON.stringify(item).toLowerCase();
@@ -161,21 +163,20 @@ function searchEntities(_entity: string, term: string, data: Record<string, unkn
 }
 
 /**
-  * Update entity in store
-  */
+   * Update entity in store with localStorage persistence
+   */
 export function updateEntityInStore(entity: string, _id: string, body: Record<string, unknown>): Record<string, unknown> {
-  const newItem = addEntityToStore(entity, body);
-  return newItem;
+  return persistence.updateEntityInStore(entity as 'tasks', _id, body) || {};
 }
 
 /**
- * Add entity to store
+ * Add entity to store with localStorage persistence and cache invalidation
  */
 export function addEntityToStore(entity: string, _body: Record<string, unknown>): Record<string, unknown> {
   const keys: Record<string, () => Record<string, unknown>> = {
     contacts: () => generateContact() as unknown as Record<string, unknown>,
     companies: () => generateCompany() as unknown as Record<string, unknown>,
-    tasks: () => generateTask() as unknown as Record<string, unknown>,
+    tasks: () => generateActivity() as unknown as Record<string, unknown>,
     activities: () => generateActivity() as unknown as Record<string, unknown>,
   };
 

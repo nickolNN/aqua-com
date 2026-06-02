@@ -226,4 +226,14 @@ export const handlers = [
       error: null,
     });
   }),
+
+  // POST /api/auth/password-reset
+  http.post('/api/auth/password-reset', async ({ request }) => {
+    const body = await getRequestBody(request);
+    return HttpResponse.json({
+      success: true,
+      data: { message: 'Reset email sent' },
+      error: null,
+    });
+  }),
 ];

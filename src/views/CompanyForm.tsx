@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useCreateCompanyMutation } from '@/api/companiesApi';
+import { useCreateCompanyMutation, useGetCompanyQuery, useUpdateCompanyMutation } from '@/api/companiesApi';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -13,16 +13,45 @@ interface FormErrors {
 export function CompanyForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const isEdit = !!id;
+  const isNew = id === 'new';
+  const isEdit = !!id && id !== 'new';
+
   const [errors, setErrors] = useState<FormErrors>({});
-  const [createCompany, { isSuccess }] = useCreateCompanyMutation();
+  const [createCompany] = useCreateCompanyMutation();
+  const [updateCompany] = useUpdateCompanyMutation();
 
   const [formData, setFormData] = useState({
-    name: isEdit ? 'Acme Corporation' : '',
+    name: isNew ? '' : 'Acme Corporation',
     industry: '',
     website: '',
     address: '',
   });
+
+  // Call RTK Query hook unconditionally at top level
+  const companyIdRef = useRef(id);
+  const companyResult = useGetCompanyQuery(companyIdRef.current as string, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Update ref when ID changes
+  useEffect(() => {
+    companyIdRef.current = id;
+  }, [id]);
+
+  // Load existing company data when editing
+  useEffect(() => {
+    if (isEdit && id && companyResult.data) {
+      const company = companyResult.data;
+      if (company) {
+        setFormData({
+          name: company.name || '',
+          industry: company.industry || '',
+          website: company.website || '',
+          address: company.address || '',
+        });
+      }
+    }
+  }, [isEdit, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -45,26 +74,17 @@ export function CompanyForm() {
     e.preventDefault();
     if (!validate()) return;
     try {
-      await createCompany(formData).unwrap();
-      if (isEdit) {
-        navigate(`/companies/${id}`);
+      if (isEdit && id) {
+        await updateCompany({ id, data: formData }).unwrap();
+        navigate('/companies');
       } else {
+        await createCompany(formData).unwrap();
         navigate('/companies');
       }
     } catch (err) {
       console.error('Failed to save company:', err);
     }
   };
-
-  if (isSuccess) {
-    return (
-      <div className="max-w-4xl mx-auto py-6 px-4">
-        <div className="text-primary">
-          Company {isEdit ? 'updated' : 'created'} successfully!
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-4xl mx-auto py-6 px-4">
@@ -159,9 +179,12 @@ export function CompanyForm() {
             <Button type="submit">
               {isEdit ? 'Update Company' : 'Create Company'}
             </Button>
-            <Button variant="outline" as="a" href={isEdit ? `/companies/${id}` : '/companies'}>
+            <Link
+              to={isEdit ? `/companies/${id}` : '/companies'}
+              className="text-primary hover:text-primary/80 transition-colors"
+            >
               Cancel
-            </Button>
+            </Link>
           </div>
         </CardFooter>
       </Card>

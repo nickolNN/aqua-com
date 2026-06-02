@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useCreateContactMutation } from '@/api/contactsApi';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useCreateContactMutation, useGetContactQuery, useUpdateContactMutation } from '@/api/contactsApi';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -14,19 +14,48 @@ interface FormErrors {
 }
 
 export function ContactForm() {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const isEdit = !!id;
+  const isNew = id === 'new';
+  const isEdit = !!id && id !== 'new';
+
   const [errors, setErrors] = useState<FormErrors>({});
-  const [createContact, { isSuccess, isLoading }] = useCreateContactMutation();
+  const [createContact, { isLoading: isCreating }] = useCreateContactMutation();
+  const [updateContact] = useUpdateContactMutation();
 
   const [formData, setFormData] = useState({
-    first_name: isEdit ? 'John' : '',
-    last_name: isEdit ? 'Doe' : '',
-    email: isEdit ? 'john.doe@example.com' : '',
+    first_name: isNew ? '' : 'John',
+    last_name: isNew ? '' : 'Doe',
+    email: isNew ? '' : 'john.doe@example.com',
     phone: '',
     company_id: '',
   });
+
+  // Call RTK Query hook unconditionally at top level
+  const idRef = useRef(id);
+  const contactResult = useGetContactQuery(idRef.current as string, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  // Update ref when ID changes (triggers re-fetch)
+  useEffect(() => {
+    idRef.current = id;
+  }, [id]);
+
+  // Load existing contact data when editing
+  useEffect(() => {
+    if (isEdit && id && contactResult.data) {
+      const contact = contactResult.data;
+      if (contact) {
+        setFormData({
+          first_name: contact.first_name || '',
+          last_name: contact.last_name || '',
+          email: contact.email || '',
+          phone: contact.phone || '',
+          company_id: contact.company_id || '',
+        });
+      }
+    }
+  }, [isEdit, id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,26 +86,15 @@ export function ContactForm() {
     e.preventDefault();
     if (!validate()) return;
     try {
-      await createContact(formData).unwrap();
-      if (isEdit) {
-        navigate(`/contacts/${id}`);
+      if (isEdit && id) {
+        await updateContact({ id, data: formData }).unwrap();
       } else {
-        navigate('/contacts');
+        await createContact(formData).unwrap();
       }
     } catch (err) {
       console.error('Failed to save contact:', err);
     }
   };
-
-  if (isSuccess) {
-    return (
-      <div className="max-w-4xl mx-auto py-6 px-4">
-        <div className="text-primary">
-          Contact {isEdit ? 'updated' : 'created'} successfully!
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-4xl mx-auto py-6 px-4">
@@ -184,12 +202,15 @@ export function ContactForm() {
         </CardContent>
         <CardFooter>
           <div className="flex gap-4">
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : (isEdit ? 'Update Contact' : 'Create Contact')}
+            <Button type="submit" disabled={isCreating}>
+              {isCreating ? 'Saving...' : (isEdit ? 'Update Contact' : 'Create Contact')}
             </Button>
-            <Button variant="outline" as="a" href={isEdit ? `/contacts/${id}` : '/contacts'}>
+            <Link
+              to={isEdit ? `/contacts/${id}` : '/contacts'}
+              className="text-primary hover:text-primary/80 transition-colors"
+            >
               Cancel
-            </Button>
+            </Link>
           </div>
         </CardFooter>
       </Card>

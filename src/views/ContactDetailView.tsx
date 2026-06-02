@@ -42,7 +42,7 @@ export function ContactDetailView() {
         <h1 className="ml-3 text-2xl font-bold">Contact Details</h1>
         <div className="flex-1" />
          <Link
-            to={`/contacts/${id}/`}
+            to={`/contacts/${id}`}
           >
             <Button>Edit Contact</Button>
           </Link>

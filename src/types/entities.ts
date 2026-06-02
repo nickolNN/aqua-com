@@ -23,6 +23,14 @@ export interface Company {
   updated_at: string;
 }
 
+// Task subtask type
+export interface TaskSubtask {
+  id: string;
+  title: string;
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+}
+
 // Task dependency type
 export interface TaskDependency {
   predecessor_task_id: string;
@@ -42,9 +50,16 @@ export interface Task {
   created_by: string;
   parent_task_id?: string;
   subtask_count: number;
+  subtasks?: TaskSubtask[];
   dependencies: TaskDependency[];
   created_at: string;
   updated_at: string;
+}
+
+// Task dependency input type
+export interface TaskDependencyInput {
+  predecessor_task_id: string;
+  dependency_type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
 }
 
 // Task creation input type
@@ -56,6 +71,8 @@ export interface TaskCreateInput {
   due_date?: string;
   assigned_to?: string;
   parent_task_id?: string;
+  subtasks?: TaskDependencyInput[];
+  dependencies?: TaskDependencyInput[];
 }
 
 // Task update input type
@@ -67,10 +84,8 @@ export interface TaskUpdateInput {
   due_date?: string;
   assigned_to?: string;
   parent_task_id?: string;
-  dependency?: {
-    predecessor_task_id: string;
-    dependency_type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
-  };
+  subtasks?: TaskDependencyInput[];
+  dependencies?: TaskDependencyInput[];
 }
 
 // Activity entity type

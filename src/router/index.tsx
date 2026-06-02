@@ -33,15 +33,16 @@ export const router = createBrowserRouter([
       { path: '/', element: <DashboardView /> },
       // Contacts
       { path: '/contacts', element: <ContactsView /> },
-      { path: '/contacts/:id', element: <ContactDetailView /> },
-      { path: '/contacts/new', element: <ContactForm /> },
+      { path: '/contacts/:id', element: <ContactForm /> },
+      { path: '/contacts/:id/details', element: <ContactDetailView /> },
       // Companies
       { path: '/companies', element: <CompaniesView /> },
-      { path: '/companies/:id', element: <CompanyDetailView /> },
-      { path: '/companies/new', element: <CompanyForm /> },
+      { path: '/companies/:id', element: <CompanyForm /> },
+      { path: '/companies/:id/details', element: <CompanyDetailView /> },
       // Tasks
       { path: '/tasks', element: <TasksView /> },
-      { path: '/tasks/:id', element: <TaskDetailView /> },
+      { path: '/tasks/:id', element: <TaskForm /> },
+      { path: '/tasks/:id/details', element: <TaskDetailView /> },
       { path: '/tasks/new', element: <TaskForm /> },
       // Activities
       { path: '/activities', element: <ActivitiesView /> },
