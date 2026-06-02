@@ -21,7 +21,7 @@ test.describe('Password Reset Tests', () => {
     await page.locator('button[type="submit"]').click();
 
     // Verify validation errors appear
-    await expect(page.locator('p.text-xs.text-red-500', { hasText: 'Email is required' })).toBeVisible();
+    await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Email is required' })).toBeVisible();
   });
 
   test('password reset form validates email format', async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe('Password Reset Tests', () => {
     await page.locator('button[type="submit"]').click();
 
     // Verify error message
-    await expect(page.locator('p.text-xs.text-red-500', { hasText: 'Invalid email format' })).toBeVisible();
+    await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Invalid email format' })).toBeVisible();
   });
 
   test('password reset shows success state', async ({ page }) => {

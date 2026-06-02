@@ -11,6 +11,18 @@ export async function setupTestEnvironment(page: Page) {
   await page.evaluate(() => {
     localStorage.clear();
   });
+  // Enable mock mode for RTK Query interceptor
+  await page.evaluate(async () => {
+    try {
+      const mod = await import('/src/api');
+      mod.setMockMode(true);
+    } catch {
+      // Fallback: try to set mock mode on window
+      if (typeof window.__setMockMode === 'function') {
+        window.__setMockMode(true);
+      }
+    }
+  });
 }
 
 /**
@@ -30,8 +42,10 @@ export async function login(page: Page) {
   // Submit login form
   await page.locator('button[type="submit"]').click();
 
-  // Wait for navigation to complete
-  await page.waitForURL(/\/(login|dashboard)/, { timeout: 10000 });
+  // Wait for token to be stored (indicates login success)
+  await page.waitForFunction(() => localStorage.getItem('token'), { timeout: 10000 });
+   // Wait for navigation to dashboard
+    await page.waitForURL((url) => !url.toString().endsWith('login'), { timeout: 5000 });
 }
 
 /**

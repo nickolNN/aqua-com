@@ -29,7 +29,7 @@ test.describe('Login Tests', () => {
     await page.locator('button[type="submit"]').click();
 
     // Verify error message is displayed
-    await expect(page.locator('.rounded-md.border.bg-red-50')).toBeVisible();
+    await expect(page.locator('div.rounded-md.border.border-destructive')).toBeVisible();
   });
 
   test('login form validation shows errors for empty fields', async ({ page }) => {
@@ -39,8 +39,8 @@ test.describe('Login Tests', () => {
     await page.locator('button[type="submit"]').click();
 
     // Verify validation errors appear
-    await expect(page.locator('p.text-xs.text-red-500', { hasText: 'Email is required' })).toBeVisible();
-    await expect(page.locator('p.text-xs.text-red-500', { hasText: 'Password is required' })).toBeVisible();
+    await expect(page.locator('p.text-xs.text-destructive', { hasText: 'Email is required' })).toBeVisible();
+    await expect(page.locator('p.text-xs.text-destructive', { hasText: 'Password is required' })).toBeVisible();
   });
 
   test('login form validation shows error for invalid email format', async ({ page }) => {
@@ -54,6 +54,6 @@ test.describe('Login Tests', () => {
     await page.locator('button[type="submit"]').click();
 
     // Verify error message
-    await expect(page.locator('p.text-xs.text-red-500', { hasText: 'Invalid email format' })).toBeVisible();
+    await expect(page.locator('p.text-xs.text-destructive', { hasText: 'Invalid email format' })).toBeVisible();
   });
 });

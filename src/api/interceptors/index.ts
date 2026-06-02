@@ -211,25 +211,19 @@ export function interceptMockRequest(
   // Auth endpoints
   // =====================================================
 
-  // POST /auth/login
+ // POST /auth/login
   if (url === '/auth/login' && method === 'POST') {
     return {
-      success: true,
-      data: {
-        token: 'mock-jwt-token',
-        user: { id: 'mock-user-id', email: 'user@example.com', role: 'admin' },
-      },
+      token: 'mock-jwt-token',
+      user: { id: 'mock-user-id', email: 'user@example.com', role: 'admin' },
     };
   }
 
   // POST /auth/register
   if (url === '/auth/register' && method === 'POST') {
     return {
-      success: true,
-      data: {
-        token: 'mock-jwt-token',
-        user: { id: 'mock-user-id', email: 'user@example.com', role: 'user' },
-      },
+      token: 'mock-jwt-token',
+      user: { id: 'mock-user-id', email: 'user@example.com', role: 'user' },
     };
   }
 

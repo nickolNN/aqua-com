@@ -7,16 +7,16 @@ const config: PlaywrightTestConfig = defineConfig({
     browserName: 'chromium',
     headless: true,
     viewport: { width: 1920, height: 1080 },
-    actionTimeout: 10000,
-    navigationTimeout: 15000,
+    actionTimeout: 200,
+    navigationTimeout: 1000,
     baseURL: 'http://localhost:3000',
     trace: 'retain',
     video: 'on',
   },
-  expect: {
-    timeout: 10000,
+ expect: {
+    timeout: 1000,
   },
-  retries: 3,
+  retries: 1,
   reporter: [['list'], ['html', { open: 'always' }]],
   webServer: [
     {
@@ -24,7 +24,7 @@ const config: PlaywrightTestConfig = defineConfig({
       port: 3000,
       reuseExisting: true,
       reuseExistingServerPort: true,
-      timeout: 120000,
+      timeout: 12000,
     },
   ],
   testIgnore: [],
