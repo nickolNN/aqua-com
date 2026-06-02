@@ -6,6 +6,14 @@ export default {
   theme: {
     extend: {
       colors: {
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        destructive: 'var(--destructive)',
+        accent: 'var(--accent)',
+        'primary-foreground': 'var(--primary-foreground)',
+        'secondary-foreground': 'var(--secondary-foreground)',
+        'destructive-foreground': 'var(--destructive-foreground)',
+        'accent-foreground': 'var(--accent-foreground)',
         border: 'hsl(var(--border))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
