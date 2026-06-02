@@ -1,6 +1,6 @@
 import { LayoutDashboard, User, Building2, CheckSquare, MessageSquare, Sun, Moon, LogOut } from 'lucide-react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Sidebar, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/layout/Sidebar';
+import { Sidebar, SidebarHeader, SidebarContent } from '@/components/layout/Sidebar';
 import GlobalSearchBar from './GlobalSearchBar';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -55,30 +55,10 @@ export function MainLayout() {
               <SidebarNavItem to="/companies" label="Companies" icon={<Building2 size={16} />} />
               <SidebarNavItem to="/tasks" label="Tasks" icon={<CheckSquare size={16} />} />
               <SidebarNavItem to="/activities" label="Activities" icon={<MessageSquare size={16} />} />
+              <SidebarNavItem onClick={handleThemeToggle} icon={currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />} label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} />
+              <SidebarNavItem onClick={handleLogout} icon={<LogOut size={16} />} label="Log out" />
             </nav>
           </SidebarContent>
-          <SidebarFooter>
-            <button
-              type="button"
-              onClick={handleThemeToggle}
-              aria-label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              role="switch"
-              aria-checked={currentTheme === 'dark'}
-              className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
-            >
-              {currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
-              <span>{currentTheme === 'dark' ? 'dark' : 'light'}</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleLogout}
-              aria-label="Log out"
-              className="flex items-center gap-2 text-sm text-sidebar-foreground hover:text-sidebar-accent-foreground transition-colors"
-            >
-              <LogOut size={16} />
-              <span>Log out</span>
-            </button>
-          </SidebarFooter>
         </Sidebar>
       </aside>
 
