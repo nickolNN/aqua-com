@@ -7,123 +7,219 @@
 # Test info
 
 - Name: login.spec.ts >> Login Tests >> login with invalid credentials shows error
-- Location: src/frontend/tests/e2e/login.spec.ts:21:3
+- Location: tests/e2e/login.spec.ts:21:3
 
 # Error details
 
 ```
-Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
+TimeoutError: locator.fill: Timeout 200ms exceeded.
 Call log:
-  - navigating to "http://localhost:3000/", waiting until "load"
+  - waiting for locator('#email')
 
 ```
 
 # Page snapshot
 
 ```yaml
-- generic [ref=e3]:
-  - generic [ref=e6]:
-    - heading "Не удается получить доступ к сайту" [level=1] [ref=e7]
-    - paragraph [ref=e8]:
-      - text: Сайт
-      - strong [ref=e9]: localhost
-      - text: не позволяет установить соединение.
-    - generic [ref=e10]:
-      - paragraph [ref=e11]: "Попробуйте сделать следующее:"
-      - list [ref=e12]:
-        - listitem [ref=e13]: Проверьте подключение к интернету.
-        - listitem [ref=e14]:
-          - link "Проверьте настройки прокси-сервера и брандмауэра" [ref=e15] [cursor=pointer]:
-            - /url: "#buttons"
-          - text: .
-    - generic [ref=e16]: ERR_CONNECTION_REFUSED
-  - generic [ref=e17]:
-    - button "Перезагрузить" [ref=e19] [cursor=pointer]
-    - button "Сведения" [ref=e20] [cursor=pointer]
+- generic [ref=f1e3]:
+  - complementary [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: Aqua CRM
+      - navigation [ref=f1e9]:
+        - link "Dashboard" [ref=f1e10] [cursor=pointer]:
+          - /url: /
+        - link "Contacts" [ref=f1e18] [cursor=pointer]:
+          - /url: /contacts
+        - link "Companies" [ref=f1e24] [cursor=pointer]:
+          - /url: /companies
+        - link "Tasks" [ref=f1e31] [cursor=pointer]:
+          - /url: /tasks
+        - link "Activities" [ref=f1e37] [cursor=pointer]:
+          - /url: /activities
+        - button "Switch to dark mode" [ref=f1e42]
+        - button "Log out" [ref=f1e51]
+  - generic [ref=f1e57]:
+    - textbox "Global search" [ref=f1e60]:
+      - /placeholder: Search contacts, tasks, companies...
+    - main [ref=f1e61]:
+      - generic [ref=f1e62]:
+        - generic [ref=f1e63]:
+          - heading "Dashboard" [level=1] [ref=f1e64]
+          - paragraph [ref=f1e65]: Overview of your CRM activity and performance
+        - generic [ref=f1e66]:
+          - generic [ref=f1e67]:
+            - paragraph [ref=f1e69]: Total Contacts
+            - generic [ref=f1e70]:
+              - paragraph [ref=f1e71]: "120"
+              - paragraph [ref=f1e72]: ↑ 20 vs last month
+          - generic [ref=f1e73]:
+            - paragraph [ref=f1e75]: Open Tasks
+            - generic [ref=f1e76]:
+              - paragraph [ref=f1e77]: "9"
+              - paragraph [ref=f1e78]: ↓ 0 vs last month
+          - generic [ref=f1e79]:
+            - paragraph [ref=f1e81]: Activities This Week
+            - paragraph [ref=f1e83]: "35"
+          - generic [ref=f1e84]:
+            - paragraph [ref=f1e86]: Active Deals
+            - generic [ref=f1e87]:
+              - paragraph [ref=f1e88]: "12"
+              - paragraph [ref=f1e89]: ↑ 5 vs last month
+        - generic [ref=f1e90]:
+          - generic [ref=f1e91]:
+            - heading "Task Status Breakdown" [level=3] [ref=f1e92]
+            - generic [ref=f1e93]:
+              - generic [ref=f1e95]:
+                - generic [ref=f1e96]: Completed
+                - generic [ref=f1e97]: 15 (33.3%)
+              - generic [ref=f1e101]:
+                - generic [ref=f1e102]: Cancelled
+                - generic [ref=f1e103]: 11 (24.4%)
+              - generic [ref=f1e107]:
+                - generic [ref=f1e108]: In Progress
+                - generic [ref=f1e109]: 10 (22.2%)
+              - generic [ref=f1e113]:
+                - generic [ref=f1e114]: Open
+                - generic [ref=f1e115]: 9 (20.0%)
+          - generic [ref=f1e118]:
+            - heading "Activity Type Breakdown" [level=3] [ref=f1e119]
+            - generic [ref=f1e120]:
+              - generic [ref=f1e122]:
+                - generic [ref=f1e123]: Call
+                - generic [ref=f1e124]: 7 (20.0%)
+              - generic [ref=f1e128]:
+                - generic [ref=f1e129]: Note
+                - generic [ref=f1e130]: 7 (20.0%)
+              - generic [ref=f1e134]:
+                - generic [ref=f1e135]: Meeting
+                - generic [ref=f1e136]: 6 (17.1%)
+              - generic [ref=f1e140]:
+                - generic [ref=f1e141]: Other
+                - generic [ref=f1e142]: 5 (14.3%)
+              - generic [ref=f1e146]:
+                - generic [ref=f1e147]: Email
+                - generic [ref=f1e148]: 5 (14.3%)
+        - generic [ref=f1e151]:
+          - generic [ref=f1e152]:
+            - heading "Task Priority Distribution" [level=3] [ref=f1e153]
+            - generic [ref=f1e162]:
+              - generic [ref=f1e163]:
+                - generic [ref=f1e165]: Medium (15)
+                - generic [ref=f1e166]: (33.3%)
+              - generic [ref=f1e167]:
+                - generic [ref=f1e169]: Low (13)
+                - generic [ref=f1e170]: (28.9%)
+              - generic [ref=f1e171]:
+                - generic [ref=f1e173]: High (11)
+                - generic [ref=f1e174]: (24.4%)
+              - generic [ref=f1e175]:
+                - generic [ref=f1e177]: Urgent (6)
+                - generic [ref=f1e178]: (13.3%)
+          - generic [ref=f1e179]:
+            - heading "Pipeline Stages" [level=3] [ref=f1e180]
+            - generic [ref=f1e190]:
+              - generic [ref=f1e191]:
+                - generic [ref=f1e193]: Closed (6)
+                - generic [ref=f1e194]: (40.0%)
+              - generic [ref=f1e195]:
+                - generic [ref=f1e197]: Prospect (3)
+                - generic [ref=f1e198]: (20.0%)
+              - generic [ref=f1e199]:
+                - generic [ref=f1e201]: Qualified (3)
+                - generic [ref=f1e202]: (20.0%)
+              - generic [ref=f1e203]:
+                - generic [ref=f1e205]: Proposal (2)
+                - generic [ref=f1e206]: (13.3%)
+              - generic [ref=f1e207]:
+                - generic [ref=f1e209]: Negotiation (1)
+                - generic [ref=f1e210]: (6.7%)
+        - generic [ref=f1e211]:
+          - paragraph [ref=f1e213]: Recent Activity
+          - generic [ref=f1e215]:
+            - generic [ref=f1e216]:
+              - generic [ref=f1e217]: 9/17/2026
+              - generic [ref=f1e218]: Email correspondence
+              - generic [ref=f1e219]: meeting
+            - generic [ref=f1e220]:
+              - generic [ref=f1e221]: 10/6/2026
+              - generic [ref=f1e222]: Follow-up call
+              - generic [ref=f1e223]: task
+            - generic [ref=f1e224]:
+              - generic [ref=f1e225]: 9/10/2026
+              - generic [ref=f1e226]: Team standup
+              - generic [ref=f1e227]: call
+            - generic [ref=f1e228]:
+              - generic [ref=f1e229]: 7/25/2026
+              - generic [ref=f1e230]: Project kickoff
+              - generic [ref=f1e231]: deal
+            - generic [ref=f1e232]:
+              - generic [ref=f1e233]: 9/10/2026
+              - generic [ref=f1e234]: Product demo
+              - generic [ref=f1e235]: deal
 ```
 
 # Test source
 
 ```ts
-  1  | import { Page } from '@playwright/test';
-  2  | 
-  3  | /**
-  4  |  * Fixture: Setup test environment
-  5  |  * Clears localStorage and navigates to the app's base URL
-  6  |  */
-  7  | export async function setupTestEnvironment(page: Page) {
-  8  |   // Navigate to the app's base URL first (so localStorage is accessible)
-> 9  |   await page.goto('/');
-     |              ^ Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
-  10 |   // Clear localStorage for isolation between tests
-  11 |   await page.evaluate(() => {
-  12 |     localStorage.clear();
-  13 |   });
-  14 | }
+  1  | import { test, expect } from '@playwright/test';
+  2  | import { login, setupTestEnvironment } from './fixtures/setup';
+  3  | 
+  4  | test.describe('Login Tests', () => {
+  5  |   test.beforeEach(async ({ page }) => {
+  6  |     await setupTestEnvironment(page);
+  7  |   });
+  8  | 
+  9  |   test('login with valid credentials', async ({ page }) => {
+  10 |     await login(page);
+  11 | 
+  12 |     // Verify navigation to dashboard
+  13 |     await expect(page).toHaveURL('/');
+  14 |     await expect(page.locator('h1')).toBeVisible();
   15 | 
-  16 | /**
-  17 |  * Fixture: Login with valid credentials
-  18 |  * @returns {Promise<void>}
-  19 |  */
-  20 | export async function login(page: Page) {
-  21 |   // Navigate to login page
-  22 |   await page.goto('/login');
+  16 |     // Verify token was stored in localStorage
+  17 |     const token = await page.evaluate(() => localStorage.getItem('token'));
+  18 |     expect(token).toBeTruthy();
+  19 |   });
+  20 | 
+  21 |   test('login with invalid credentials shows error', async ({ page }) => {
+  22 |     await login(page);
   23 | 
-  24 |   // Fill in valid credentials
-  25 |   await page.locator('#email').click();
-  26 |   await page.locator('#email').fill('test@example.com');
-  27 |   await page.locator('#password').click();
-  28 |   await page.locator('#password').fill('password123');
-  29 | 
-  30 |   // Submit login form
-  31 |   await page.locator('button[type="submit"]').click();
-  32 | 
-  33 |   // Wait for navigation to complete
-  34 |   await page.waitForURL(/\/(login|dashboard)/, { timeout: 10000 });
-  35 | }
-  36 | 
-  37 | /**
-  38 |  * Fixture: Register with valid data
-  39 |  * @returns {Promise<void>}
-  40 |  */
-  41 | export async function register(page: Page) {
-  42 |   // Navigate to register page
-  43 |   await page.goto('/register');
-  44 | 
-  45 |   // Fill registration form
-  46 |   await page.locator('#name').click();
-  47 |   await page.locator('#name').fill('Test User');
-  48 |   await page.locator('#register-email').click();
-  49 |   await page.locator('#register-email').fill('newuser@example.com');
-  50 |   await page.locator('#password').click();
-  51 |   await page.locator('#password').fill('TestPass123');
-  52 |   await page.locator('#confirm-password').click();
-  53 |   await page.locator('#confirm-password').fill('TestPass123');
-  54 | 
-  55 |   // Submit registration form
-  56 |   await page.locator('button[type="submit"]').click();
-  57 | }
-  58 | 
-  59 | /**
-  60 |  * Fixture: Navigate to dashboard after login
-  61 |  * @returns {Promise<void>}
-  62 |  */
-  63 | export async function goToDashboard(page: Page) {
-  64 |   await page.goto('/');
-  65 |   await expect(page.locator('h1')).toBeVisible({ timeout: 5000 });
-  66 | }
-  67 | 
-  68 | /**
-  69 |  * Fixture: Logout by clearing localStorage and navigating to login
-  70 |  * @returns {Promise<void>}
-  71 |  */
-  72 | export async function logout(page: Page) {
-  73 |   // Navigate to login page first
-  74 |   await page.goto('/login');
-  75 |   // Clear localStorage
-  76 |   await page.evaluate(() => {
-  77 |     localStorage.clear();
-  78 |   });
-  79 | }
-  80 | 
+  24 |     // Fill in invalid credentials
+> 25 |     await page.locator('#email').fill('invalid@example.com');
+     |                                  ^ TimeoutError: locator.fill: Timeout 200ms exceeded.
+  26 |     await page.locator('#password').fill('wrongpassword');
+  27 | 
+  28 |     // Submit login form
+  29 |     await page.locator('button[type="submit"]').click();
+  30 | 
+  31 |     // Verify error message is displayed
+  32 |     await expect(page.locator('div.rounded-md.border.border-destructive')).toBeVisible();
+  33 |   });
+  34 | 
+  35 |   test('login form validation shows errors for empty fields', async ({ page }) => {
+  36 |     await page.goto('/login');
+  37 | 
+  38 |     // Click submit without filling any fields
+  39 |     await page.locator('button[type="submit"]').click();
+  40 | 
+  41 |     // Verify validation errors appear
+  42 |     await expect(page.locator('p.text-xs.text-destructive', { hasText: 'Email is required' })).toBeVisible();
+  43 |     await expect(page.locator('p.text-xs.text-destructive', { hasText: 'Password is required' })).toBeVisible();
+  44 |   });
+  45 | 
+  46 |   test('login form validation shows error for invalid email format', async ({ page }) => {
+  47 |     await page.goto('/login');
+  48 | 
+  49 |     // Fill invalid email
+  50 |     await page.locator('#email').fill('invalid-email');
+  51 |     await page.locator('#password').fill('password123');
+  52 | 
+  53 |     // Submit
+  54 |     await page.locator('button[type="submit"]').click();
+  55 | 
+  56 |     // Verify error message
+  57 |     await expect(page.locator('p.text-xs.text-destructive', { hasText: 'Invalid email format' })).toBeVisible();
+  58 |   });
+  59 | });
+  60 | 
 ```

@@ -30,12 +30,18 @@ export const handlers = [
   // ===================== CONTACTS =====================
   // GET /api/contacts
   http.get('/api/contacts', ({ request }) => {
-    const url = new URL(request.url);
+    let url: URL;
+    try {
+      url = new URL(request.url);
+    } catch {
+      return new HttpResponse(null, { status: 400 });
+    }
     const search = url.searchParams.get('search');
 
     const contacts = generateContacts(10);
 
     if (search) {
+      // SAFETY: mock data is an array of objects
       const filtered = (contacts as unknown as Record<string, unknown>[]).filter(
       (contact) =>
         (contact as Record<string, string>)['first_name']?.toLowerCase().includes(search) ||
@@ -74,12 +80,18 @@ export const handlers = [
   // ===================== COMPANIES =====================
   // GET /api/companies
   http.get('/api/companies', ({ request }) => {
-    const url = new URL(request.url);
+    let url: URL;
+    try {
+      url = new URL(request.url);
+    } catch {
+      return new HttpResponse(null, { status: 400 });
+    }
     const search = url.searchParams.get('search');
 
     const companies = generateCompanies(10);
 
     if (search) {
+      // SAFETY: mock data is an array of objects
       const filtered = (companies as unknown as Record<string, unknown>[]).filter(
       (company) =>
         (company as Record<string, string>)['name']?.toLowerCase().includes(search) ||
@@ -117,12 +129,18 @@ export const handlers = [
   // ===================== TASKS =====================
   // GET /api/tasks
   http.get('/api/tasks', ({ request }) => {
-    const url = new URL(request.url);
+    let url: URL;
+    try {
+      url = new URL(request.url);
+    } catch {
+      return new HttpResponse(null, { status: 400 });
+    }
     const search = url.searchParams.get('search');
 
     const tasks = generateTasks(10);
 
     if (search) {
+      // SAFETY: mock data is an array of objects
       const filtered = (tasks as unknown as Record<string, unknown>[]).filter(
       (task) =>
         (task as Record<string, string>)['title']?.toLowerCase().includes(search) ||
@@ -160,12 +178,18 @@ export const handlers = [
   // ===================== ACTIVITIES =====================
   // GET /api/activities
   http.get('/api/activities', ({ request }) => {
-    const url = new URL(request.url);
+    let url: URL;
+    try {
+      url = new URL(request.url);
+    } catch {
+      return new HttpResponse(null, { status: 400 });
+    }
     const search = url.searchParams.get('search');
 
     const activities = generateActivities(10);
 
     if (search) {
+      // SAFETY: mock data is an array of objects
       const filtered = (activities as unknown as Record<string, unknown>[]).filter(
       (activity) =>
         (activity as Record<string, string>)['title']?.toLowerCase().includes(search) ||
@@ -228,8 +252,7 @@ export const handlers = [
   }),
 
   // POST /api/auth/password-reset
-  http.post('/api/auth/password-reset', async ({ request }) => {
-    const body = await getRequestBody(request);
+  http.post('/api/auth/password-reset', async () => {
     return HttpResponse.json({
       success: true,
       data: { message: 'Reset email sent' },

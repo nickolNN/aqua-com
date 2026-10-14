@@ -1,7 +1,9 @@
 allowBuilds:
+  '@parcel/watcher': true
   '@swc/core': true
   esbuild: true
   msw: true
+  unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@types/react@19.2.16'
   - '@typescript-eslint/eslint-plugin@8.60.1'

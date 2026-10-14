@@ -7,123 +7,144 @@
 # Test info
 
 - Name: register.spec.ts >> Registration Tests >> register with valid data
-- Location: src/frontend/tests/e2e/register.spec.ts:9:3
+- Location: tests/e2e/register.spec.ts:9:3
 
 # Error details
 
 ```
-Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
+Error: expect(page).toHaveURL(expected) failed
+
+Expected: "http://localhost:3000/login"
+Received: "http://localhost:3000/"
+Timeout:  1000ms
+
 Call log:
-  - navigating to "http://localhost:3000/", waiting until "load"
+  - Expect "toHaveURL" with timeout 1000ms
+    11 × locator resolved to <html lang="en">…</html>
+       - unexpected value "http://localhost:3000/"
 
 ```
 
-# Page snapshot
-
 ```yaml
-- generic [ref=e3]:
-  - generic [ref=e6]:
-    - heading "Не удается получить доступ к сайту" [level=1] [ref=e7]
-    - paragraph [ref=e8]:
-      - text: Сайт
-      - strong [ref=e9]: localhost
-      - text: не позволяет установить соединение.
-    - generic [ref=e10]:
-      - paragraph [ref=e11]: "Попробуйте сделать следующее:"
-      - list [ref=e12]:
-        - listitem [ref=e13]: Проверьте подключение к интернету.
-        - listitem [ref=e14]:
-          - link "Проверьте настройки прокси-сервера и брандмауэра" [ref=e15] [cursor=pointer]:
-            - /url: "#buttons"
-          - text: .
-    - generic [ref=e16]: ERR_CONNECTION_REFUSED
-  - generic [ref=e17]:
-    - button "Перезагрузить" [ref=e19] [cursor=pointer]
-    - button "Сведения" [ref=e20] [cursor=pointer]
+- complementary:
+  - text: Aqua CRM
+  - navigation:
+    - link "Dashboard":
+      - /url: /
+    - link "Contacts":
+      - /url: /contacts
+    - link "Companies":
+      - /url: /companies
+    - link "Tasks":
+      - /url: /tasks
+    - link "Activities":
+      - /url: /activities
+    - button "Switch to dark mode"
+    - button "Log out"
+- textbox "Global search":
+  - /placeholder: Search contacts, tasks, companies...
+- main:
+  - heading "Dashboard" [level=1]
+  - paragraph: Overview of your CRM activity and performance
+  - paragraph: Total Contacts
+  - paragraph: "120"
+  - paragraph: ↑ 20 vs last month
+  - paragraph: Open Tasks
+  - paragraph: "12"
+  - paragraph: ↓ 0 vs last month
+  - paragraph: Activities This Week
+  - paragraph: "35"
+  - paragraph: Active Deals
+  - paragraph: "12"
+  - paragraph: ↑ 5 vs last month
+  - heading "Task Status Breakdown" [level=3]
+  - text: Completed 14 (31.1%) Open 12 (26.7%) Cancelled 10 (22.2%) In Progress 9 (20.0%)
+  - heading "Activity Type Breakdown" [level=3]
+  - text: Note 7 (20.0%) Deal 7 (20.0%) Meeting 5 (14.3%) Task 5 (14.3%) Call 5 (14.3%)
+  - heading "Task Priority Distribution" [level=3]
+  - img
+  - text: Medium (14) (31.1%) Low (11) (24.4%) Urgent (10) (22.2%) High (10) (22.2%)
+  - heading "Pipeline Stages" [level=3]
+  - img
+  - text: Closed (6) (40.0%) Prospect (3) (20.0%) Qualified (3) (20.0%) Proposal (2) (13.3%) Negotiation (1) (6.7%)
+  - paragraph: Recent Activity
+  - text: 7/23/2026 Status update call 8/2/2026 Email correspondence meeting 8/18/2026 Client meeting note 8/2/2026 Vendor meeting deal 8/18/2026 Project kickoff call
 ```
 
 # Test source
 
 ```ts
-  1  | import { Page } from '@playwright/test';
-  2  | 
-  3  | /**
-  4  |  * Fixture: Setup test environment
-  5  |  * Clears localStorage and navigates to the app's base URL
-  6  |  */
-  7  | export async function setupTestEnvironment(page: Page) {
-  8  |   // Navigate to the app's base URL first (so localStorage is accessible)
-> 9  |   await page.goto('/');
-     |              ^ Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/
-  10 |   // Clear localStorage for isolation between tests
-  11 |   await page.evaluate(() => {
-  12 |     localStorage.clear();
-  13 |   });
-  14 | }
-  15 | 
-  16 | /**
-  17 |  * Fixture: Login with valid credentials
-  18 |  * @returns {Promise<void>}
-  19 |  */
-  20 | export async function login(page: Page) {
-  21 |   // Navigate to login page
-  22 |   await page.goto('/login');
-  23 | 
-  24 |   // Fill in valid credentials
-  25 |   await page.locator('#email').click();
-  26 |   await page.locator('#email').fill('test@example.com');
-  27 |   await page.locator('#password').click();
-  28 |   await page.locator('#password').fill('password123');
-  29 | 
-  30 |   // Submit login form
-  31 |   await page.locator('button[type="submit"]').click();
-  32 | 
-  33 |   // Wait for navigation to complete
-  34 |   await page.waitForURL(/\/(login|dashboard)/, { timeout: 10000 });
-  35 | }
-  36 | 
-  37 | /**
-  38 |  * Fixture: Register with valid data
-  39 |  * @returns {Promise<void>}
-  40 |  */
-  41 | export async function register(page: Page) {
-  42 |   // Navigate to register page
-  43 |   await page.goto('/register');
-  44 | 
-  45 |   // Fill registration form
-  46 |   await page.locator('#name').click();
-  47 |   await page.locator('#name').fill('Test User');
-  48 |   await page.locator('#register-email').click();
-  49 |   await page.locator('#register-email').fill('newuser@example.com');
-  50 |   await page.locator('#password').click();
-  51 |   await page.locator('#password').fill('TestPass123');
-  52 |   await page.locator('#confirm-password').click();
-  53 |   await page.locator('#confirm-password').fill('TestPass123');
-  54 | 
-  55 |   // Submit registration form
-  56 |   await page.locator('button[type="submit"]').click();
-  57 | }
+  1  | import { test, expect } from '@playwright/test';
+  2  | import { login, setupTestEnvironment } from './fixtures/setup';
+  3  | 
+  4  | test.describe('Registration Tests', () => {
+  5  |   test.beforeEach(async ({ page }) => {
+  6  |     await setupTestEnvironment(page);
+  7  |   });
+  8  | 
+  9  |   test('register with valid data', async ({ page }) => {
+  10 |     await page.goto('/register');
+  11 | 
+  12 |     // Fill registration form
+  13 |     await page.locator('#name').fill('Test User');
+  14 |     await page.locator('#register-email').fill('newuser@example.com');
+  15 |     await page.locator('#password').fill('TestPass123');
+  16 |     await page.locator('#confirm-password').fill('TestPass123');
+  17 | 
+  18 |     // Submit registration form
+  19 |     await page.locator('button[type="submit"]').click();
+  20 | 
+  21 |     // Verify navigation to login page
+> 22 |     await expect(page).toHaveURL('/login');
+     |                        ^ Error: expect(page).toHaveURL(expected) failed
+  23 |   });
+  24 | 
+  25 |   test('register form validation shows errors for empty fields', async ({ page }) => {
+  26 |     await page.goto('/register');
+  27 | 
+  28 |     // Fill only name
+  29 |     await page.locator('#name').fill('Test User');
+  30 | 
+  31 |     // Submit without filling other required fields
+  32 |     await page.locator('button[type="submit"]').click();
+  33 | 
+  34 |     // Verify validation errors appear
+  35 |     await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Email is required' })).toBeVisible();
+  36 |     await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Password is required' })).toBeVisible();
+  37 |     await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Password must be at least 8 characters' })).toBeVisible();
+  38 |   });
+  39 | 
+  40 |   test('register form validates password length requirement', async ({ page }) => {
+  41 |     await page.goto('/register');
+  42 | 
+  43 |     // Fill form with short password
+  44 |     await page.locator('#name').fill('Test User');
+  45 |     await page.locator('#register-email').fill('newuser@example.com');
+  46 |     await page.locator('#password').fill('1234567');
+  47 |     await page.locator('#confirm-password').fill('1234567');
+  48 | 
+  49 |     // Submit
+  50 |     await page.locator('button[type="submit"]').click();
+  51 | 
+  52 |     // Verify password length error
+  53 |     await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Password must be at least 8 characters' })).toBeVisible();
+  54 |   });
+  55 | 
+  56 |   test('register with mismatched passwords shows error', async ({ page }) => {
+  57 |     await page.goto('/register');
   58 | 
-  59 | /**
-  60 |  * Fixture: Navigate to dashboard after login
-  61 |  * @returns {Promise<void>}
-  62 |  */
-  63 | export async function goToDashboard(page: Page) {
-  64 |   await page.goto('/');
-  65 |   await expect(page.locator('h1')).toBeVisible({ timeout: 5000 });
-  66 | }
+  59 |     // Fill form with mismatched passwords
+  60 |     await page.locator('#name').fill('Test User');
+  61 |     await page.locator('#register-email').fill('newuser@example.com');
+  62 |     await page.locator('#password').fill('TestPass123');
+  63 |     await page.locator('#confirm-password').fill('DifferentPass123');
+  64 | 
+  65 |     // Submit
+  66 |     await page.locator('button[type="submit"]').click();
   67 | 
-  68 | /**
-  69 |  * Fixture: Logout by clearing localStorage and navigating to login
-  70 |  * @returns {Promise<void>}
-  71 |  */
-  72 | export async function logout(page: Page) {
-  73 |   // Navigate to login page first
-  74 |   await page.goto('/login');
-  75 |   // Clear localStorage
-  76 |   await page.evaluate(() => {
-  77 |     localStorage.clear();
-  78 |   });
-  79 | }
-  80 | 
+  68 |     // Verify password mismatch error
+  69 |     await expect(page.locator('p:text-xs:text-destructive', { hasText: 'Passwords do not match' })).toBeVisible();
+  70 |   });
+  71 | });
+  72 | 
 ```

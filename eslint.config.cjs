@@ -1,92 +1,64 @@
 /** @type {import("eslint").Linter.Config} */
+// ESLint 10 flat config:
+// - `language: "TSX"` is not a registered language; the TS parser comes from
+//   the @typescript-eslint flat configs via `languageOptions.parser`.
+// - `env` and `parserOptions` are eslintrc-only keys and error in flat config.
+// - `configs["flat/..."]` entries are arrays; `configs.recommended` is
+//   eslintrc-style and cannot be spread into a flat config.
+const tsConfigs = require("@typescript-eslint/eslint-plugin").configs;
+const reactConfig = require("eslint-plugin-react").configs;
+const reactHooksConfig = require("eslint-plugin-react-hooks").configs;
+const jsxA11yConfig = require("eslint-plugin-jsx-a11y").configs;
+const importConfig = require("eslint-plugin-import").configs;
+const prettierConfig = require("eslint-config-prettier");
+
+// eslint-plugin-jsx-a11y / eslint-plugin-import ship eslintrc-style configs
+// with a `parserOptions` key, which is incompatible with flat config.
+const { parserOptions: _a11yParserOptions, ...jsxA11y } = jsxA11yConfig.recommended;
+const { parserOptions: _importParserOptions, ...importRules } = importConfig.recommended;
+
 module.exports = [
-  {
-    files: ["**/*.ts", "**/*.tsx"],
-    linterOptions: {
-      maxTopContainerDepth: Infinity,
-    },
-  },
-  {
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-  },
-
-  // Base environment settings
-  {
-    name: "base-environment",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    env: {
-      browser: true,
-      node: true,
-      es2021: true,
-    },
-  },
-
-  // Parser and base configs
-  {
-    name: "typescript-eslint-base",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("@typescript-eslint/eslint-plugin").configs.recommended,
-  },
-
-  {
-    name: "typescript-eslint-type-checked",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("@typescript-eslint/eslint-plugin").configs["flat/recommended-type-checked"],
-  },
+  // typescript-eslint: base + eslint-recommended + type-checked rules
+  ...tsConfigs["flat/recommended-type-checked"],
 
   // React config
   {
     name: "react",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("eslint-plugin-react").config.flat.recommended,
+    ...reactConfig.flat.recommended,
   },
 
   // React hooks config
   {
     name: "react-hooks",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("eslint-plugin-react-hooks").configs.recommended,
+    ...reactHooksConfig.recommended,
   },
 
   // JSX Accessibility config
   {
     name: "jsx-a11y",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("eslint-plugin-jsx-a11y").configs.recommended,
+    ...jsxA11y,
   },
 
   // Import config
   {
     name: "import",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("eslint-plugin-import").configs.recommended,
+    ...importRules,
   },
 
   // Prettier config (turns off conflicting rules)
   {
     name: "prettier",
-    files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
-    ...require("eslint-config-prettier"),
+    ...prettierConfig,
   },
 
-  // Project-level overrides and settings
+  // Project-level settings
   {
     name: "project-settings",
     files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
     settings: {
       react: {
-      version: "detect",
-    },
+        version: "detect",
+      },
       "import/resolver": {
         node: {
           extensions: [".ts", ".tsx", ".js", ".jsx", ".mjs"],
@@ -99,7 +71,6 @@ module.exports = [
   {
     name: "project-rules",
     files: ["**/*.ts", "**/*.tsx"],
-    language: "TSX",
     rules: {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],

@@ -10,7 +10,7 @@ const config: PlaywrightTestConfig = defineConfig({
     actionTimeout: 200,
     navigationTimeout: 1000,
     baseURL: 'http://localhost:3000',
-    trace: 'retain',
+    trace: 'retain-on-failure-and-retries',
     video: 'on',
   },
  expect: {
@@ -22,8 +22,7 @@ const config: PlaywrightTestConfig = defineConfig({
     {
       command: 'pnpm dev',
       port: 3000,
-      reuseExisting: true,
-      reuseExistingServerPort: true,
+      reuseExistingServer: true,
       timeout: 12000,
     },
   ],
