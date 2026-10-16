@@ -221,6 +221,15 @@ export const handlers = [
         { status: 404 },
       );
     }
+    // Explicit position update (kanban cross-column drop): a present `position`
+    // must validate, otherwise the store would be corrupted with an unorderable
+    // card (contract parity with PUT /api/tasks/:id).
+    if ('position' in body && !isValidPosition(body['position'])) {
+      return HttpResponse.json(
+        { success: false, data: null, error: 'position must be a non-negative integer' },
+        { status: 400 },
+      );
+    }
     const updated: TaskRecord = {
       ...tasks[index],
       ...(body as TaskRecord),

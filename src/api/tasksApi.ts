@@ -59,8 +59,9 @@ export const tasksApi = api.injectEndpoints({
        }),
        invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.taskId }],
       }),
-    // Update task status
-    updateTaskStatus: builder.mutation<Task, { id: string; data: { status: string } }>({
+    // Update task status (kanban column move; optional position for
+    // cross-column drop — the card lands at that index in the target column)
+    updateTaskStatus: builder.mutation<Task, { id: string; data: { status: string; position?: number } }>({
       query: ({ id, data }) => ({
         url: `/tasks/${id}/status`,
         method: 'PUT',
@@ -115,6 +116,6 @@ export const useRemoveTaskDependencyMutationTyped = tasksApi['useRemoveTaskDepen
   unknown,
 ];
 export const useUpdateTaskStatusMutationTyped = tasksApi['useUpdateTaskStatusMutation'] as unknown as () => [
-  (input: { id: string; data: { status: string } }) => Promise<{ data: Task }>,
+  (input: { id: string; data: { status: string; position?: number } }) => Promise<{ data: Task }>,
   unknown,
 ];

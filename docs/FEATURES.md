@@ -34,7 +34,7 @@ This document captures the feature specifications for Aqua CRM based on user req
 - **Due dates**: Optional (not required)
 
 ### Views
-- **Kanban board**: Drag-and-drop board view for task management
+- **Kanban board**: Drag-and-drop board view for task management; 8px vertical gap between cards; cross-column drop inserts the card at the drop position (above/below the hovered card by comparing ghost/card centers), drop on the column background lands at the end of the column
 
 ### Notifications
 - **Task events**: Email + in-app notifications (assignment, due date approaching, completion)
