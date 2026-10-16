@@ -69,7 +69,7 @@ export function ReportsView() {
     <div className="max-w-7xl mx-auto py-6 px-4">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-primary-foreground">Reports</h1>
+        <h1 className="text-2xl font-bold">Reports</h1>
         <p className="text-muted-foreground">Generate and export reports for analysis</p>
       </div>
 
@@ -171,7 +171,7 @@ function ActivityReportSection() {
       {Object.entries(stats.by_type).map(([type, count]) => (
         <div key={type} className="flex justify-between text-sm py-2 border-b border-border last:border-0">
           <span className="text-muted-foreground capitalize">{type}</span>
-          <span className="text-primary-foreground">{count}</span>
+          <span className="text-foreground font-medium">{count}</span>
         </div>
       ))}
     </div>
@@ -185,7 +185,7 @@ function PipelineReportSection() {
       {Object.entries(stats.by_stage).map(([stage, count]) => (
         <div key={stage} className="flex justify-between text-sm py-2 border-b border-border last:border-0">
           <span className="text-muted-foreground">{stage}</span>
-          <span className="text-primary-foreground">{count}</span>
+          <span className="text-foreground font-medium">{count}</span>
         </div>
       ))}
     </div>

@@ -49,6 +49,7 @@ export interface Task {
   assigned_to?: string;
   created_by: string;
   parent_task_id?: string;
+  position: number;
   subtask_count: number;
   subtasks?: TaskSubtask[];
   dependencies: TaskDependency[];
@@ -71,6 +72,7 @@ export interface TaskCreateInput {
   due_date?: string;
   assigned_to?: string;
   parent_task_id?: string;
+  position?: number;
   subtasks?: TaskDependencyInput[];
   dependencies?: TaskDependencyInput[];
 }
@@ -84,6 +86,7 @@ export interface TaskUpdateInput {
   due_date?: string;
   assigned_to?: string;
   parent_task_id?: string;
+  position?: number;
   subtasks?: TaskDependencyInput[];
   dependencies?: TaskDependencyInput[];
 }

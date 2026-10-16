@@ -12,25 +12,21 @@ interface PieChartProps {
 }
 
 const defaultColorPalette = [
-  'bg-blue-500',
-  'bg-green-500',
-  'bg-yellow-500',
-  'bg-purple-500',
-  'bg-pink-500',
-  'bg-indigo-500',
   'bg-teal-500',
-  'bg-orange-500',
+  'bg-cyan-500',
+  'bg-teal-400',
+  'bg-cyan-400',
+  'bg-teal-600',
+  'bg-teal-700',
 ];
 
 const colorMap: Record<string, string> = {
-  'bg-blue-500': '#3b82f6',
-  'bg-green-500': '#10b981',
-  'bg-yellow-500': '#eab308',
-  'bg-purple-500': '#a855f7',
-  'bg-pink-500': '#ec4899',
-  'bg-indigo-500': '#6366f1',
   'bg-teal-500': '#14b8a6',
-  'bg-orange-500': '#f97316',
+  'bg-cyan-500': '#06b6d4',
+  'bg-teal-400': '#2dd4bf',
+  'bg-cyan-400': '#22d3ee',
+  'bg-teal-600': '#0d9488',
+  'bg-teal-700': '#0f766e',
 };
 
 export function PieChart({ data, title, colorPalette: customPalette }: PieChartProps) {
@@ -38,7 +34,7 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
   const total = Object.values(data).reduce((sum, val) => sum + val, 0);
 
   return (
-    <div className="p-4 bg-card rounded-lg shadow-sm border border-border">
+    <div className="p-4 glass rounded-lg">
       <h3 className="text-sm font-semibold">{title}</h3>
       <div className="flex items-center gap-4">
         {/* Donut chart visualization */}

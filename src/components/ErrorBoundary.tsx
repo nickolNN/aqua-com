@@ -1,4 +1,5 @@
 import React, { Component, type ErrorInfo } from 'react';
+import { Button } from './ui/Button';
 
 interface ErrorBoundaryProps {
   children?: React.ReactNode;
@@ -57,11 +58,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps> {
         <div
           role="alert"
           aria-label="Application error"
-          className="flex items-center justify-center min-h-[300px] bg-red-50"
+          className="flex items-center justify-center min-h-[300px] bg-background"
         >
           <div className="max-w-lg mx-auto p-6 text-center">
             <svg
-              className="w-16 h-16 text-red-500 mx-auto mb-4"
+              className="w-16 h-16 text-destructive mx-auto mb-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -74,39 +75,42 @@ class ErrorBoundary extends Component<ErrorBoundaryProps> {
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.538 0 2.713-1.65 1.698-3L12 4.5 4.304 15.5a3 3 0 000 3.372"
               />
             </svg>
-            <h2 className="text-xl font-semibold text-red-800 mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               Something went wrong
             </h2>
-            <p className="text-sm text-red-700 mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               An unexpected error occurred. Please try refreshing the page.
             </p>
 
             {/* Error details (collapsed by default) */}
             {this.state.error && (
-              <details className="mb-4 text-left bg-white p-3 rounded border border-red-200">
-                <summary className="cursor-pointer text-sm text-gray-600">
+              <details className="mb-4 text-left bg-destructive/10 p-3 rounded-lg border border-destructive/20">
+                <summary className="cursor-pointer text-sm text-muted-foreground">
                   Error details
                 </summary>
-                <pre className="mt-2 text-xs text-red-700 overflow-x-auto p-2 bg-red-50 rounded">
+                <pre className="mt-2 text-xs text-muted-foreground overflow-x-auto p-2 bg-background rounded">
                   {this.state.error.toString()}
                 </pre>
               </details>
             )}
 
-            <button
+            <Button
               type="button"
+              variant="destructive"
               onClick={this.handleReset}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="mt-4"
             >
               Try Again
-            </button>
+            </Button>
 
-            <a
+            <Button
+              as="a"
               href="/"
-              className="block mt-3 text-sm text-blue-600 hover:underline"
+              variant="link"
+              className="mt-3"
             >
               Return to Dashboard
-            </a>
+            </Button>
           </div>
         </div>
       );

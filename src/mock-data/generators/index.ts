@@ -187,7 +187,7 @@ const taskTitles = [
 /**
  * Generate a realistic task object
  */
-export function generateTask(): TaskSchema {
+export function generateTask(position?: number): TaskSchema {
   const title = randomChoice(taskTitles);
 
   const statuses: Array<'open' | 'in_progress' | 'completed' | 'cancelled'> = ['open', 'in_progress', 'completed', 'cancelled'];
@@ -211,6 +211,7 @@ export function generateTask(): TaskSchema {
       successor_task_id: generateUuid(),
       dependency_type: randomChoice(['finish_to_start', 'start_to_start', 'finish_to_finish', 'start_to_finish']),
     }] : [],
+    position: position ?? randomInt(0, 100),
     created_by: generateUuid(),
     created_at: generateDate(Math.floor(Math.random() * 90)),
     updated_at: generateDate(Math.floor(Math.random() * 30)),
@@ -221,7 +222,7 @@ export function generateTask(): TaskSchema {
  * Generate multiple tasks
  */
 export function generateTasks(count: number = 10): TaskSchema[] {
-  return Array.from({ length: count }, () => generateTask());
+  return Array.from({ length: count }, (_, i) => generateTask(i));
 }
 
 // =====================================================

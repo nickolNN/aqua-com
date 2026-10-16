@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { Button } from './ui/Button';
 
 type StateType = 'loading' | 'error' | 'empty' | 'success';
 
@@ -40,11 +41,11 @@ export function LoadingState({
       >
         <div className="flex flex-col items-center gap-3">
           <div
-            className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+            className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"
             role="img"
             aria-label="Loading spinner"
           />
-          <p className="text-sm text-gray-500">{loadingMessage}</p>
+          <p className="text-sm text-muted-foreground">{loadingMessage}</p>
         </div>
       </div>
     );
@@ -64,9 +65,9 @@ export function LoadingState({
         aria-live="assertive"
         className={`flex flex-col items-center justify-center min-h-[200px] px-4 ${className}`}
       >
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md text-center">
+        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-6 max-w-md text-center">
           <svg
-            className="w-12 h-12 text-red-500 mx-auto mb-3"
+            className="w-12 h-12 text-destructive mx-auto mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -79,16 +80,17 @@ export function LoadingState({
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.538 0 2.713-1.65 1.698-3L12 4.5 4.304 15.5a3 3 0 000 3.372"
             />
           </svg>
-          <h3 className="text-lg font-semibold text-red-800 mb-2">Error</h3>
-          <p className="text-sm text-red-700 mb-3">{errorDetails}</p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">Error</h3>
+          <p className="text-sm text-muted-foreground mb-3">{errorDetails}</p>
           {showRetry && onRetry && (
-            <button
+            <Button
               type="button"
+              variant="destructive"
               onClick={onRetry}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+              className="mt-1"
             >
               Try Again
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -105,7 +107,7 @@ export function LoadingState({
       >
         <div className="text-center">
           <svg
-            className="w-16 h-16 text-gray-300 mx-auto mb-3"
+            className="w-16 h-16 text-muted-foreground/40 mx-auto mb-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -119,7 +121,7 @@ export function LoadingState({
             />
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10" />
           </svg>
-          <p className="text-gray-500">{emptyMessage}</p>
+          <p className="text-muted-foreground">{emptyMessage}</p>
         </div>
       </div>
     );

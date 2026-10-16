@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Modal, ModalContent, ModalTitle, ModalFooter } from '@/components/ui/Modal';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
 
 // =====================================================
 // FilterBar Component
@@ -75,21 +79,21 @@ export default function FilterBar({ entityType, onFilterChange }: FilterBarProps
   const hasFilters = Object.keys(filters).length > 0;
 
   return (
-    <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+    <div className="mb-4 p-4 bg-muted rounded-lg border border-border">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-gray-700">Advanced Filters</h3>
+        <h3 className="text-sm font-semibold text-foreground">Advanced Filters</h3>
         <div className="flex gap-2">
           {hasFilters && (
             <button
               onClick={() => setFilters({})}
-              className="text-xs text-red-600 hover:text-red-800"
+              className="text-xs text-destructive hover:text-destructive/80"
             >
               Clear Filters
             </button>
           )}
           <button
             onClick={handleSaveFilter}
-            className="text-xs text-blue-600 hover:text-blue-800"
+            className="text-xs text-primary hover:text-primary/80"
           >
             Save Filter
           </button>
@@ -99,64 +103,63 @@ export default function FilterBar({ entityType, onFilterChange }: FilterBarProps
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {filtersConfig.map((config) => (
           <div key={config.key}>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
               {config.label}
             </label>
-            <select
-              value={String(filters[config.key] || '')}
-              onChange={(e) => handleFilterChange(config.key, e.target.value)}
-              className="w-full text-sm rounded border border-gray-300 px-2 py-1"
+            <Select
+              value={String(filters[config.key] ?? 'all')}
+              onValueChange={(value) => handleFilterChange(config.key, value)}
             >
-              <option value="">Select {config.label}</option>
-              {config.options.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt === 'all' ? 'All' : opt}
-              </option>
-              ))}
-            </select>
+              <SelectTrigger>
+                <SelectValue placeholder={`Select ${config.label}`} />
+              </SelectTrigger>
+              <SelectContent>
+                {config.options.map((opt) => (
+                  <SelectItem key={opt} value={opt}>
+                    {opt === 'all' ? 'All' : opt}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         ))}
 
         <div className="space-y-2">
           <div className="flex items-center">
-            <label htmlFor="date-range" className="block text-xs font-medium text-gray-600 mr-2">
+            <label htmlFor="date-range" className="block text-xs font-medium text-muted-foreground mr-2">
               Date Range
             </label>
-            <input
+            <Input
               id="date-range"
               type="date"
               onChange={(e) => {
                 const newFilters = { ...filters, date_start: e.target.value };
                 setFilters(newFilters);
               }}
-              className="w-full text-sm rounded border border-gray-300 px-2 py-1"
             />
           </div>
         </div>
       </div>
 
-      {showSaveDialog && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-4 w-80">
-            <h3 className="text-sm font-semibold mb-2">Save Filter</h3>
-            <input
-              type="text"
-              value={filterName}
-              onChange={(e) => setFilterName(e.target.value)}
-              placeholder="Filter name"
-              className="w-full text-sm rounded border border-gray-300 px-2 py-1 mb-2"
-            />
-            <div className="flex gap-2">
-              <button onClick={confirmSaveFilter} className="text-sm text-blue-600 hover:text-blue-800">
-                Save
-              </button>
-              <button onClick={() => setShowSaveDialog(false)} className="text-sm text-gray-600 hover:text-gray-800">
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <ModalContent>
+          <ModalTitle>Save Filter</ModalTitle>
+          <Input
+            type="text"
+            value={filterName}
+            onChange={(e) => setFilterName(e.target.value)}
+            placeholder="Filter name"
+          />
+          <ModalFooter>
+            <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={confirmSaveFilter}>
+              Save
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

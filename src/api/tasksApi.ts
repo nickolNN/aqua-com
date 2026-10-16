@@ -87,6 +87,7 @@ export const useGetTasksQueryTyped = tasksApi['useGetTasksQuery'] as (arg: strin
   isLoading: boolean;
   isSuccess: boolean;
   isError: boolean;
+  error: unknown;
 };
 export const useGetTaskQueryTyped = tasksApi['useGetTaskQuery'] as (arg: string) => {
   data: Task | undefined;

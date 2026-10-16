@@ -156,22 +156,22 @@ export default function GlobalSearchBar() {
       />
 
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full mt-1 left-0 w-full border border-input bg-white rounded-md shadow-lg z-50 max-h-80 overflow-y-auto">
-          <div className="p-2 text-xs text-gray-500 font-medium">
+        <div className="absolute top-full mt-1 left-0 w-full border border-input bg-popover rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div className="p-2 text-xs text-muted-foreground font-medium">
             {totalResults} result{totalResults !== 1 ? 's' : ''} found
           </div>
           {results.map((result, index) => (
             <a
               key={`${result.type}-${result.id}-${index}`}
               href={result.link || '#'}
-              className="block px-3 py-1.5 text-sm hover:bg-gray-50 transition"
+              className="block px-3 py-1.5 text-sm hover:bg-muted transition"
               onClick={() => setIsOpen(false)}
             >
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500 uppercase">{result.type}</span>
+                <span className="text-xs text-muted-foreground uppercase">{result.type}</span>
                 <span className="font-medium">{result.title}</span>
               </div>
-              <div className="text-xs text-gray-500">{result.subtitle}</div>
+              <div className="text-xs text-muted-foreground">{result.subtitle}</div>
             </a>
           ))}
         </div>
@@ -179,7 +179,7 @@ export default function GlobalSearchBar() {
 
       {savedFilters.length > 0 && (
         <button
-          className="mt-1 text-xs text-blue-600 hover:text-blue-800"
+          className="mt-1 text-xs text-primary hover:underline"
           onClick={() => setShowSavedFilters(!showSavedFilters)}
         >
           Saved Filters ({savedFilters.length})
@@ -187,9 +187,9 @@ export default function GlobalSearchBar() {
       )}
 
       {showSavedFilters && (
-        <div className="absolute top-full mt-1 left-0 w-full border border-input bg-popover rounded-md p-2 shadow-lg">
+        <div className="absolute top-full mt-1 left-0 w-full border border-input bg-popover rounded-lg p-2 shadow-lg">
           {savedFilters.map((filter) => (
-            <div key={filter.id} className="flex items-center gap-2 px-2 py-1 text-sm hover:bg-gray-100">
+            <div key={filter.id} className="flex items-center gap-2 px-2 py-1 text-sm hover:bg-muted">
               <button
                 onClick={() => handleLoadSavedFilter(filter)}
                 className="flex-1 text-left"
@@ -198,7 +198,7 @@ export default function GlobalSearchBar() {
               </button>
               <button
                 onClick={() => dispatch(removeSavedFilter(filter.id))}
-                className="text-xs text-red-500 hover:text-red-700"
+                className="text-xs text-destructive hover:text-destructive/80"
               >
                 ×
               </button>
@@ -206,7 +206,7 @@ export default function GlobalSearchBar() {
           ))}
           <button
             onClick={handleSaveFilter}
-            className="text-xs text-blue-600 hover:text-blue-800 py-1"
+            className="text-xs text-primary hover:underline py-1"
           >
             Save Current Filter
           </button>

@@ -17,7 +17,7 @@ export const SidebarNavItem = React.forwardRef<HTMLButtonElement | HTMLAnchorEle
           ref={ref as React.Ref<HTMLButtonElement>}
           type="button"
           onClick={onClick}
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
           {...rest}
         >
           {icon && <span className="flex-shrink-0">{icon}</span>}
@@ -32,9 +32,9 @@ export const SidebarNavItem = React.forwardRef<HTMLButtonElement | HTMLAnchorEle
         to={to!}
         className={({ isActive }) =>
           cn(
-            'flex items-center gap-2 rounded-md px-3 py-2 text-sm text-sidebar-foreground transition-colors',
+            'flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground transition-colors',
             isActive
-              ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+              ? 'gradient-primary text-primary-foreground font-medium'
               : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
           )
         }

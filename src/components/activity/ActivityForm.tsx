@@ -1,33 +1,60 @@
 // =====================================================
 // Activity Form Component
 // =====================================================
-import { useForm } from 'react-hook-form';
-import { useCreateActivityMutation } from '@/api/activitiesApi';
+import { useState, type FormEvent } from 'react';
 import { ACTIVITY_TYPES, type ActivityType } from '@/api/activitiesApi';
+import { useCreateActivityMutation } from '@/api/activitiesApi';
 import { Button } from '@/components/ui/Button';
-
-interface ActivityFormData {
-  type: ActivityType;
-  title: string;
-  description?: string;
-  contact_id?: string;
-  company_id?: string;
-  date: string;
-  duration?: number;
-}
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Modal, ModalContent, ModalTitle } from '@/components/ui/Modal';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
 
 interface ActivityFormProps {
   onClose: () => void;
 }
 
-export default function ActivityForm({ onClose }: ActivityFormProps) {
-  const { register, handleSubmit, reset } = useForm<ActivityFormData>();
-  const [createActivity] = useCreateActivityMutation();
+interface FormErrors {
+  type?: string;
+  title?: string;
+  date?: string;
+}
 
-  const onSubmit = async (data: ActivityFormData) => {
+export default function ActivityForm({ onClose }: ActivityFormProps) {
+  const [createActivity] = useCreateActivityMutation();
+  const [type, setType] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
+  const [duration, setDuration] = useState('');
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    if (!type || type === 'none') {
+      newErrors.type = 'Activity type is required';
+    }
+    if (!title.trim()) {
+      newErrors.title = 'Title is required';
+    }
+    if (!date) {
+      newErrors.date = 'Date is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
     try {
-      await createActivity(data).unwrap();
-      reset();
+      await createActivity({
+        type: type as ActivityType,
+        title,
+        description,
+        date,
+        duration: duration ? Number(duration) : undefined,
+      }).unwrap();
       onClose();
     } catch (error) {
       console.error('Failed to create activity:', error);
@@ -35,30 +62,107 @@ export default function ActivityForm({ onClose }: ActivityFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-card p-6 rounded max-w-lg w-full">
-        <h2 className="text-xl font-bold mb-4">Create Activity</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <Modal open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <ModalContent>
+        <ModalTitle>Create Activity</ModalTitle>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <select {...register('type', { required: 'Activity type is required' })}>
-              <option value="">Select type</option>
-              {ACTIVITY_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+            <label htmlFor="activity-type" className="block text-sm font-medium mb-1">
+              Type *
+            </label>
+            <Select value={type}
+              onValueChange={(value) => {
+                setType(value);
+                if (errors.type) setErrors((prev) => ({ ...prev, type: undefined }));
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Select type</SelectItem>
+                {ACTIVITY_TYPES.map((item) => (
+                  <SelectItem key={item} value={item}>{item}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.type && (
+              <p className="text-xs text-destructive mt-1">{errors.type}</p>
+            )}
           </div>
-          <input {...register('title', { required: 'Title is required' })} placeholder="Title" />
-          <textarea {...register('description')} placeholder="Description" />
-          <input {...register('date', { required: 'Date is required' })} type="date" />
-          <input {...register('duration')} type="number" placeholder="Duration (minutes)" />
+
+          <div>
+            <label htmlFor="activity-title" className="block text-sm font-medium mb-1">
+              Title *
+            </label>
+            <Input
+              id="activity-title"
+              type="text"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (errors.title) setErrors((prev) => ({ ...prev, title: undefined }));
+              }}
+              placeholder="Title"
+              required
+              className={errors.title ? 'border-destructive' : ''}
+            />
+            {errors.title && (
+              <p className="text-xs text-destructive mt-1">{errors.title}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="activity-description" className="block text-sm font-medium mb-1">
+              Description
+            </label>
+            <Textarea
+              id="activity-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="activity-date" className="block text-sm font-medium mb-1">
+              Date *
+            </label>
+            <Input
+              id="activity-date"
+              type="date"
+              value={date}
+              onChange={(e) => {
+                setDate(e.target.value);
+                if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
+              }}
+              required
+              className={errors.date ? 'border-destructive' : ''}
+            />
+            {errors.date && (
+              <p className="text-xs text-destructive mt-1">{errors.date}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="activity-duration" className="block text-sm font-medium mb-1">
+              Duration (minutes)
+            </label>
+            <Input
+              id="activity-duration"
+              type="number"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              placeholder="Duration (minutes)"
+            />
+          </div>
+
           <div className="flex gap-2">
             <Button type="submit">Create</Button>
             <Button variant="outline" onClick={onClose}>Cancel</Button>
           </div>
         </form>
-      </div>
-    </div>
+      </ModalContent>
+    </Modal>
   );
 }

@@ -49,14 +49,12 @@ export function DashboardView() {
         <BarChart
           data={metrics.task_stats.by_status}
           title="Task Status Breakdown"
-          color="bg-blue-500"
         />
 
         {/* Activity Type Breakdown */}
         <BarChart
           data={metrics.activity_summary.by_type}
           title="Activity Type Breakdown"
-          color="bg-green-500"
         />
       </div>
 
@@ -104,18 +102,14 @@ export function DashboardView() {
 
 function SummaryCard({ title, value, trend }: { title: string; value: number; trend?: number }) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold">{value}</p>
-        {trend !== undefined && (
-          <p className={`text-sm ${trend > 0 ? 'text-green-500' : 'text-red-500'}`}>
-            {trend > 0 ? '↑' : '↓'} {trend} vs last month
-          </p>
-        )}
-      </CardContent>
-    </Card>
+    <div className="gradient-primary rounded-lg p-4 text-primary-foreground shadow-sm">
+      <p className="text-xs font-medium uppercase tracking-wide opacity-75">{title}</p>
+      <p className="mt-1 text-2xl font-bold">{value}</p>
+      {trend !== undefined && (
+        <p className="mt-1 text-xs opacity-75">
+          {trend > 0 ? '↑' : '↓'} {trend} vs last month
+        </p>
+      )}
+    </div>
   );
 }

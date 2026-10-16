@@ -13,12 +13,12 @@ interface BarChartProps {
   color?: string;
 }
 
-export function BarChart({ data, title, color = 'bg-blue-500' }: BarChartProps) {
+export function BarChart({ data, title, color = 'gradient-primary' }: BarChartProps) {
   const total = Object.values(data).reduce((sum, val) => sum + val, 0);
   const [hovered, setHovered] = useState<string>('');
 
   return (
-    <div className="p-4 bg-card rounded-lg shadow-sm border border-border">
+    <div className="p-4 glass rounded-lg">
       <h3 className="text-sm font-semibold">{title}</h3>
       <div className="space-y-2">
         {Object.entries(data)

@@ -8,7 +8,7 @@ const Header = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex h-16 items-center justify-between border-b bg-white px-6', className)}
+      className={cn('flex h-16 items-center justify-between border-b bg-background px-6', className)}
       {...props}
     >
       {title && <h2 className="text-lg font-semibold">{title}</h2>}

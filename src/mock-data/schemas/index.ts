@@ -48,6 +48,7 @@ export interface TaskSchema {
   due_date?: string;
   assigned_to?: string;
   parent_task_id?: string;
+  position: number;
   subtask_count: number;
   dependencies: Array<{
     predecessor_task_id: string;

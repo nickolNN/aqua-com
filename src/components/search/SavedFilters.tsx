@@ -21,21 +21,21 @@ function SavedFilterButton({ filter }: { filter: SavedFilter }) {
   const dispatch = useDispatch();
 
   return (
-    <div className="flex items-center justify-between px-3 py-2 bg-blue-50 rounded border border-blue-200">
+    <div className="flex items-center justify-between px-3 py-2 bg-muted rounded-lg border">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-blue-700">{filter.name}</span>
-        <span className="text-xs text-blue-500">({filter.type})</span>
+        <span className="text-sm font-medium">{filter.name}</span>
+        <span className="text-xs text-muted-foreground">({filter.type})</span>
       </div>
       <div className="flex gap-1">
         <button
           onClick={() => dispatch(loadSavedFilter(filter))}
-          className="text-xs text-blue-600 hover:text-blue-800"
+          className="text-xs text-primary hover:text-primary/80"
         >
           Load
         </button>
         <button
           onClick={() => dispatch(removeSavedFilter(filter.id))}
-          className="text-xs text-red-600 hover:text-red-800"
+          className="text-xs text-destructive hover:text-destructive/80"
         >
           Remove
         </button>
@@ -62,7 +62,7 @@ export function SavedFilters({ entityType }: SavedFiltersProps) {
     <div className="mt-4">
       <h4 className="text-sm font-medium mb-2">Saved Filters</h4>
       {entityFilters.length === 0 ? (
-        <div className="text-sm text-gray-500 italic">No saved filters for this entity type</div>
+        <div className="text-sm text-muted-foreground italic">No saved filters for this entity type</div>
       ) : (
         <div className="space-y-1">
           {entityFilters.map((filter) => (

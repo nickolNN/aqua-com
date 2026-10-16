@@ -24,10 +24,10 @@ const Skeleton = React.forwardRef<
   };
 
   const variantStyles: Record<string, string> = {
-    text: 'bg-gray-200',
-    avatar: 'bg-gray-200 rounded-full',
-    image: 'bg-gray-200 rounded-lg',
-    default: 'bg-gray-200',
+    text: 'bg-muted',
+    avatar: 'bg-muted rounded-full',
+    image: 'bg-muted rounded-lg',
+    default: 'bg-muted',
   };
 
   return (
