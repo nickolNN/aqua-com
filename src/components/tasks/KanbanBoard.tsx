@@ -12,13 +12,12 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { KanbanQuickAdd } from './KanbanQuickAdd';
 import { useCreateTaskMutation, useUpdateTaskMutation, useUpdateTaskStatusMutation } from '@/api/tasksApi';
-import { updateTaskStatus } from '@/stores/tasksSlice';
+import { resolveInsertIndex } from './kanbanInsert';
 import type { Task } from '@/types/entities';
 import { cn } from '@/lib/utils';
 
@@ -73,9 +72,13 @@ function KanbanColumn({ column, tasks, highlighted, onTaskClick, onAddTask }: Ka
       </div>
 
       <SortableContext items={tasks.map((task) => task.id)}>
-        {tasks.map((task) => (
-          <KanbanTaskCard key={task.id} task={task} column={column} onTaskClick={onTaskClick} />
-        ))}
+        {/* 8px vertical gap between cards; dnd-kit measures only the sortable
+            cards, so the flex wrapper doesn't affect the drag logic. */}
+        <div className="flex flex-col gap-2">
+          {tasks.map((task) => (
+            <KanbanTaskCard key={task.id} task={task} column={column} onTaskClick={onTaskClick} />
+          ))}
+        </div>
       </SortableContext>
 
       {/* Stage 26: empty column → glass stub Card; the quick-add button above stays. */}
@@ -155,7 +158,6 @@ function KanbanTaskCard({ task, column, onTaskClick }: KanbanTaskCardProps) {
 }
 
 export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
-  const dispatch = useDispatch();
   const [createTask] = useCreateTaskMutation();
   const [updateTaskStatusMutation] = useUpdateTaskStatusMutation();
   const [updateTaskMutation] = useUpdateTaskMutation();
@@ -213,17 +215,53 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
     const overIndex = over.data.current?.sortable?.index as number | undefined;
 
     if (to && to !== from) {
-      // Cross-column drop → status change (stage 19 pattern).
+      // Cross-column drop → status change at the drop position (stage 4):
+      // the card lands at the index resolved from the ghost/over-card centers
+      // (plan D2/D3) instead of always the end of the target column.
       const taskId = String(active.id);
       const newStatus = to;
 
-      // Instant UI update (existing handleDrop pattern).
-      dispatch(updateTaskStatus({ taskId, newStatus }));
+      const toTasks = boardTasks
+        .filter((task) => task.status === newStatus)
+        .sort((a, b) => a.position - b.position);
+      const insertIndex = resolveInsertIndex({
+        overIsColumn: COLUMNS.includes(overId as KanbanColumn),
+        overIndex,
+        overRect: over.rect ?? null,
+        ghostRect: active.rect.current?.translated ?? null,
+        targetCount: toTasks.length,
+      });
+
+      // Instant UI update: moved card lands at insertIndex; target-column
+      // cards at or after that index bump +1 (scattered positions stay ordered).
+      setBoardTasks((prev) =>
+        prev.map((task) => {
+          if (task.id === taskId) return { ...task, status: newStatus, position: insertIndex };
+          if (task.status === newStatus && task.position >= insertIndex) {
+            return { ...task, position: task.position + 1 };
+          }
+          return task;
+        }),
+      );
 
       try {
-        await updateTaskStatusMutation({ id: taskId, data: { status: newStatus } }).unwrap();
+        await updateTaskStatusMutation({ id: taskId, data: { status: newStatus, position: insertIndex } }).unwrap();
       } catch (err) {
         console.error('Failed to update task status:', err);
+      }
+
+      // Persist the renumbered target-column cards (stage 23 pattern: PUT every
+      // changed position through the active RTK layer).
+      for (let index = 0; index < toTasks.length; index++) {
+        const task = toTasks[index];
+        if (task.id === taskId) continue;
+        const newPosition = index >= insertIndex ? index + 1 : index;
+        if (task.position === newPosition) continue; // position unchanged
+        try {
+          await updateTaskMutation({ id: task.id, data: { position: newPosition } }).unwrap();
+        } catch (err) {
+          console.error('Failed to update task position:', err);
+        }
       }
       return;
     }
