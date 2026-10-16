@@ -123,27 +123,27 @@ export default function GlobalSearchBar() {
           if (query) performSearch(query);
         }}
         placeholder="Search contacts, tasks, companies..."
-        className="w-64 px-3 py-1.5 text-sm rounded border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 outline-none transition"
+        className="w-64 px-3 py-1.5 text-sm rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:border-ring focus:ring focus:ring-ring/30 outline-none transition"
         aria-label="Global search"
       />
 
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full mt-1 left-0 w-full bg-white border border-gray-200 rounded shadow-lg z-50 max-h-80 overflow-y-auto">
-          <div className="p-2 text-xs text-gray-500 font-medium">
+        <div className="absolute top-full mt-1 left-0 w-full bg-popover border rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+          <div className="p-2 text-xs text-muted-foreground font-medium">
             {results.length} result{results.length !== 1 ? 's' : ''} found
           </div>
           {results.map((result, index) => (
             <a
               key={`${result.type}-${result.id}-${index}`}
               href={result.link || '#'}
-              className="block px-3 py-1.5 text-sm hover:bg-gray-50 transition"
+              className="block px-3 py-1.5 text-sm hover:bg-muted transition"
               onClick={() => setIsOpen(false)}
             >
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500 uppercase">{result.type}</span>
+                <span className="text-xs text-muted-foreground uppercase">{result.type}</span>
                 <span className="font-medium">{result.title}</span>
               </div>
-              <div className="text-xs text-gray-500">{result.subtitle}</div>
+              <div className="text-xs text-muted-foreground">{result.subtitle}</div>
             </a>
           ))}
         </div>

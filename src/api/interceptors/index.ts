@@ -10,11 +10,10 @@ import {
   generateContacts,
   generateCompany,
   generateCompanies,
-  generateTask,
-  generateTasks,
   generateActivity,
   generateActivities,
 } from '../../mock-data/generators';
+import { interceptTasksMockRequest } from './mocks';
 
 type RequestArgs = {
   url: string;
@@ -150,32 +149,13 @@ export function interceptMockRequest(
   }
 
   // =====================================================
-  // Task endpoints
+  // Task endpoints — persisted in the localStorage layer (mock_data_tasks)
+  // so created/updated/deleted tasks survive page refreshes (kanban DnD).
+  // Canonical implementation in ./mocks (stage 16).
   // =====================================================
-
-  // GET /tasks - list all tasks (with optional search query param)
-  if (url === '/tasks' && method === 'GET') {
-    return generateTasks(10);
-  }
-
-  // GET /tasks/:id - get single task detail
-  if (url.startsWith('/tasks/') && url.split('/').length === 3 && method === 'GET') {
-    return generateTask();
-  }
-
-  // POST /tasks - create a single task
-  if (url === '/tasks' && method === 'POST') {
-    return generateTask();
-  }
-
-  // PUT /tasks/:id - update a single task
-  if (url.startsWith('/tasks/') && url.split('/').length === 3 && method === 'PUT') {
-    return { success: true, data: _body };
-  }
-
-  // DELETE /tasks/:id - delete a single task
-  if (url.startsWith('/tasks/') && url.split('/').length === 3 && method === 'DELETE') {
-    return { success: true };
+  const tasksResult = interceptTasksMockRequest(url, { method, body: _body, params: request.params });
+  if (tasksResult !== null) {
+    return tasksResult;
   }
 
   // =====================================================

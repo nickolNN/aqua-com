@@ -10,17 +10,10 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+// The palette lives in src/styles/tailwind.css (`:root` / `.dark`); this only
+// toggles the `.dark` class so the CSS variables apply. No inline overrides.
 const applyTheme = (theme: 'light' | 'dark') => {
   document.documentElement.classList.toggle('dark', theme === 'dark');
-  document.documentElement.style.setProperty('--background', theme === 'dark' ? '#030711' : '#ffffff');
-  document.documentElement.style.setProperty('--foreground', theme === 'dark' ? '#f5f9ff' : '#020817');
-  document.documentElement.style.setProperty('--border', theme === 'dark' ? '#27272a' : '#eeeff1');
-  document.documentElement.style.setProperty('--sidebar', theme === 'dark' ? '#09090b' : '#fafafa');
-  document.documentElement.style.setProperty('--sidebar-foreground', theme === 'dark' ? '#f5f9ff' : '#020817');
-  document.documentElement.style.setProperty('--sidebar-border', theme === 'dark' ? '#27272a' : '#eeeff1');
-  document.documentElement.style.setProperty('--sidebar-accent', theme === 'dark' ? '#27272a' : '#eeeff1');
-  document.documentElement.style.setProperty('--sidebar-accent-foreground', theme === 'dark' ? '#f5f9ff' : '#17181c');
-  document.documentElement.style.setProperty('--radius', '0.5rem');
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {

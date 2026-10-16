@@ -17,7 +17,7 @@ export function ActivitiesView() {
   const [sortBy, setSortBy] = useState<'date' | 'type' | 'title'>('date');
   const [filterType, setFilterType] = useState<ActivityType | undefined>(undefined);
 
-  const { data: activitiesData, isLoading } = useGetActivitiesQuery({
+  const { data: activitiesData, isLoading, error } = useGetActivitiesQuery({
     page: 1,
     limit: 50,
     search: '',
@@ -45,18 +45,30 @@ export function ActivitiesView() {
     return sorted;
   }, [filteredActivities, sortBy]);
 
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="text-destructive">
+          Error: {typeof error === 'string' ? error : 'Failed to load activities'}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto py-6 px-4">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Activity Timeline</h1>
-       <Button size="sm" onClick={() => setShowForm(true)}>
-            New Activity
-          </Button>
+        <Button size="sm" onClick={() => setShowForm(true)}>
+          New Activity
+        </Button>
       </div>
 
       <ActivityFilterBar
-        onTypeChange={(type) => setFilterType(type as ActivityType | undefined)}
-        onSortChange={(sort) => setSortBy(sort as 'date' | 'type' | 'title')}
+        type={filterType}
+        sort={sortBy}
+        onTypeChange={(type) => setFilterType(type)}
+        onSortChange={(sort) => setSortBy(sort)}
       />
 
       <ActivityTimeline

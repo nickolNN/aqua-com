@@ -4,12 +4,12 @@ import { cn } from '@/lib/utils';
 type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'status' | 'priority';
 
 const variantStyles: Record<string, string> = {
-  default: 'bg-primary text-primary-foreground',
+  default: 'bg-primary/10 text-primary border border-primary/20',
   secondary: 'bg-secondary text-secondary-foreground',
-  destructive: 'bg-destructive text-destructive-foreground',
+  destructive: 'bg-destructive/10 text-destructive border border-destructive/20',
   outline: 'border border-input bg-transparent',
-  status: 'bg-blue-100 text-blue-800',
-  priority: 'bg-yellow-100 text-yellow-800',
+  status: 'bg-primary/10 text-primary border border-primary/20',
+  priority: 'bg-accent/10 text-accent border border-accent/20',
 };
 
 const statusVariantMap: Record<string, string> = {

@@ -8,7 +8,7 @@ const Sidebar = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('h-full bg-sidebar text-sidebar-foreground border-r border-sidebar-border', className)}
+      className={cn('h-full flex flex-col bg-transparent', className)}
       {...props}
     />
   );
@@ -25,7 +25,14 @@ const SidebarHeader = React.forwardRef<
       className={cn('flex items-center gap-2 p-4', className)}
       {...props}
     >
-      {logo && <span className="text-xl font-bold">Aqua CRM</span>}
+      {logo && (
+        <span className="flex items-center gap-2.5">
+          <span className="gradient-primary flex h-7 w-7 shrink-0 items-center justify-center rounded-lg shadow-sm">
+            <span className="h-3.5 w-3.5 rounded-full bg-white/90" />
+          </span>
+          <span className="text-lg font-bold tracking-tight">{logo}</span>
+        </span>
+      )}
     </div>
   );
 });

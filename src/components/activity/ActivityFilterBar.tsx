@@ -2,33 +2,55 @@
 // Activity Filter Bar Component
 // =====================================================
 import { ACTIVITY_TYPES, type ActivityType } from '@/api/activitiesApi';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
+
+type SortKey = 'date' | 'type' | 'title';
 
 interface ActivityFilterBarProps {
-  onTypeChange?: (type: ActivityType) => void;
-  onSortChange?: (sort: 'date' | 'type' | 'title') => void;
+  type: ActivityType | undefined;
+  sort: SortKey;
+  onTypeChange: (type: ActivityType | undefined) => void;
+  onSortChange: (sort: SortKey) => void;
 }
 
 export default function ActivityFilterBar({
+  type,
+  sort,
   onTypeChange,
   onSortChange,
 }: ActivityFilterBarProps) {
   return (
-    <div className="flex gap-4 mb-4">
-      <div>
-        <select onChange={(e) => onTypeChange?.(e.target.value as ActivityType)} className="px-2 py-1 border rounded">
-          <option value="">All Types</option>
-          {ACTIVITY_TYPES.map((type) => (
-            <option key={type} value={type}>{type}</option>
+    <div className="mb-4 flex gap-4">
+      <Select
+        value={type ?? 'all'}
+        onValueChange={(value) =>
+          onTypeChange(value === 'all' ? undefined : (value as ActivityType))
+        }
+      >
+        <SelectTrigger className="w-48">
+          <SelectValue placeholder="All Types" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Types</SelectItem>
+          {ACTIVITY_TYPES.map((item) => (
+            <SelectItem key={item} value={item}>{item}</SelectItem>
           ))}
-        </select>
-      </div>
-      <div>
-        <select onChange={(e) => onSortChange?.(e.target.value as 'date' | 'type' | 'title')}>
-          <option value="date">Sort by Date</option>
-          <option value="type">Sort by Type</option>
-          <option value="title">Sort by Title</option>
-        </select>
-      </div>
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={sort}
+        onValueChange={(value) => onSortChange(value as SortKey)}
+      >
+        <SelectTrigger className="w-48">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="date">Date</SelectItem>
+          <SelectItem value="type">Type</SelectItem>
+          <SelectItem value="title">Title</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }

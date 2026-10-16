@@ -108,7 +108,7 @@ export function SearchView() {
           {savedFilters.map((filterItem: unknown) => {
             const filter = filterItem as SavedFilter;
             return (
-              <div key={filter.id} className="flex items-center justify-between p-3 bg-white border rounded-md">
+              <div key={filter.id} className="flex items-center justify-between p-3 bg-card border rounded-lg">
                 <div>
                   <span className="font-medium">{filter.name}</span>
                   <span className="text-sm text-muted-foreground ml-2">{JSON.stringify(filter.criteria)}</span>

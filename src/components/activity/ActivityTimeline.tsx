@@ -3,6 +3,7 @@
 // =====================================================
 import type { ActivitySchema } from '@/mock-data/schemas';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { Card } from '@/components/ui/Card';
 
 interface ActivityTimelineProps {
   activities: ActivitySchema[];
@@ -37,31 +38,31 @@ export default function ActivityTimeline({ activities, loading }: ActivityTimeli
 
   if (activities.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
+      <Card className="p-6 text-center text-muted-foreground">
         No activities found. Create one to get started.
-      </div>
+      </Card>
     );
   }
 
   return (
     <div className="space-y-4">
       {activities.map((activity) => (
-        <div key={activity.id} className="border-l-4 border-primary pl-4 py-2">
+        <Card key={activity.id} className="border-l-4 border-primary p-4">
           <div className="font-semibold flex items-center gap-2">
             <span>{ACTIVITY_TYPE_ICONS[activity.type] || '📋'}</span>
             <span>{activity.title}</span>
             <span className="text-sm text-muted-foreground text-xs">({activity.type})</span>
           </div>
-          <div className="text-muted-foreground text-sm">
+          <div className="text-muted-foreground text-sm mt-1">
             {new Date(activity.date).toLocaleDateString()}
           </div>
           {activity.description && (
-            <div className="text-foreground">{activity.description}</div>
+            <div className="text-foreground mt-2">{activity.description}</div>
           )}
           {activity.duration && (
-            <div className="text-muted-foreground text-sm">Duration: {activity.duration} min</div>
+            <div className="text-muted-foreground text-sm mt-2">Duration: {activity.duration} min</div>
           )}
-        </div>
+        </Card>
       ))}
     </div>
   );

@@ -14,7 +14,7 @@ export function ConfirmDialog({ isOpen, onClose, onConfirm, title, description, 
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-      <div className="bg-background rounded-lg p-6 max-w-md w-full mx-4">
+      <div className="glass rounded-lg p-6 max-w-md w-full mx-4">
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
         <p className="text-sm text-muted-foreground mb-4">{description}</p>
         <div className="flex justify-end gap-2">

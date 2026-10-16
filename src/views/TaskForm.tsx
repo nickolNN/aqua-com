@@ -177,7 +177,7 @@ export function TaskForm() {
   if (success) {
     return (
       <div className="max-w-4xl mx-auto py-6 px-4">
-        <div className="text-green-600">{success}</div>
+        <div className="text-primary">{success}</div>
         <Link to="/tasks" className="text-primary">Back to tasks</Link>
       </div>
     );

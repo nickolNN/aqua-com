@@ -10,6 +10,7 @@ import {
   generateTask,
   generateActivity,
 } from '../mock-data/generators';
+import { getStoredTasks, saveTasks } from '../mock-data/persistence';
 
 // Helper to get request body
 async function getRequestBody(request: Request): Promise<Record<string, unknown> | null> {
@@ -23,6 +24,31 @@ async function getRequestBody(request: Request): Promise<Record<string, unknown>
   } catch {
     return null;
   }
+}
+
+// ===================== TASKS PERSISTENCE =====================
+// Tasks live in localStorage (mock_data_tasks). The store is seeded once
+// with generated data on the first request; every read and write afterwards
+// goes through getStoredTasks/saveTasks so created and updated tasks
+// survive page refreshes (kanban persistence).
+type TaskRecord = Record<string, unknown>;
+
+function getTaskStore(): TaskRecord[] {
+  const stored = getStoredTasks() as TaskRecord[];
+  if (stored.length > 0) {
+    return stored;
+  }
+  // SAFETY: generateTasks(10) always returns full Task objects (position included),
+  // so casting to TaskRecord[] keeps the store shape valid for reads/merges.
+  const seeded = generateTasks(10) as unknown as TaskRecord[];
+  saveTasks(seeded);
+  return seeded;
+}
+// Kanban position contract: when a PUT body carries `position` it must be a
+// finite non-negative integer — it orders cards within a column and is what
+// gets persisted into the mock_data_tasks store on every update.
+function isValidPosition(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0;
 }
 
 // Create handlers array for MSW
@@ -137,15 +163,14 @@ export const handlers = [
     }
     const search = url.searchParams.get('search');
 
-    const tasks = generateTasks(10);
+    const tasks = getTaskStore();
 
     if (search) {
-      // SAFETY: mock data is an array of objects
-      const filtered = (tasks as unknown as Record<string, unknown>[]).filter(
-      (task) =>
-        (task as Record<string, string>)['title']?.toLowerCase().includes(search) ||
-        ((task as Record<string, string>)['description'] || '').toLowerCase().includes(search)
-    );
+      const filtered = tasks.filter(
+        (task) =>
+          (task['title'] as string | undefined)?.toLowerCase().includes(search) ||
+          ((task['description'] as string | undefined) || '').toLowerCase().includes(search)
+      );
       return HttpResponse.json({ success: true, data: filtered, error: null });
     }
 
@@ -153,25 +178,105 @@ export const handlers = [
   }),
 
   // GET /api/tasks/:id
-  http.get('/api/tasks/:id', () => {
-    const task = generateTask();
+  http.get('/api/tasks/:id', ({ params }) => {
+    const tasks = getTaskStore();
+    const task = tasks.find((t) => t['id'] === params.id);
+    if (!task) {
+      return HttpResponse.json(
+        { success: false, data: null, error: `Task ${params.id} not found` },
+        { status: 404 },
+      );
+    }
     return HttpResponse.json({ success: true, data: task, error: null });
   }),
 
   // POST /api/tasks
-  http.post('/api/tasks', () => {
-    const newTask = generateTask();
+  http.post('/api/tasks', async ({ request }) => {
+    const body = (await getRequestBody(request)) ?? {};
+    const tasks = getTaskStore();
+    const now = new Date().toISOString();
+    // Start from a fully-shaped generated task, then overlay the client's
+    // fields so missing optional fields keep valid defaults.
+    const newTask: TaskRecord = {
+      ...generateTask(),
+      ...(body as TaskRecord),
+      created_at: now,
+      updated_at: now,
+    };
+    tasks.push(newTask);
+    saveTasks(tasks);
     return HttpResponse.json({ success: true, data: newTask, error: null });
   }),
 
+  // PUT /api/tasks/:id/status — kanban column move (layer parity with the
+  // RTK interceptor). Must be declared before PUT /api/tasks/:id: MSW
+  // matches handlers in array order and `:id` would swallow the /status path.
+  http.put('/api/tasks/:id/status', async ({ params, request }) => {
+    const body = (await getRequestBody(request)) ?? {};
+    const tasks = getTaskStore();
+    const index = tasks.findIndex((t) => t['id'] === params.id);
+    if (index === -1) {
+      return HttpResponse.json(
+        { success: false, data: null, error: `Task ${params.id} not found` },
+        { status: 404 },
+      );
+    }
+    const updated: TaskRecord = {
+      ...tasks[index],
+      ...(body as TaskRecord),
+      id: params.id,
+      updated_at: new Date().toISOString(),
+    };
+    tasks[index] = updated;
+    saveTasks(tasks);
+    return HttpResponse.json({ success: true, data: updated, error: null });
+  }),
+
   // PUT /api/tasks/:id
-  http.put('/api/tasks/:id', () => {
-    const updatedTask = generateTask();
-    return HttpResponse.json({ success: true, data: updatedTask, error: null });
+  http.put('/api/tasks/:id', async ({ params, request }) => {
+    const body = (await getRequestBody(request)) ?? {};
+    const tasks = getTaskStore();
+    const index = tasks.findIndex((t) => t['id'] === params.id);
+    if (index === -1) {
+      return HttpResponse.json(
+        { success: false, data: null, error: `Task ${params.id} not found` },
+        { status: 404 },
+      );
+    }
+    // Explicit position update (kanban): a present `position` must validate,
+    // otherwise the store would be corrupted with an unorderable card.
+    if ('position' in body && !isValidPosition(body['position'])) {
+      return HttpResponse.json(
+        { success: false, data: null, error: 'position must be a non-negative integer' },
+        { status: 400 },
+      );
+    }
+    const updated: TaskRecord = {
+      ...tasks[index],
+      ...(body as TaskRecord),
+      id: params.id,
+      updated_at: new Date().toISOString(),
+    };
+    // The validated position from the body wins (kanban reorder contract).
+    if ('position' in body) {
+      updated['position'] = body['position'];
+    }
+    tasks[index] = updated;
+    saveTasks(tasks);
+    return HttpResponse.json({ success: true, data: updated, error: null });
   }),
 
   // DELETE /api/tasks/:id
-  http.delete('/api/tasks/:id', () => {
+  http.delete('/api/tasks/:id', ({ params }) => {
+    const tasks = getTaskStore();
+    const remaining = tasks.filter((t) => t['id'] !== params.id);
+    if (remaining.length === tasks.length) {
+      return HttpResponse.json(
+        { success: false, data: null, error: `Task ${params.id} not found` },
+        { status: 404 },
+      );
+    }
+    saveTasks(remaining);
     return HttpResponse.json({ success: true, data: true, error: null });
   }),
 

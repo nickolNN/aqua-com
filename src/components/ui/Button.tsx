@@ -15,10 +15,10 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
     const isAnchor = props.href !== undefined;
 
     const variantStyles: Record<string, string> = {
-      default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+      default: 'gradient-primary text-primary-foreground shadow-sm hover:shadow-md hover:brightness-110',
       secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-      outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-      ghost: 'hover:bg-accent hover:text-accent-foreground',
+      outline: 'border border-input bg-background hover:bg-accent/10 hover:border-accent',
+      ghost: 'hover:bg-accent/10',
       link: 'text-primary underline-offset-4 hover:underline',
       destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
     };
@@ -31,7 +31,7 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
     };
 
     const buttonClasses = cn(
-      'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50',
       variantStyles[variant],
       sizeStyles[size],
       className
