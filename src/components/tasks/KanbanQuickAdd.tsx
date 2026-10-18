@@ -51,7 +51,6 @@ export function KanbanQuickAdd({ onSubmit }: KanbanQuickAddProps) {
         }}
         placeholder="Task title"
         className="h-9"
-        autoFocus
       />
       <Button type="submit" size="sm" disabled={submitting || !title.trim()}>
         Add

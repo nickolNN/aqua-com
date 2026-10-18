@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login, setupTestEnvironment } from './fixtures/setup';
+import { setupTestEnvironment } from './fixtures/setup';
 
 test.describe('Registration Tests', () => {
   test.beforeEach(async ({ page }) => {

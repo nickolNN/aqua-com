@@ -34,7 +34,7 @@ export const settingsSlice = createSlice({
   reducers: {
     setTheme: (state, action) => {
       state.theme = action.payload;
-      try { localStorage.setItem('theme', action.payload as 'light' | 'dark'); } catch (e) { /* ignore */ }
+      try { localStorage.setItem('theme', action.payload as 'light' | 'dark'); } catch { /* ignore */ }
     },
     setLanguage: (state, action) => { state.language = action.payload; },
     setPreferences: (state, action) => { state.preferences = action.payload; },
