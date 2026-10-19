@@ -1,22 +1,11 @@
-// =====================================================
-// SavedFilters Component
-// =====================================================
-// Displays saved filters and allows loading/removing them.
-// Uses Redux store for saved filter state management.
-// =====================================================
-
 import { useSelector, useDispatch } from 'react-redux';
 import { loadSavedFilter, removeSavedFilter } from '../../stores/searchSlice';
 import type { SavedFilter } from '../../stores/searchSlice';
 
 interface SavedFiltersProps {
-  /** Entity type this filter applies to */
   entityType: 'task' | 'contact' | 'company' | 'activity';
 }
 
-/**
- * Renders a single saved filter button
- */
 function SavedFilterButton({ filter }: { filter: SavedFilter }) {
   const dispatch = useDispatch();
 
@@ -44,16 +33,11 @@ function SavedFilterButton({ filter }: { filter: SavedFilter }) {
   );
 }
 
-/**
- * SavedFilters displays saved filters for the current entity type
- * and allows loading/removing them
- */
 export function SavedFilters({ entityType }: SavedFiltersProps) {
   const loadedFilters = useSelector((state: { search: { savedFilters: SavedFilter[] } }) =>
     state.search.savedFilters
   );
 
-  // Filter for the current entity type
   const entityFilters = loadedFilters.filter(
     (f) => f.type === entityType
   );

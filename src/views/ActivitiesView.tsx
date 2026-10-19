@@ -1,6 +1,3 @@
-// =====================================================
-// Activity Timeline View
-// =====================================================
 import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetActivitiesQuery } from '@/api/activitiesApi';

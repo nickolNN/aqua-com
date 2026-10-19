@@ -54,7 +54,6 @@ export function CompaniesView() {
         </Button>
       </div>
 
-      {/* Search and Create Form */}
       <div className="mb-6 flex gap-4">
         <Input
           type="text"
@@ -69,7 +68,6 @@ export function CompaniesView() {
         </form>
       </div>
 
-      {/* Companies List */}
       <Card>
         <CardContent>
           {companies && companies.length > 0 ? (

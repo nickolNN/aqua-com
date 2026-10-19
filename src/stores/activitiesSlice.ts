@@ -1,6 +1,3 @@
-// =====================================================
-// Activity Redux Slice
-// =====================================================
 import { createSlice, type PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import type { ActivitySchema } from '@/mock-data/schemas';
 import { generateActivities } from '@/mock-data/generators';
@@ -8,7 +5,6 @@ import { generateActivities } from '@/mock-data/generators';
 export const ACTIVITY_TYPES = ['call', 'meeting', 'email', 'note', 'task', 'deal', 'other'] as const;
 export type ActivityType = (typeof ACTIVITY_TYPES)[number];
 
-// Async thunk for loading activities from API
 export const fetchActivities = createAsyncThunk(
   'activities/fetchActivities',
   async () => {
@@ -17,7 +13,6 @@ export const fetchActivities = createAsyncThunk(
   },
 );
 
-// Async thunk for creating an activity
 export const createActivityThunk = createAsyncThunk(
   'activities/createActivity',
   async (activity: Omit<ActivitySchema, 'id' | 'created_by' | 'created_at'> & { contact_id?: string }) => {
@@ -31,7 +26,6 @@ export const createActivityThunk = createAsyncThunk(
   },
 );
 
-// Async thunk for updating an activity
 export const updateActivityThunk = createAsyncThunk(
   'activities/updateActivity',
   async ({ id, data }: { id: string; data: Partial<ActivitySchema> }) => {
@@ -40,7 +34,6 @@ export const updateActivityThunk = createAsyncThunk(
   },
 );
 
-// Async thunk for deleting an activity
 export const deleteActivityThunk = createAsyncThunk(
   'activities/deleteActivity',
   async (id: string) => {
@@ -48,7 +41,6 @@ export const deleteActivityThunk = createAsyncThunk(
   },
 );
 
-// Async thunk for loading mock activities
 export const loadMockActivitiesThunk = createAsyncThunk(
   'activities/loadMockActivities',
   async () => generateActivities(10),
@@ -120,26 +112,21 @@ export const activitiesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch activities
       .addCase(fetchActivities.fulfilled, (state, action) => {
       state.activities = action.payload;
       })
-      // Create activity
       .addCase(createActivityThunk.fulfilled, (state, action) => {
       state.activities.push(action.payload);
       })
-      // Update activity
       .addCase(updateActivityThunk.fulfilled, (state, action) => {
       const index = state.activities.findIndex((a) => a.id === action.payload.id);
       if (index !== -1) {
         Object.assign(state.activities[index], action.payload);
       }
       })
-      // Delete activity
       .addCase(deleteActivityThunk.fulfilled, (state, action) => {
       state.activities = state.activities.filter((a) => a.id !== action.payload);
       })
-      // Load mock activities
       .addCase(loadMockActivitiesThunk.fulfilled, (state, action) => {
       state.activities = action.payload;
       });

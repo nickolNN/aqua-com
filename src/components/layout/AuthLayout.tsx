@@ -1,9 +1,5 @@
 import { Outlet } from 'react-router-dom';
 
-/**
- * AuthLayout component provides the layout for authentication pages (login, register).
- * Centers content and provides a clean, minimal background.
- */
 export function AuthLayout() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">

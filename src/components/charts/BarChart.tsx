@@ -1,10 +1,3 @@
-// =====================================================
-// BarChart Component
-// =====================================================
-// Renders a horizontal bar chart for displaying data distributions.
-// Uses Tailwind CSS for styling.
-// =====================================================
-
 import { useState } from 'react';
 
 interface BarChartProps {

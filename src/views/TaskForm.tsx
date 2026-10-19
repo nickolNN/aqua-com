@@ -145,7 +145,7 @@ export function TaskForm() {
           setSuccess('Task updated successfully');
           navigate(`/tasks/${id}`);
         }
-      } catch (err) {
+      } catch {
         setErrorMessage('Failed to update task');
       } finally {
         setIsUpdating(false);
@@ -158,7 +158,7 @@ export function TaskForm() {
           setSuccess('Task created successfully');
           navigate('/tasks');
         }
-      } catch (err) {
+      } catch {
         setErrorMessage('Failed to create task');
       } finally {
         setIsCreating(false);
@@ -314,7 +314,7 @@ export function TaskForm() {
                 )}
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Dependencies</label>
+                  <p className="block text-sm font-medium mb-2">Dependencies</p>
                   {dependencies.length === 0 && (
                     <Button type="button" variant="outline" size="sm" onClick={handleAddDependency}>
                       Add Dependency

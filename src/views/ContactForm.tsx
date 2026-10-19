@@ -30,18 +30,15 @@ export function ContactForm() {
     company_id: '',
   });
 
-  // Call RTK Query hook unconditionally at top level
   const idRef = useRef(id);
   const contactResult = useGetContactQuery(idRef.current as string, {
     refetchOnMountOrArgChange: true,
   });
 
-  // Update ref when ID changes (triggers re-fetch)
   useEffect(() => {
     idRef.current = id;
   }, [id]);
 
-  // Load existing contact data when editing
   useEffect(() => {
     if (isEdit && id && contactResult.data) {
       const contact = contactResult.data;

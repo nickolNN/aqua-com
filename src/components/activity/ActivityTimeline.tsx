@@ -1,6 +1,3 @@
-// =====================================================
-// Activity Timeline Component
-// =====================================================
 import type { ActivitySchema } from '@/mock-data/schemas';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Card } from '@/components/ui/Card';
@@ -10,7 +7,6 @@ interface ActivityTimelineProps {
   loading: boolean;
 }
 
-/** Activity type to icon mapping */
 const ACTIVITY_TYPE_ICONS: Record<string, string> = {
   call: '📞',
   meeting: '📅',

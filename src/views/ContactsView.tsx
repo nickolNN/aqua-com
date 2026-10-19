@@ -22,7 +22,6 @@ export function ContactsView() {
       phone: '+1-555-123-4567',
       };
       await createContact(newContact).unwrap();
-      // Force refetch
       setSearchTerm('');
     } catch (err) {
       console.error('Failed to create contact:', err);
@@ -56,7 +55,6 @@ export function ContactsView() {
          </Button>
       </div>
 
-      {/* Search and Create Form */}
       <div className="mb-6 flex gap-4">
         <Input
           type="text"
@@ -71,7 +69,6 @@ export function ContactsView() {
         </form>
       </div>
 
-      {/* Contacts List */}
       <Card>
         <CardContent>
         {contacts && contacts.length > 0 ? (

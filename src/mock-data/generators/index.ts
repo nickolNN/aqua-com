@@ -1,10 +1,3 @@
-// =====================================================
-// Mock Data Generators
-// =====================================================
-// Realistic mock data generators for each entity type.
-// Each generator creates sample data with realistic names, emails, etc.
-// =====================================================
-
 import type {
   ContactSchema,
   CompanySchema,
@@ -13,13 +6,6 @@ import type {
   UserSchema,
 } from '../schemas';
 
-// =====================================================
-// Utility Functions
-// =====================================================
-
-/**
- * Generate a UUID v4
- */
 function generateUuid(): string {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
     /[xy]/g,
@@ -31,9 +17,6 @@ function generateUuid(): string {
   );
 }
 
-/**
- * Generate a date string in ISO format
- */
 function generateDate(daysAgo: number, rangeDays: number = 30): string {
   const now = new Date();
   const baseDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
@@ -42,23 +25,13 @@ function generateDate(daysAgo: number, rangeDays: number = 30): string {
   return date.toISOString();
 }
 
-/**
- * Get a random element from an array
- */
 function randomChoice<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)];
 }
 
-/**
- * Generate a random integer between min and max
- */
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min) + min);
 }
-
-// =====================================================
-// Person Data
-// =====================================================
 
 const firstNames = [
   'James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
@@ -92,13 +65,6 @@ const companyPrefixes = ['Tech', 'Global', 'Prime', 'Alpha', 'Digital', 'Smart',
 const companySuffixes = ['Solutions', 'Systems', 'Labs', 'Enterprises', 'Holdings', 'Group', 'Partners', 'Ventures'];
 const industries = ['Technology', 'Healthcare', 'Finance', 'Education', 'Manufacturing', 'Retail', 'Consulting', 'Real Estate', 'Media', 'Telecommunications'];
 
-// =====================================================
-// Contact Generator
-// =====================================================
-
-/**
- * Generate a realistic contact object
- */
 export function generateContact(id?: string, dateOffset: number = 0): ContactSchema {
   const firstName = randomChoice(firstNames);
   const lastName = randomChoice(lastNames);
@@ -116,20 +82,10 @@ export function generateContact(id?: string, dateOffset: number = 0): ContactSch
   };
 }
 
-/**
- * Generate multiple contacts
- */
 export function generateContacts(count: number = 10): ContactSchema[] {
   return Array.from({ length: count }, () => generateContact(undefined, Math.floor(Math.random() * 30)));
 }
 
-// =====================================================
-// Company Generator
-// =====================================================
-
-/**
- * Generate a realistic company object
- */
 export function generateCompany(): CompanySchema {
   const name = `${randomChoice(companyPrefixes)} ${randomChoice(companySuffixes)}`;
 
@@ -145,16 +101,9 @@ export function generateCompany(): CompanySchema {
   };
 }
 
-/**
- * Generate multiple companies
- */
 export function generateCompanies(count: number = 10): CompanySchema[] {
   return Array.from({ length: count }, () => generateCompany());
 }
-
-// =====================================================
-// Task Generator
-// =====================================================
 
 const taskTitles = [
   'Review project proposal',
@@ -184,9 +133,6 @@ const taskTitles = [
   'Review security logs',
 ];
 
-/**
- * Generate a realistic task object
- */
 export function generateTask(position?: number): TaskSchema {
   const title = randomChoice(taskTitles);
 
@@ -218,16 +164,9 @@ export function generateTask(position?: number): TaskSchema {
   };
 }
 
-/**
- * Generate multiple tasks
- */
 export function generateTasks(count: number = 10): TaskSchema[] {
   return Array.from({ length: count }, (_, i) => generateTask(i));
 }
-
-// =====================================================
-// Activity Generator
-// =====================================================
 
 const activityTypes: Array<'call' | 'meeting' | 'email' | 'note' | 'task' | 'deal' | 'other'> = ['call', 'meeting', 'email', 'note', 'task', 'deal', 'other'];
 const activityTitles = [
@@ -248,9 +187,6 @@ const activityTitles = [
   'Technical review',
 ];
 
-/**
- * Generate a realistic activity object
- */
 export function generateActivity(): ActivitySchema {
   const type = randomChoice(activityTypes);
   const title = randomChoice(activityTitles);
@@ -269,20 +205,10 @@ export function generateActivity(): ActivitySchema {
   };
 }
 
-/**
- * Generate multiple activities
- */
 export function generateActivities(count: number = 10): ActivitySchema[] {
   return Array.from({ length: count }, () => generateActivity());
 }
 
-// =====================================================
-// User Generator
-// =====================================================
-
-/**
- * Generate a realistic user object
- */
 export function generateUser(): UserSchema {
   const role = randomChoice(['admin', 'user', 'manager']);
   return {

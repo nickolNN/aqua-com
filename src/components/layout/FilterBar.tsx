@@ -4,13 +4,6 @@ import { Input } from '@/components/ui/Input';
 import { Modal, ModalContent, ModalTitle, ModalFooter } from '@/components/ui/Modal';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
 
-// =====================================================
-// FilterBar Component
-// =====================================================
-// Advanced filtering UI component supporting date range,
-// status, priority, type, and custom field filters.
-// =====================================================
-
 interface FilterBarProps {
   entityType: 'tasks' | 'contacts' | 'companies' | 'activities';
   onFilterChange?: (filters: Record<string, unknown>) => void;

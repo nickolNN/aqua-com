@@ -7,7 +7,6 @@ export interface SettingsState {
   isLoading: boolean;
 }
 
-// Helper to check system preference
 const getSystemThemePreference = (): 'light' | 'dark' =>
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
@@ -34,7 +33,7 @@ export const settingsSlice = createSlice({
   reducers: {
     setTheme: (state, action) => {
       state.theme = action.payload;
-      try { localStorage.setItem('theme', action.payload as 'light' | 'dark'); } catch (e) { /* ignore */ }
+      try { localStorage.setItem('theme', action.payload as 'light' | 'dark'); } catch { /* ignore */ }
     },
     setLanguage: (state, action) => { state.language = action.payload; },
     setPreferences: (state, action) => { state.preferences = action.payload; },
@@ -44,12 +43,10 @@ export const settingsSlice = createSlice({
 
 export const { setTheme, setLanguage, setPreferences, setSettingsLoading } = settingsSlice.actions;
 
-// Selectors
 export const selectSettingsTheme = (state: { settings: SettingsState }) => state.settings.theme;
 
 export const settingsReducer = settingsSlice.reducer;
 
-// Apply theme to document element
 export const applyTheme = (theme?: string) => {
   const themeToApply = theme ?? (localStorage.getItem('theme') as 'light' | 'dark') ?? getSystemThemePreference();
   document.documentElement.classList.toggle('dark', themeToApply === 'dark');

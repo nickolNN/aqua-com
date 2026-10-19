@@ -14,7 +14,6 @@ import {
   settingsReducer,
 } from '@/stores';
 
-// Persist config
 const persistConfig = {
   key: 'root',
   storage,

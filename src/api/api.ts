@@ -1,8 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { mockBaseQuery } from './interceptors';
 
-
-// Login/Register types
 export type LoginResponse = {
   token: string;
   user: {
@@ -17,14 +15,12 @@ export type RegisterRequest = {
   name: string;
 }
 
-// API response wrapper
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data: T;
   error: string | null;
 }
 
-// Paginated response
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
@@ -32,7 +28,6 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
-// Query params for filtering
 export interface QueryParams {
   page?: number;
   limit?: number;
@@ -41,13 +36,11 @@ export interface QueryParams {
   search?: string;
 }
 
-// RTK Query API definition
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: mockBaseQuery,
   tagTypes: ['Contact', 'Company', 'Task', 'Activity', 'Auth', 'Dashboard', 'Search'],
   endpoints: (builder) => ({
-    // Auth endpoints
     login: builder.mutation<LoginResponse, { email: string; password: string }>({
       query: (credentials) => ({
         url: '/auth/login',
@@ -72,9 +65,7 @@ export const api = createApi({
   keepUnusedDataFor: 5,
 });
 
-// Export hooks
 export const {
-  // Auth hooks
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,

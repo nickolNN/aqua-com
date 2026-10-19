@@ -1,10 +1,3 @@
-// =====================================================
-// PieChart Component
-// =====================================================
-// Renders a donut chart for displaying data distributions.
-// Uses pure CSS with Tailwind for styling.
-// =====================================================
-
 interface PieChartProps {
   data: Record<string, number>;
   title: string;
@@ -37,7 +30,6 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
     <div className="p-4 glass rounded-lg">
       <h3 className="text-sm font-semibold">{title}</h3>
       <div className="flex items-center gap-4">
-        {/* Donut chart visualization */}
         <div className="relative w-24 h-24 shrink-0">
           <svg viewBox="0 0 100 100" className="w-full h-full">
             {(() => {
@@ -77,10 +69,8 @@ export function PieChart({ data, title, colorPalette: customPalette }: PieChartP
               });
             })()}
           </svg>
-          {/* Center circle for donut effect */}
           <div className="absolute inset-3 bg-card rounded-full" />
         </div>
-        {/* Legend */}
         <div className="flex-1 space-y-1">
           {Object.entries(data)
             .sort(([, a], [, b]) => b - a)

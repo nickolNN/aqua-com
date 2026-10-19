@@ -27,18 +27,15 @@ export function CompanyForm() {
     address: '',
   });
 
-  // Call RTK Query hook unconditionally at top level
   const companyIdRef = useRef(id);
   const companyResult = useGetCompanyQuery(companyIdRef.current as string, {
     refetchOnMountOrArgChange: true,
   });
 
-  // Update ref when ID changes
   useEffect(() => {
     companyIdRef.current = id;
   }, [id]);
 
-  // Load existing company data when editing
   useEffect(() => {
     if (isEdit && id && companyResult.data) {
       const company = companyResult.data;

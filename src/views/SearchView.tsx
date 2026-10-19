@@ -1,10 +1,3 @@
-// =====================================================
-// SearchView Component
-// =====================================================
-// Full-page view for searching across all entities
-// with advanced filtering and saved filter support.
-// =====================================================
-
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -20,10 +13,6 @@ import FilterBar from '@/components/layout/FilterBar';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
-/**
- * SearchView component provides a full-page search experience
- * with advanced filtering, saved filters, and search results.
- */
 export function SearchView() {
   const dispatch = useDispatch();
   const savedFilters = useSelector((state: { search: { savedFilters: unknown[] } }) => state.search.savedFilters);
@@ -49,13 +38,11 @@ export function SearchView() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Search</h1>
         <p className="text-sm text-muted-foreground">Search across contacts, companies, tasks, and activities</p>
       </div>
 
-      {/* Search form */}
       <form onSubmit={handleSearch} className="mb-6">
         <div className="flex gap-2">
           <Input
@@ -71,7 +58,6 @@ export function SearchView() {
         </div>
       </form>
 
-      {/* Tabs */}
       <div className="flex gap-2 mb-4">
      <button
            className={`px-3 py-1 rounded text-sm ${activeTab === 'search' ? 'bg-muted' : 'hover:bg-muted'}`}
@@ -93,7 +79,6 @@ export function SearchView() {
         </button>
       </div>
 
-      {/* Tab content */}
       {activeTab === 'search' && query && (
         <div>
           <SearchResults results={globalSearch(query)} query={query} />

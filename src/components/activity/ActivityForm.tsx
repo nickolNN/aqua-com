@@ -1,6 +1,3 @@
-// =====================================================
-// Activity Form Component
-// =====================================================
 import { useState, type FormEvent } from 'react';
 import { ACTIVITY_TYPES, type ActivityType } from '@/api/activitiesApi';
 import { useCreateActivityMutation } from '@/api/activitiesApi';

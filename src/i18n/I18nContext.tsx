@@ -11,16 +11,11 @@ export interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | undefined>(undefined);
 
-/**
- * Provides i18n translation context to children.
- * Uses localStorage to persist language preference.
- */
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>(() => {
     return (localStorage.getItem('language') as Language) || 'en';
   });
 
-  // Persist language to localStorage
   useEffect(() => {
     localStorage.setItem('language', language);
   }, [language]);
@@ -47,7 +42,6 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-/** Hook to access i18n context. */
 export const useI18n = (): I18nContextValue => {
   const context = useContext(I18nContext);
   if (!context) {

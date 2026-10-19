@@ -105,7 +105,6 @@ export function TasksView() {
         </div>
       </div>
 
-      {/* Search */}
       <div className="mb-6">
         <Input
           type="text"
@@ -115,7 +114,6 @@ export function TasksView() {
         />
       </div>
 
-      {/* Tasks list */}
       <div className="space-y-4">
         {(tasks || []).length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

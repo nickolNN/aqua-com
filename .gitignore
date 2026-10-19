@@ -31,3 +31,10 @@ coverage/
 
 # Logs
 *.log
+
+# Kilo agent
+.kilo/
+
+# Playwright
+playwright-report/
+tests/test-results/
