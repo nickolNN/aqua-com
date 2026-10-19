@@ -18,11 +18,7 @@ All API responses follow a consistent format:
 {
   "success": false,
   "data": null,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Description of the error",
-    "details": []
-  }
+  "error": "Description of the error"
 }
 ```
 
@@ -34,10 +30,13 @@ All API responses follow a consistent format:
 
 ## API Endpoints
 
-API endpoints follow REST conventions and are grouped by resource:
+All endpoints are served under the `/api` base (see `src/api/baseApi.ts`) and follow REST conventions, grouped by resource:
 
-- `/api/v1/tasks` - Task management
-- `/api/v1/contacts` - Contact management
-- `/api/v1/companies` - Company management
-- `/api/v1/activities` - Activity tracking
-- `/api/v1/auth` - Authentication
+- `/api/tasks` - Task management (list, create)
+- `/api/tasks/:id` - Get, update, delete a task
+- `/api/tasks/:id/status` - Update task status (optional `position` for Kanban placement)
+- `/api/tasks/:id/dependencies` - Task dependencies
+- `/api/contacts` - Contact management
+- `/api/companies` - Company management
+- `/api/activities` - Activity tracking
+- `/api/auth/login`, `/api/auth/register`, `/api/auth/logout`, `/api/auth/password-reset` - Authentication
