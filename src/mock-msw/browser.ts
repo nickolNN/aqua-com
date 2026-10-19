@@ -1,12 +1,8 @@
 import { setupWorker } from 'msw/browser';
 import { handlers } from './handlers';
 
-// This creates an MSW worker that intercepts network requests in the browser
 export const worker = setupWorker(...handlers);
 
-/**
- * Starts the MSW worker in development mode
- */
 export async function startMockWorker() {
   if (typeof window !== 'undefined') {
     await worker.start({
@@ -19,9 +15,6 @@ export async function startMockWorker() {
   }
 }
 
-/**
- * Stops the MSW worker (useful for testing)
- */
 export function stopMockWorker() {
   if (typeof window !== 'undefined') {
     worker.stop();

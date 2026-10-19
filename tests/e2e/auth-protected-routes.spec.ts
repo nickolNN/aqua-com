@@ -7,13 +7,11 @@ test.describe('Protected Route Tests', () => {
   });
 
   test('unauthenticated user redirects to login when accessing dashboard', async ({ page }) => {
-    // Ensure no auth state
     await page.evaluate(() => {
       localStorage.clear();
     });
     await page.goto('/');
 
-    // Verify redirect to login
     await expect(page).toHaveURL('/login');
   });
 
@@ -23,7 +21,6 @@ test.describe('Protected Route Tests', () => {
     });
     await page.goto('/contacts');
 
-    // Verify redirect to login
     await expect(page).toHaveURL('/login');
   });
 
@@ -33,7 +30,6 @@ test.describe('Protected Route Tests', () => {
     });
     await page.goto('/companies');
 
-    // Verify redirect to login
     await expect(page).toHaveURL('/login');
   });
 
@@ -43,7 +39,6 @@ test.describe('Protected Route Tests', () => {
     });
     await page.goto('/tasks');
 
-    // Verify redirect to login
     await expect(page).toHaveURL('/login');
   });
 
@@ -53,7 +48,6 @@ test.describe('Protected Route Tests', () => {
     });
     await page.goto('/activities');
 
-    // Verify redirect to login
     await expect(page).toHaveURL('/login');
   });
 

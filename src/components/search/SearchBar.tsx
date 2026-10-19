@@ -1,15 +1,7 @@
-// =====================================================
-// SearchBar Component
-// =====================================================
-// A search bar component that works with the Redux store
-// for global search across all entity types.
-// =====================================================
-
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { getMockContacts, getMockTasks, getMockCompanies, getMockActivities } from '@/mock-data';
 import type { TaskSchema, CompanySchema, ActivitySchema } from '@/mock-data/schemas';
 
-// Types for search results
 export interface SearchResult {
   type: string;
   id: string;
@@ -18,9 +10,6 @@ export interface SearchResult {
   link: string;
 }
 
-/**
- * GlobalSearchBar component for integration into the header
- */
 export default function GlobalSearchBar() {
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);

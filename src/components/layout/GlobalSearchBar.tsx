@@ -1,12 +1,3 @@
-// =====================================================
-// GlobalSearchBar Component
-// =====================================================
-// Provides a global search input that searches across all
-// entity types (contacts, tasks, companies, activities)
-// with real-time suggestions, results display, and saved filters.
-// Connected to Redux state for saved filters.
-// =====================================================
-
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch , useSelector } from 'react-redux';
 import {
@@ -26,10 +17,6 @@ type SearchResultItem = {
   link?: string;
 };
 
-/**
- * GlobalSearchBar component that provides global search functionality
- * with saved filter support and real-time search across all entities.
- */
 export default function GlobalSearchBar() {
   const dispatch = useDispatch();
   const savedFilters = useSelector(

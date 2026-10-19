@@ -1,10 +1,3 @@
-// =====================================================
-// Mock Data Index
-// =====================================================
-// Central entry point for all mock data generation.
-// Provides factory functions for generating realistic mock data.
-// =====================================================
-
 export {
   generateContact,
   generateContacts,

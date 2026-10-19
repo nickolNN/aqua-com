@@ -38,7 +38,7 @@ export const SidebarNavItem = React.forwardRef<HTMLButtonElement | HTMLAnchorEle
               : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
           )
         }
-        {...(rest as any)}
+        {...rest}
       >
         {icon && <span className="flex-shrink-0">{icon}</span>}
         <span>{label}</span>

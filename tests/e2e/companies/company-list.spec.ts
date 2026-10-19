@@ -10,7 +10,6 @@ test.describe('Company List Tests', () => {
     await login(page);
     await page.goto('/companies');
 
-    // Verify page title
     await expect(page.locator('h1', { hasText: /Companies/ })).toBeVisible();
   });
 
@@ -18,7 +17,6 @@ test.describe('Company List Tests', () => {
     await login(page);
     await page.goto('/companies');
 
-    // Verify company cards are displayed
     const companyCards = page.locator('a[class*="flex items-center gap-4"], [class*="divide-y"]');
     await expect(companyCards).toHaveCountGreaterThan(0);
   });
@@ -27,7 +25,6 @@ test.describe('Company List Tests', () => {
     await login(page);
     await page.goto('/companies');
 
-    // Use search input
     const searchInput = page.locator('input[type="text"], input[placeholder="Search companies..."]');
     await searchInput.fill('Test');
     const companyCards = page.locator('a[class*="flex items-center gap-4"]');
@@ -38,11 +35,9 @@ test.describe('Company List Tests', () => {
     await login(page);
     await page.goto('/companies');
 
-    // Click on first company
     const companyCard = page.locator('a[class*="flex items-center gap-4"]:first');
     await companyCard.click();
 
-    // Verify navigation to company detail
     await expect(page.locator('h1', { hasText: /Company|Task Details/ })).toBeVisible();
   });
 
@@ -50,7 +45,6 @@ test.describe('Company List Tests', () => {
     await login(page);
     await page.goto('/companies');
 
-    // Verify company list renders
     await expect(page.locator('h1', { hasText: /Companies/ })).toBeVisible();
   });
 
@@ -58,11 +52,9 @@ test.describe('Company List Tests', () => {
     await login(page);
     await page.goto('/companies');
 
-    // Click quick add button
     const quickAddBtn = page.locator('button', { hasText: /Quick Add/ });
     await quickAddBtn.click();
 
-    // Verify company is created
     await expect(page.locator('h1', { hasText: /Companies/ })).toBeVisible();
   });
 });

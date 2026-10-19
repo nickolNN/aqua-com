@@ -1,13 +1,3 @@
-// =====================================================
-// SearchResults Component
-// =====================================================
-// Displays search results organized by entity type
-// with clickable items that navigate to details.
-// =====================================================
-
-/**
- * Safely extract string from a record
- */
 function safeString(value: unknown): string {
   return typeof value === 'string' ? value : '';
 }
@@ -25,9 +15,6 @@ interface SearchResultsProps {
   query: string;
 }
 
-/**
- * Renders a single search result item
- */
 function SearchResultItem({ item }: { item: SearchResultItem }) {
   return (
     <a
@@ -43,10 +30,6 @@ function SearchResultItem({ item }: { item: SearchResultItem }) {
   );
 }
 
-/**
- * SearchResults displays grouped search results by entity type
- * when a search query is active
- */
 export function SearchResults({ results, query }: SearchResultsProps) {
   const entityTypes: Array<{ key: string; label: string; icon: string }> = [
     { key: 'contacts', label: 'Contacts', icon: '👤' },
@@ -71,12 +54,10 @@ export function SearchResults({ results, query }: SearchResultsProps) {
 
   return (
     <div className="mt-2">
-      {/* Results count */}
       <div className="px-3 py-2 text-xs text-muted-foreground font-medium">
         {totalResults} result{totalResults !== 1 ? 's' : ''} found
       </div>
 
-      {/* Results grouped by type */}
       {entityTypes.map(({ key, label }) => {
         const items = results[key] as unknown[];
         if (!items || items.length === 0) return null;

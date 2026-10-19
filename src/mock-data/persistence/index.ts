@@ -16,9 +16,6 @@ const STORAGE_KEY_MAP: Record<string, keyof SchemaMap> = {
   users: 'users',
 };
 
-/**
- * Get stored mock data from localStorage
- */
 function getStoredData(): Partial<SchemaMap> | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -30,9 +27,6 @@ function getStoredData(): Partial<SchemaMap> | null {
   }
 }
 
-/**
- * Store mock data in localStorage
- */
 function storeData(data: Partial<SchemaMap>): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -41,22 +35,14 @@ function storeData(data: Partial<SchemaMap>): void {
   }
 }
 
-/**
- * Clear stored mock data from localStorage
- */
 export function clearStoredData(): void {
   localStorage.removeItem(STORAGE_KEY);
 }
 
-/**
- * Get or create mock data with persistence
- * Returns the stored data if available, otherwise generates fresh mock data and stores it
- */
 export function getMockDataWithPersistence<T extends keyof SchemaMap>(entityKey: T): SchemaMap[T] {
   const storedData = getStoredData();
   const storedKey = STORAGE_KEY_MAP[entityKey];
 
-  // Return stored data if available
   if (storedData && storedData[storedKey]) {
     return storedData[storedKey] as SchemaMap[T];
   }
@@ -72,7 +58,6 @@ export function getMockDataWithPersistence<T extends keyof SchemaMap>(entityKey:
   const generator = generators[entityKey];
   if (generator) {
     const result = generator() as SchemaMap[T];
-    // Store the generated data for future use
     const updatedData = {
       ...storedData,
       [storedKey]: result,
@@ -84,9 +69,6 @@ export function getMockDataWithPersistence<T extends keyof SchemaMap>(entityKey:
   return [] as unknown as SchemaMap[T];
 }
 
-/**
- * Update a single entity in localStorage
- */
 export function updateEntityInStore<T extends keyof SchemaMap>(
   entityKey: T,
   id: string,
@@ -112,9 +94,6 @@ export function updateEntityInStore<T extends keyof SchemaMap>(
   return (updated[STORAGE_KEY_MAP[entityKey]] as unknown as Record<string, unknown>[])[index];
 }
 
-/**
- * Add a new entity to localStorage
- */
 export function addEntityToStore<T extends keyof SchemaMap>(
   entityKey: T,
   entity: Record<string, unknown>
@@ -131,9 +110,6 @@ export function addEntityToStore<T extends keyof SchemaMap>(
   return entity;
 }
 
-/**
- * Delete an entity from localStorage
- */
 export function deleteEntityFromStore<T extends keyof SchemaMap>(
   entityKey: T,
   id: string
@@ -152,9 +128,6 @@ const entityArray = storedData[STORAGE_KEY_MAP[entityKey]] as unknown as Record<
   return true;
 }
 
-/**
-  * Search/filter entities in localStorage
-  */
  export function searchEntities<T extends keyof SchemaMap>(
    _entityKey: T,
    searchTerm: string,

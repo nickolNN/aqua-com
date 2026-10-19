@@ -1,10 +1,6 @@
-// =====================================================
-// RTK Query Activities API
-// =====================================================
 import { api } from './api';
 import type { ActivitySchema } from '@/mock-data/schemas';
 
-// Activity type constants
 export const ACTIVITY_TYPES = ['call', 'meeting', 'email', 'note', 'task', 'deal', 'other'] as const;
 export type ActivityType = (typeof ACTIVITY_TYPES)[number];
 

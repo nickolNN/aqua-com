@@ -7,12 +7,6 @@ interface KanbanQuickAddProps {
   onSubmit: (title: string) => Promise<void>;
 }
 
-/**
- * Inline quick-add for a kanban column header (stage 25).
- * Closed: the original "+ Add Task" button — text and selector preserved.
- * Open: an inline Input + submit; on success the title is cleared and the
- * form stays open so several tasks can be added in a row.
- */
 export function KanbanQuickAdd({ onSubmit }: KanbanQuickAddProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
@@ -25,7 +19,7 @@ export function KanbanQuickAdd({ onSubmit }: KanbanQuickAddProps) {
     setSubmitting(true);
     try {
       await onSubmit(trimmed);
-      setTitle(''); // success — ready for the next task
+      setTitle('');
     } finally {
       setSubmitting(false);
     }
@@ -51,7 +45,6 @@ export function KanbanQuickAdd({ onSubmit }: KanbanQuickAddProps) {
         }}
         placeholder="Task title"
         className="h-9"
-        autoFocus
       />
       <Button type="submit" size="sm" disabled={submitting || !title.trim()}>
         Add

@@ -9,7 +9,6 @@ import { ThemeProvider } from './components/ThemeContext';
 import { AuthProvider } from './components/AuthContext';
 import './styles/tailwind.css';
 
-// Enable mock mode for all RTK Query requests
 setMockMode(true);
 
 const root = document.getElementById('root');

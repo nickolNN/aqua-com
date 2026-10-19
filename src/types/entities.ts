@@ -1,4 +1,3 @@
-// Contact entity type
 export interface Contact {
   id: string;
   first_name: string;
@@ -11,7 +10,6 @@ export interface Contact {
   updated_at: string;
 }
 
-// Company entity type
 export interface Company {
   id: string;
   name: string;
@@ -23,7 +21,6 @@ export interface Company {
   updated_at: string;
 }
 
-// Task subtask type
 export interface TaskSubtask {
   id: string;
   title: string;
@@ -31,14 +28,12 @@ export interface TaskSubtask {
   priority: 'low' | 'medium' | 'high' | 'urgent';
 }
 
-// Task dependency type
 export interface TaskDependency {
   predecessor_task_id: string;
   successor_task_id: string;
   dependency_type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
 }
 
-// Task entity type
 export interface Task {
   id: string;
   title: string;
@@ -57,13 +52,11 @@ export interface Task {
   updated_at: string;
 }
 
-// Task dependency input type
 export interface TaskDependencyInput {
   predecessor_task_id: string;
   dependency_type: 'finish_to_start' | 'start_to_start' | 'finish_to_finish' | 'start_to_finish';
 }
 
-// Task creation input type
 export interface TaskCreateInput {
   title: string;
   description?: string;
@@ -77,7 +70,6 @@ export interface TaskCreateInput {
   dependencies?: TaskDependencyInput[];
 }
 
-// Task update input type
 export interface TaskUpdateInput {
   title?: string;
   description?: string;
@@ -91,7 +83,6 @@ export interface TaskUpdateInput {
   dependencies?: TaskDependencyInput[];
 }
 
-// Activity entity type
 export interface Activity {
   id: string;
   type: 'call' | 'meeting' | 'email' | 'note' | 'task' | 'deal' | 'other';
@@ -105,7 +96,6 @@ export interface Activity {
   created_at: string;
 }
 
-// User entity type
 export interface User {
   id: string;
   email: string;
@@ -114,7 +104,6 @@ export interface User {
   created_at: string;
 }
 
-// Auth user type (for logged in user)
 export interface AuthUser {
   id: string;
   email: string;

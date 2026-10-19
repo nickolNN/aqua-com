@@ -39,15 +39,15 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
 
     if (isAnchor) {
       return React.createElement('a', {
-                ref: ref as any,
+        ref: ref as React.Ref<HTMLAnchorElement>,
         className: buttonClasses,
         ...props
-            });
+      });
     }
 
     return (
       <button
-        ref={ref as any}
+        ref={ref as React.Ref<HTMLButtonElement>}
         className={buttonClasses}
         {...rest}
       />

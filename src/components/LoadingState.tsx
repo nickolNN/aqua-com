@@ -14,13 +14,6 @@ interface LoadingStateProps {
   onRetry?: () => void;
 }
 
-/**
- * LoadingState component provides reusable loading and error states for RTK Query hooks.
- * Handles loading, error, and empty state UI with accessible markup.
- * Usage: <LoadingState state={isLoading ? 'loading' : error ? 'error' : 'empty'} error={error}>
- *   {data ? <ContactsList data={data} /> : undefined}
- * </LoadingState>
- */
 export function LoadingState({
   state = 'loading',
   error,
@@ -31,7 +24,6 @@ export function LoadingState({
   showRetry = true,
   onRetry,
 }: LoadingStateProps) {
-  // Loading state
   if (state === 'loading') {
     return (
       <div
@@ -51,7 +43,6 @@ export function LoadingState({
     );
   }
 
-  // Error state
   if (state === 'error') {
     const errorDetails = error
       ? (typeof error === 'string' ? error : typeof error === 'object' && 'message' in error
@@ -97,7 +88,6 @@ export function LoadingState({
     );
   }
 
-  // Empty state
   if (state === 'empty') {
     return (
       <div
@@ -127,11 +117,9 @@ export function LoadingState({
     );
   }
 
-  // Success state — render children
   return <>{children}</>;
 }
 
-/** Hook wrapper for RTK Query hooks that returns loading state. */
 export interface UseQueryState {
   isLoading: boolean;
   isError: boolean;

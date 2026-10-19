@@ -1,9 +1,3 @@
-// =====================================================
-// Reports View
-// =====================================================
-// Reports page with export options (CSV/PDF) for various data.
-// =====================================================
-
 import { useState } from 'react';
 import { generateTaskStats, generateActivityBreakdown, generateContactStats, generatePipelineValue } from '@/mock-data/dashboard';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
@@ -67,13 +61,11 @@ export function ReportsView() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Reports</h1>
         <p className="text-muted-foreground">Generate and export reports for analysis</p>
       </div>
 
-      {/* Report Type Tabs */}
       <div className="flex gap-2 mb-6 border-b border-border">
         {Object.entries(reportConfig).map(([key, config]) => (
           <button
@@ -88,7 +80,6 @@ export function ReportsView() {
         ))}
       </div>
 
-      {/* Report Summary */}
       <Card>
         <CardHeader>
           <CardTitle>{reportConfig[activeTab].label}</CardTitle>
@@ -121,7 +112,6 @@ export function ReportsView() {
         </CardContent>
       </Card>
 
-      {/* Report Content */}
       <Card>
         <CardHeader>
           <CardTitle>Report Data</CardTitle>

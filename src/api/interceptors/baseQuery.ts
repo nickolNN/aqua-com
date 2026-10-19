@@ -1,32 +1,15 @@
-// =====================================================
-// RTK Query Interceptor for Mock Data
-// =====================================================
-// Intercepts RTK Query requests and returns mock data
-// when mock mode is enabled.
-// =====================================================
-
 import { interceptMockRequest } from './mocks';
 
-// Mock mode state
 let mockMode = false;
 
-/**
- * Enable or disable mock mode
- */
 export function setMockMode(enabled: boolean): void {
   mockMode = enabled;
 }
 
-/**
- * Check if mock mode is currently enabled
- */
 export function isMockMode(): boolean {
   return mockMode;
 }
 
-/**
- * RTK Query interceptor that intercepts requests and returns mock data
- */
 export async function mockBaseQuery(
   request: { url: string; method?: string; body?: Record<string, unknown>; params?: Record<string, string> }
 ): Promise<{ data?: unknown; error?: string }> {

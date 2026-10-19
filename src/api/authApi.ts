@@ -31,7 +31,6 @@ export type PasswordResetResponse = {
 // Re-export the auth endpoints already defined in api.ts
 export const { useLoginMutation, useRegisterMutation, useLogoutMutation } = api;
 
-// Auth API for password reset
 export const passwordResetApi = api.injectEndpoints({
   endpoints: (builder) => ({
     passwordReset: builder.mutation<

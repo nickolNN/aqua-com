@@ -13,11 +13,6 @@ interface ErrorBoundaryState {
   errorInfo: ErrorInfo | null;
 }
 
-/**
- * Enhanced ErrorBoundary component with detailed error display,
- * recovery button, and accessible markup.
- * Catches errors in child components and provides recovery UI.
- */
 class ErrorBoundary extends Component<ErrorBoundaryProps> {
   state: ErrorBoundaryState = {
     hasError: false,
@@ -31,11 +26,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ error, errorInfo });
-    // Log error to monitoring service
     console.error('Uncaught error:', error);
     console.error('Error details:', errorInfo);
 
-    // Call custom onError handler if provided
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -53,7 +46,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps> {
         return fallbackUI;
       }
 
-      // Detailed error UI
       return (
         <div
           role="alert"
@@ -82,7 +74,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps> {
               An unexpected error occurred. Please try refreshing the page.
             </p>
 
-            {/* Error details (collapsed by default) */}
             {this.state.error && (
               <details className="mb-4 text-left bg-destructive/10 p-3 rounded-lg border border-destructive/20">
                 <summary className="cursor-pointer text-sm text-muted-foreground">

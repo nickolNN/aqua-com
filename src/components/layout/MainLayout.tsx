@@ -12,10 +12,6 @@ import { useEffect } from 'react';
 import { useLogoutMutation } from '@/api/api';
 import { logoutSuccess } from '@/stores/authSlice';
 
-/**
- * MainLayout component provides the main application layout with sidebar, header, and content area.
- * Includes global search bar for searching across all entity types.
- */
 export function MainLayout() {
   const dispatch = useAppDispatch();
   const currentTheme = useSelector((state: RootState) => state.settings.theme);
@@ -44,7 +40,6 @@ export function MainLayout() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <aside className="sticky top-0 h-screen w-64 flex flex-col glass text-sidebar-foreground">
         <Sidebar>
           <SidebarHeader logo="Aqua CRM" />
@@ -62,14 +57,11 @@ export function MainLayout() {
         </Sidebar>
       </aside>
 
-      {/* Main content area */}
       <div className="flex-1 flex flex-col min-h-screen">
-        {/* Global search bar */}
         <div className="sticky top-0 z-50 border-b bg-background/80 px-6 py-4 backdrop-blur-md">
           <GlobalSearchBar />
         </div>
 
-        {/* Main content */}
         <main className="flex-1 p-6">
           <Outlet />
         </main>

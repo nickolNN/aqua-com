@@ -1,40 +1,24 @@
-// =====================================================
-// i18n Translation Files
-// =====================================================
-// Translation strings organized by locale.
-// Each file exports a record of translation keys and their values.
-// =====================================================
-
 export const en = {
-  // Navigation
   nav: {
   },
-  // Auth
   auth: {
     logout: 'Log out',
   },
-  // Dashboard
   dashboard: {
   },
-  // Contacts
   contacts: {
   },
-  // Companies
   companies: {
   },
-  // Tasks
   tasks: {
   },
-  // Activities
   activities: {
   },
-  // Error states
   error: {
     loading: 'Loading...',
     error: 'An error occurred while loading data.',
     retry: 'Try Again',
   },
-  // Common
   common: {
     loading: 'Loading...',
     error: 'Error',

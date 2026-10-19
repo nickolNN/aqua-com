@@ -7,10 +7,6 @@ import {
   getMockActivities,
 } from '@/mock-data';
 
-// =====================================================
-// Types
-// =====================================================
-
 export interface SavedFilter {
   id: string;
   name: string;
@@ -38,10 +34,6 @@ export interface SearchState {
   activeSavedFilterId: string | null;
 }
 
-// =====================================================
-// Constants
-// =====================================================
-
 const INITIAL_SAVED_FILTERS_KEY = 'savedFilters';
 
 const initialState: SearchState = {
@@ -54,7 +46,6 @@ const initialState: SearchState = {
   activeSavedFilterId: null,
 };
 
-/** Load saved filters from localStorage */
 function loadSavedFiltersFromStorage(): SavedFilter[] {
   try {
     const raw = localStorage.getItem(INITIAL_SAVED_FILTERS_KEY);
@@ -63,10 +54,6 @@ function loadSavedFiltersFromStorage(): SavedFilter[] {
     return [];
   }
 }
-
-// =====================================================
-// Slice
-// =====================================================
 
 export const searchSlice = createSlice({
   name: 'search',
@@ -151,10 +138,6 @@ export const searchSlice = createSlice({
   },
 });
 
-// =====================================================
-// Actions
-// =====================================================
-
 export const {
   setQuery,
   setResults,
@@ -172,13 +155,6 @@ export const {
 
 export const searchReducer = searchSlice.reducer;
 
-// =====================================================
-// Filter utilities for React components
-// =====================================================
-
-/**
- * Filter tasks by criteria
- */
 export function filterTasks(tasks: TaskSchema[], filters: Partial<FilterCriteria>): TaskSchema[] {
   let filtered = [...tasks];
   if (filters.priority && filters.priority !== 'all') {
@@ -199,9 +175,6 @@ export function filterTasks(tasks: TaskSchema[], filters: Partial<FilterCriteria
   return filtered;
 }
 
-/**
- * Filter contacts by criteria
- */
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
@@ -217,9 +190,6 @@ export function filterContacts(contacts: unknown[], filters: Partial<FilterCrite
   return filtered;
 }
 
-/**
- * Filter activities by criteria
- */
 export function filterActivities(activities: ActivitySchema[], filters: Partial<FilterCriteria>): ActivitySchema[] {
   let filtered = [...activities];
   if (filters.type && filters.type !== 'all') {
@@ -234,9 +204,6 @@ export function filterActivities(activities: ActivitySchema[], filters: Partial<
   return filtered;
 }
 
-/**
- * Global search across all entities using mock data
- */
 export function globalSearch(query: string): Record<string, unknown[]> {
   if (!query || !query.trim()) {
     return { contacts: [], tasks: [], activities: [], companies: [] };

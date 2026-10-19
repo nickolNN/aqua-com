@@ -1,6 +1,3 @@
-// =====================================================
-// Activity Filter Bar Component
-// =====================================================
 import { ACTIVITY_TYPES, type ActivityType } from '@/api/activitiesApi';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/Select';
 

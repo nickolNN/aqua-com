@@ -42,15 +42,15 @@ const COLUMNS: KanbanColumn[] = ['open', 'in_progress', 'completed', 'cancelled'
 const columnClass = 'rounded-lg p-3 bg-muted border';
 
 /**
- * Stage 2 (drop preview): fallback card height for the dashed slot when no
- * rect data is available; the live value is the dragged card's own layout
- * height (active.rect.current.initial), so the slot matches the card being
- * dragged, not an arbitrary constant (plan Step 2.3).
+ * Fallback card height for the dashed slot when no rect data is available;
+ * the live value is the dragged card's own layout height
+ * (active.rect.current.initial), so the slot matches the card being dragged,
+ * not an arbitrary constant.
  */
 const CARD_HEIGHT_FALLBACK = 96;
 
 /** The flex `gap-2` (8px) between cards — the cross-column preview shift is
- *  one card + this gap (plan D3). */
+ *  one card + this gap. */
 const CARD_GAP = 8;
 
 /** Drop preview state: the pure resolver's answer plus the dragged card's
@@ -59,7 +59,7 @@ interface DropPreviewState extends DropPreview {
   cardHeight: number;
 }
 
-// Stage 2 (drop preview): layout-aware collision detector. dnd-kit's
+// Layout-aware collision detector. dnd-kit's
 // closestCenter reads the *transformed* DOM rect of every sortable node, so
 // the preview offsets (cards shifted down via transform) would feed back
 // into the `over` resolution and oscillate around the midpoint; the detector
@@ -68,8 +68,8 @@ interface DropPreviewState extends DropPreview {
 // the horizontal one is equal for every card in a column, gaps included);
 // pointer below the column's last card → the column droppable (end of the
 // column, closestCenter parity); no pointer (keyboard drag) → the active
-// card itself (the in-column resolver then returns a no-op, plan Step 1
-// rule 4); pointer in no column (the 16px gaps between columns) → no over.
+// card itself (the in-column resolver then returns a no-op); pointer in no
+// column (the 16px gaps between columns) → no over.
 // A pointer inside a column stays put: shifting a card's measured rect down
 // only moves it further from a pointer above it, and the pointer never sits
 // inside the shifted run (it sits inside the slot's gap, below the last
@@ -117,11 +117,11 @@ interface KanbanColumnProps {
   highlighted: boolean;
   onTaskClick: (taskId: string) => void;
   onAddTask: (status: string, title: string) => Promise<void>;
-  /** Stage 2 (drop preview): the live landing-slot preview, when it targets
-   *  this column (null otherwise). */
+  /** The live landing-slot preview (drop preview), when it targets this
+   *  column (null otherwise). */
   dropPreview: DropPreviewState | null;
-  /** Stage 2 (drop preview): registers each card's DOM node by id (slot
-   *  sizing from the dragged card's layout height). */
+  /** Registers each card's DOM node by id (slot sizing from the dragged
+   *  card's layout height). */
   registerCard: (id: string, el: HTMLElement | null) => void;
 }
 
@@ -136,23 +136,22 @@ function KanbanColumn({
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: column });
 
-  // Stage 2 (drop preview): this column hosts the live landing slot.
+  // This column hosts the live landing slot (drop preview).
   const isPreviewColumn = dropPreview?.column === column;
 
-  // No-op preview (the card lands where it is): nothing moves — no slot
-  // (plan Step 2.4). dnd-kit's own layout animation is the identity in this
-  // case, so there is no gap for the slot to mark.
+  // No-op preview (the card lands where it is): nothing moves — no slot.
+  // dnd-kit's own layout animation is the identity in this case, so there is
+  // no gap for the slot to mark.
   const isNoOp = isPreviewColumn && dropPreview !== null && dropPreview.noOp;
 
-  // Dashed landing slot (plan D2): rendered absolutely positioned, so the
-  // layout (and dnd-kit's measurements) is untouched. dnd-kit's native layout
-  // animation (rectSortingStrategy) already shifts the cards out of the way
-  // during the drag (plan D3) — the active card is inserted at the hovered
-  // card's index and the gap it opens always sits at the HOVERED card's
-  // original (layout) top. So the slot top is the hovered card's offsetTop
-  // (layout position — transforms don't affect it), measured from the DOM;
-  // at the end of a non-empty column it is the last card's bottom, and an
-  // empty column slots at the top (plan Step 2.5 / rule 3).
+  // Dashed landing slot: rendered absolutely positioned, so the layout (and
+  // dnd-kit's measurements) is untouched. dnd-kit's native layout animation
+  // (rectSortingStrategy) already shifts the cards out of the way during the
+  // drag — the active card is inserted at the hovered card's index and the
+  // gap it opens always sits at the HOVERED card's original (layout) top. So
+  // the slot top is the hovered card's offsetTop (layout position — transforms
+  // don't affect it), measured from the DOM; at the end of a non-empty column
+  // it is the last card's bottom, and an empty column slots at the top.
   const slotVisible =
     isPreviewColumn && dropPreview !== null && dropPreview.insertIndex <= tasks.length && !isNoOp;
 
@@ -176,9 +175,9 @@ function KanbanColumn({
     }
   }, [slotVisible, dropPreview, tasks]);
 
-  // Stage 2 (drop preview): the cross-column per-card shift (plan D3).
-  // dnd-kit's native layout animation only reorders the ACTIVE column (the
-  // target column's items never include the active card, so it opens no gap);
+  // The cross-column per-card shift: dnd-kit's native layout animation only
+  // reorders the ACTIVE column (the target column's items never include the
+  // active card, so it opens no gap);
   // in a cross-column preview the target column's cards at/after the slot
   // slide down by one card + gap. In-column the native animation already
   // shifts the cards (and packs them up), so no offset there — only the slot.
@@ -191,7 +190,7 @@ function KanbanColumn({
       ? dropPreview.cardHeight + CARD_GAP
       : 0;
 
-  // Stage 27: a11y — the droppable container announces its column name.
+  // a11y — the droppable container announces its column name.
   // Drop indicator: `isOver` is true only when the over-droppable is the column
   // itself (pointer below the last card / no rect data, per the layout-aware
   // collision detector); `highlighted` covers drags over cards in a
@@ -242,7 +241,6 @@ function KanbanColumn({
         </div>
       </SortableContext>
 
-      {/* Stage 26: empty column → glass stub Card; the quick-add button above stays. */}
       {tasks.length === 0 && (
         <Card className="p-6 text-center text-muted-foreground" data-testid="kanban-empty-column">
           No tasks
@@ -285,10 +283,10 @@ interface KanbanTaskCardProps {
   /** The card's DOM node (position order) — lets the column measure the
    *  hovered card's layout top for the dashed landing slot. */
   cardRef?: (el: HTMLElement | null) => void;
-  /** Stage 2 (drop preview): the cross-column shift — cards at/after the
-   *  landing slot slide down by one card + gap (plan D3); 0 otherwise. */
+  /** The cross-column shift — cards at/after the landing slot slide down by
+   *  one card + gap; 0 otherwise. */
   offsetY?: number;
-  /** Stage 2 (drop preview): registers the card's DOM node by id. */
+  /** Registers the card's DOM node by id. */
   registerCard?: (id: string, el: HTMLElement | null) => void;
 }
 
@@ -301,15 +299,15 @@ function KanbanTaskCard({ task, column, onTaskClick, cardRef, registerCard, offs
   // dnd-kit's Transform object as a CSS string (its type is not a CSS
   // transform); null outside a layout animation. The cross-column offset
   // merges into it: dnd-kit's native animation only reorders the active
-  // column, so the target column's cards shift via this offset (plan D3).
+  // column, so the target column's cards shift via this offset.
   const cssTransform = transform
     ? `translate3d(${transform.x}px, ${transform.y + offsetY}px, 0)`
     : offsetY
       ? `translateY(${offsetY}px)`
       : undefined;
 
-  // Stage 27: a11y — cards are focusable (useSortable sets tabIndex) and
-  // announce title + priority; aria-grabbed mirrors the drag state.
+  // a11y — cards are focusable (useSortable sets tabIndex) and announce
+  // title + priority; aria-grabbed mirrors the drag state.
   return (
     <Card
       ref={(el) => {
@@ -321,9 +319,9 @@ function KanbanTaskCard({ task, column, onTaskClick, cardRef, registerCard, offs
       {...attributes}
       aria-label={`${task.title}, priority ${task.priority}`}
       aria-grabbed={isDragging}
-      // Stage 2 (drop preview): dnd-kit's own transform/transition when
-      // present (in-column native animation); a local transition animates
-      // the cross-column offset, where dnd-kit has no transform of its own.
+      // dnd-kit's own transform/transition when present (in-column native
+      // animation); a local transition animates the cross-column offset,
+      // where dnd-kit has no transform of its own.
       style={{
         transform: cssTransform,
         transition: transition ?? (offsetY ? 'transform 200ms ease' : undefined),
@@ -348,8 +346,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
   const [updateTaskStatusMutation] = useUpdateTaskStatusMutation();
   const [updateTaskMutation] = useUpdateTaskMutation();
 
-  // Stage 27: a11y — KeyboardSensor lets cards be grabbed (Space) and moved
-  // (arrows, Escape to cancel) without a pointer.
+  // KeyboardSensor: Space grabs a card, arrows move it, Escape cancels.
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor),
@@ -362,27 +359,26 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
   // the same resolution handleDragEnd uses for the actual drop.
   const [overColumn, setOverColumn] = useState<KanbanColumn | null>(null);
 
-  // Stage 2 (drop preview): the live landing-slot preview, resolved on every
-  // drag move by the pure resolver (plan Step 1); cleared on drop/cancel.
+  // The live landing-slot preview, resolved on every drag move by the pure
+  // resolver; cleared on drop/cancel.
   const [dropPreview, setDropPreview] = useState<DropPreviewState | null>(null);
 
-  // Stage 2 (drop preview): the cards' DOM nodes by id — sizes the dashed slot
-  // from the dragged card's own LAYOUT height (offsetHeight — transforms do
-  // not affect it). dnd-kit's `active.rect.current.initial` is the DragOverlay
-  // ghost's rect when a ghost is mounted (scale-105 → 5% too big), so the
-  // slot is sized from the DOM instead (plan D2: slot = size of the dragged
-  // card).
+  // The cards' DOM nodes by id — sizes the dashed slot from the dragged
+  // card's own LAYOUT height (offsetHeight — transforms do not affect it).
+  // dnd-kit's `active.rect.current.initial` is the DragOverlay ghost's rect
+  // when a ghost is mounted (scale-105 → 5% too big), so the slot is sized
+  // from the DOM instead (slot = size of the dragged card).
   const cardElsById = useRef<Map<string, HTMLElement>>(new Map());
   const registerCard = (id: string, el: HTMLElement | null) => {
     if (el) cardElsById.current.set(id, el);
     else cardElsById.current.delete(id);
   };
 
-  // Stage 2 (drop preview): resolve the live landing slot (plan Step 1) —
-  // no preview when the over node does not resolve to a column; the ghost
-  // rect height sizes the slot and the per-card shift. Shared by dragOver
-  // (coarse — fires when `over` changes) and dragMove (fine — fires on every
-  // pointer move, so the slot tracks the pointer within one over-card).
+  // Resolve the live landing slot — no preview when the over node does not
+  // resolve to a column; the ghost rect height sizes the slot and the
+  // per-card shift. Shared by dragOver (coarse — fires when `over` changes)
+  // and dragMove (fine — fires on every pointer move, so the slot tracks the
+  // pointer within one over-card).
   const updateDropPreview = (event: DragOverEvent | DragMoveEvent) => {
     const overId = String(event.over?.id ?? '');
     const to = COLUMNS.includes(overId as KanbanColumn)
@@ -421,14 +417,14 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
     updateDropPreview(event);
   };
 
-  // Stage 2 (drop preview): onDragOver only fires when `over` changes, so the
-  // preview is re-resolved on every pointer move as well.
+  // onDragOver only fires when `over` changes, so the preview is re-resolved
+  // on every pointer move as well.
   const handleDragMove = (event: DragMoveEvent) => {
     updateDropPreview(event);
   };
 
-  // Local board state so in-column reordering (stage 22) is visible immediately;
-  // re-syncs whenever the RTK query refetches (stage 19 pattern).
+  // Local board state so in-column reordering is visible immediately;
+  // re-syncs whenever the RTK query refetches.
   const [boardTasks, setBoardTasks] = useState<Task[]>(tasks);
   useEffect(() => {
     setBoardTasks(tasks);
@@ -459,9 +455,6 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
     const overIndex = over.data.current?.sortable?.index as number | undefined;
 
     if (to && to !== from) {
-      // Cross-column drop → status change at the drop position (stage 4):
-      // the card lands at the index resolved from the ghost/over-card centers
-      // (plan D2/D3) instead of always the end of the target column.
       const taskId = String(active.id);
       const newStatus = to;
 
@@ -490,8 +483,8 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
         console.error('Failed to update task status:', err);
       }
 
-      // Persist the renumbered target-column cards (stage 23 pattern: PUT every
-      // changed position through the active RTK layer).
+      // Persist the renumbered positions: PUT every changed task through the
+      // active RTK layer.
       for (let index = 0; index < toTasks.length; index++) {
         const task = toTasks[index];
         if (task.id === taskId) continue;
@@ -506,7 +499,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
       return;
     }
 
-    // In-column drop onto a different card → reorder within the column (stage 22).
+    // In-column drop onto a different card → reorder within the column.
     if (from === undefined || activeIndex === undefined || overIndex === undefined) {
       return; // dropped onto the column background — no-op
     }
@@ -516,8 +509,8 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
       .sort((a, b) => a.position - b.position);
     // Landing at the hovered card's index — dnd-kit's native landing (the same
     // gap the live preview showed), so the card lands exactly where the dashed
-    // slot was (plan D3). Over the active card itself → the identity (the
-    // preview's `noOp` flag), so skip the drop.
+    // slot was. Over the active card itself → the identity (the preview's
+    // `noOp` flag), so skip the drop.
     if (overIndex === activeIndex) {
       return; // no-op: the card lands where it is — the same rule the preview uses
     }
@@ -529,8 +522,8 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
       }),
     );
 
-    // Stage 23: persist the renumbered positions — PUT every task whose position
-    // changed, through the active RTK layer (stage 16 → localStorage).
+    // Persist the renumbered positions: PUT every changed task through the
+    // active RTK layer.
     for (let index = 0; index < newOrder.length; index++) {
       const task = newOrder[index];
       if (task.position === index) continue; // position unchanged
@@ -544,11 +537,9 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
 
   const activeTask = activeTaskId ? tasks.find((task) => task.id === activeTaskId) ?? null : null;
 
-  // Stage 25: quick-add from the column header — new task lands at the end of
-  // its column (position = max existing position + 1, so scattered positions
-  // left by the seed store or cross-column drops can't push it into the
-  // middle). createTask invalidates the 'Task' tag → getTasks refetches →
-  // boardTasks re-syncs via the useEffect.
+  // Quick-add: new task lands at the end of its column (position = max + 1, so
+  // scattered positions can't push it into the middle). createTask invalidates
+  // the 'Task' tag → getTasks refetches → boardTasks re-syncs via the useEffect.
   const handleAddTask = async (status: string, title: string) => {
     const columnTasks = boardTasks.filter((task) => task.status === status);
     const nextPosition =
@@ -610,7 +601,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
           })}
         </div>
 
-        {/* Drag feedback: ghost card following the pointer during the drag. */}
+        {/* Drag ghost following the pointer. */}
         <DragOverlay>
           {activeTask ? (
             <Card className="p-3 opacity-80 scale-105 shadow-lg" aria-hidden="true">

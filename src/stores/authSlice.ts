@@ -76,7 +76,6 @@ export const {
 
 export const authReducer = authSlice.reducer;
 
-// Selectors
 export const selectAuthUser = (state: { auth: AuthState }): AuthUser | null =>
   state.auth.user;
 

@@ -1,18 +1,17 @@
 import type { Task } from '@/types/entities';
 
 /**
- * Pure insert-index resolver for cross-column kanban drops (plan D2/D3).
+ * Pure insert-index resolver for cross-column kanban drops.
  *
  * dnd-kit's native layout animation (rectSortingStrategy) inserts the active
  * card at the HOVERED card's index — `arrayMove(items, activeIndex, overIndex)`
  * — and the visible gap always sits at the hovered card's original position.
  * The drop must land where that gap is, so the insert index is simply the
  * hovered card's index; over the column background / an empty column / no
- * hovered index (keyboard drag, plan D8) the card lands at the end of the
- * column.
+ * hovered index (keyboard drag) the card lands at the end of the column.
  *
  * Pure on purpose: no DOM, no React state — trivially testable and wired
- * into handleDragEnd in Stage 4.
+ * into handleDragEnd.
  */
 export interface ResolveInsertIndexArgs {
   /** over.data.current.sortable.index — the hovered card's index in its column. */
@@ -27,24 +26,24 @@ export function resolveInsertIndex(args: ResolveInsertIndexArgs): number {
 }
 
 /**
- * Pure drop-PREVIEW resolver for kanban drags (plan Step 1) — where the
- * dragged card will land, resolved DURING the drag (no drop, no persistence).
- * Feeds the live landing-slot indicator in KanbanBoard (Stage 2); the actual
- * drop in handleDragEnd uses the same index, so the card lands exactly where
- * the dashed slot showed.
+ * Pure drop-PREVIEW resolver for kanban drags — where the dragged card will
+ * land, resolved DURING the drag (no drop, no persistence).
+ * Feeds the live landing-slot indicator in KanbanBoard; the actual drop in
+ * handleDragEnd uses the same index, so the card lands exactly where the
+ * dashed slot showed.
  *
  * The slot is expressed in the FULL list (the target column's tasks, active
  * card included) and is exactly dnd-kit's landing position: the hovered
  * card's index, or the end of the column when the pointer is over the column
  * background / the column is empty. dnd-kit's native shift animation creates
  * the gap there (cards below shift down when landing above; cards between the
- * active card and the landing pack up when moving down — plan D3), so the
- * preview needs no per-card offset of its own.
+ * active card and the landing pack up when moving down), so the preview needs
+ * no per-card offset of its own.
  *
  * `noOp` is true when the drop is the identity: the hovered card is the
  * active card itself, or the pointer is over the in-column background (no
  * hovered card) — `handleDragEnd` treats both as no-ops, so the board
- * renders no slot (plan Step 2.4) and the card stays where it is.
+ * renders no slot and the card stays where it is.
  *
  * Pure on purpose: no DOM, no React state — trivially testable. The caller
  * resolves the target column exactly like handleDragOver does (overId if it
@@ -78,9 +77,9 @@ export interface DropPreview {
   insertIndex: number;
   /** True when the active card is inside the target column. */
   activeIsInTarget: boolean;
-  /** True when the drop is the identity (plan Step 2.4): the hovered card is
-   *  the active card itself, or the over node is the in-column background
-   *  (no hovered card) — no slot, nothing moves. */
+  /** True when the drop is the identity: the hovered card is the active card
+   *  itself, or the over node is the in-column background (no hovered card)
+   *  — no slot, nothing moves. */
   noOp: boolean;
 }
 

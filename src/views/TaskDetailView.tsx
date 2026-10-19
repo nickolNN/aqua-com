@@ -29,7 +29,7 @@ export function TaskDetailView() {
         await deleteTask(id).unwrap();
         setSuccess('Task deleted successfully');
         setShowDeleteConfirm(false);
-      } catch (err) {
+      } catch {
         setError('Failed to delete task');
       }
       window.location.href = '/tasks';

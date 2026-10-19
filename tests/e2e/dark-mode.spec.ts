@@ -4,18 +4,15 @@ test.describe('Dark Mode', () => {
   test('dark mode toggle works', async ({ page }) => {
     await page.goto('/');
     
-    // Verify initial light mode
     const initialTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(initialTheme).toBe(false);
     
-    // Click theme toggle button (resilient selector with partial match)
+    // Resilient selector (partial match).
     await page.locator('button[aria-label*="dark mode"]').click();
     
-    // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(darkTheme).toBe(true);
     
-    // Verify theme persists in localStorage
     const storedTheme = await page.evaluate(() => localStorage.getItem('theme'));
     expect(storedTheme).toBe('dark');
   });
@@ -23,13 +20,10 @@ test.describe('Dark Mode', () => {
   test('dark mode persists on reload', async ({ page }) => {
     await page.goto('/');
     
-    // Set dark mode
     await page.locator('button[aria-label*="dark mode"]').click();
     
-    // Reload page
     await page.reload();
     
-    // Verify dark mode is still applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(darkTheme).toBe(true);
   });
@@ -37,10 +31,8 @@ test.describe('Dark Mode', () => {
   test('dark mode works on login page', async ({ page }) => {
     await page.goto('/login');
     
-    // Toggle dark mode
     await page.locator('button[aria-label*="dark mode"]').click();
     
-    // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(darkTheme).toBe(true);
   });
@@ -48,10 +40,8 @@ test.describe('Dark Mode', () => {
   test('dark mode works on contacts page', async ({ page }) => {
     await page.goto('/contacts');
     
-    // Toggle dark mode
     await page.locator('button[aria-label*="dark mode"]').click();
     
-    // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(darkTheme).toBe(true);
   });
@@ -59,10 +49,8 @@ test.describe('Dark Mode', () => {
   test('dark mode works on companies page', async ({ page }) => {
     await page.goto('/companies');
     
-    // Toggle dark mode
     await page.locator('button[aria-label*="dark mode"]').click();
     
-    // Verify dark mode is applied
     const darkTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(darkTheme).toBe(true);
   });

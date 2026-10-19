@@ -1,16 +1,6 @@
-// =====================================================
-// Dashboard Mock Data Generator
-// =====================================================
-// Generates realistic dashboard metrics for the dashboard page.
-// Includes task statistics, activity summaries, contact stats, and more.
-// =====================================================
-
 import { generateTask, generateActivity, generateContact } from './generators';
 import type { ActivitySchema, ContactSchema } from './schemas';
 
-/**
- * Dashboard metric data structure for task breakdown by status
- */
 export interface TaskStatsBreakdown {
   total: number;
   by_status: Record<string, number>;
@@ -18,45 +8,30 @@ export interface TaskStatsBreakdown {
   trend: number;
 }
 
-/**
- * Dashboard metric data structure for activity breakdown by type
- */
 export interface ActivityBreakdown {
   total: number;
   by_type: Record<string, number>;
   trend: number;
 }
 
-/**
- * Dashboard metric data structure for contact statistics
- */
 export interface ContactStats {
   total: number;
   new_this_month: number;
   trend: number;
 }
 
-/**
- * Dashboard metric data structure for company statistics
- */
 export interface CompanyStats {
   total: number;
   active_deals: number;
   trend: number;
 }
 
-/**
- * Dashboard metric data structure for pipeline value
- */
 export interface PipelineValue {
   total: number;
   by_stage: Record<string, number>;
   trend: number;
 }
 
-/**
- * Dashboard overview data structure
- */
 export interface DashboardMetrics {
   task_stats: TaskStatsBreakdown;
   activity_summary: ActivityBreakdown;
@@ -67,13 +42,6 @@ export interface DashboardMetrics {
   recent_contacts: ContactSchema[];
 }
 
-// =====================================================
-// Dashboard Metrics Generator
-// =====================================================
-
-/**
- * Generate realistic task statistics for dashboard
- */
 export function generateTaskStats(count: number = 50): TaskStatsBreakdown {
   const statuses: Array<'open' | 'in_progress' | 'completed' | 'cancelled'> = ['open', 'in_progress', 'completed', 'cancelled'];
   const priorities: Array<'low' | 'medium' | 'high' | 'urgent'> = ['low', 'medium', 'high', 'urgent'];
@@ -108,9 +76,6 @@ export function generateTaskStats(count: number = 50): TaskStatsBreakdown {
   };
 }
 
-/**
- * Generate realistic activity breakdown for dashboard
- */
 export function generateActivityBreakdown(count: number = 40): ActivityBreakdown {
   const activities = Array.from({ length: count }, () => generateActivity());
 
@@ -132,9 +97,6 @@ export function generateActivityBreakdown(count: number = 40): ActivityBreakdown
   };
 }
 
-/**
- * Generate realistic contact statistics
- */
 export function generateContactStats(count: number = 120): ContactStats {
   const newCount = Math.floor(count * 0.15);
 
@@ -145,9 +107,6 @@ export function generateContactStats(count: number = 120): ContactStats {
   };
 }
 
-/**
- * Generate realistic company statistics
- */
 export function generateCompanyStats(count: number = 30): CompanyStats {
   const activeDeals = Math.floor(count * 0.4);
 
@@ -158,9 +117,6 @@ export function generateCompanyStats(count: number = 30): CompanyStats {
   };
 }
 
-/**
- * Generate realistic pipeline value data
- */
 export function generatePipelineValue(count: number = 15): PipelineValue {
   const by_stage = {
     prospect: Math.floor(count * 0.25),
@@ -177,9 +133,6 @@ export function generatePipelineValue(count: number = 15): PipelineValue {
   };
 }
 
-/**
- * Generate complete dashboard metrics with mock data
- */
 export function generateDashboardMetrics(): DashboardMetrics {
   const taskStats = generateTaskStats(45);
   const activityBreakdown = generateActivityBreakdown(35);
@@ -187,7 +140,6 @@ export function generateDashboardMetrics(): DashboardMetrics {
   const companyStats = generateCompanyStats(30);
   const pipelineValue = generatePipelineValue(15);
 
-  // Generate recent activities and contacts
   const recentActivities = Array.from({ length: 5 }, () => generateActivity());
   const recentContacts = Array.from({ length: 5 }, () => generateContact());
 

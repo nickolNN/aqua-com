@@ -3,7 +3,6 @@ import type { Task, TaskCreateInput, TaskDependency, TaskUpdateInput } from '@/t
 
 export const tasksApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all tasks with filtering and sorting
     getTasks: builder.query<Task[], string>({
       query: (search) => `/tasks${search ? `&search=${search}` : ''}`,
       providesTags: (result) =>
@@ -11,12 +10,10 @@ export const tasksApi = api.injectEndpoints({
           ? result.map((task) => ({ type: 'Task' as const, id: task.id as unknown as string }))
           : [{ type: 'Task' }],
     }),
-    // Get single task by ID
     getTask: builder.query<Task, string>({
       query: (id) => `/tasks/${id}`,
       providesTags: (result, _err, id) => (result ? [{ type: 'Task', id }] : [{ type: 'Task', id }]),
     }),
-    // Create a new task
     createTask: builder.mutation<Task, TaskCreateInput>({
       query: (data) => ({
         url: '/tasks',
@@ -25,7 +22,6 @@ export const tasksApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Task'],
     }),
-    // Update a task
     updateTask: builder.mutation<Task, { id: string; data: TaskUpdateInput }>({
       query: ({ id, data }) => ({
         url: `/tasks/${id}`,
@@ -34,7 +30,6 @@ export const tasksApi = api.injectEndpoints({
       }),
       invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.id }],
     }),
-    // Delete a task
      deleteTask: builder.mutation<void, string>({
       query: (id) => ({
         url: `/tasks/${id}`,
@@ -42,7 +37,6 @@ export const tasksApi = api.injectEndpoints({
       }),
       invalidatesTags: (_, _err, id) => [{ type: 'Task', id }],
     }),
-    // Add a task dependency
     addTaskDependency: builder.mutation<TaskDependency, { taskId: string; data: { predecessor_task_id: string; dependency_type: string } }>({
        query: ({ taskId, data }) => ({
          url: `/tasks/${taskId}/dependencies`,
@@ -51,7 +45,6 @@ export const tasksApi = api.injectEndpoints({
        }),
        invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.taskId }],
       }),
-    // Remove a task dependency
    removeTaskDependency: builder.mutation<void, { taskId: string; dependencyId: string }>({
        query: ({ taskId, dependencyId }) => ({
          url: `/tasks/${taskId}/dependencies/${dependencyId}`,
@@ -59,8 +52,7 @@ export const tasksApi = api.injectEndpoints({
        }),
        invalidatesTags: (_result, _err, arg) => [{ type: 'Task', id: arg.taskId }],
       }),
-    // Update task status (kanban column move; optional position for
-    // cross-column drop — the card lands at that index in the target column)
+    // Optional `position`: the card lands at that index in the target column (cross-column drop).
     updateTaskStatus: builder.mutation<Task, { id: string; data: { status: string; position?: number } }>({
       query: ({ id, data }) => ({
         url: `/tasks/${id}/status`,

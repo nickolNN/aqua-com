@@ -11,7 +11,6 @@ test.describe('Contact Detail Tests', () => {
     await page.goto('/contacts');
     await page.locator('a[class*="flex items-center gap-4"]:first').click();
 
-    // Verify contact detail is displayed
     await expect(page.locator('h1', { hasText: /Contact|Task Details/ })).toBeVisible();
   });
 
@@ -20,7 +19,6 @@ test.describe('Contact Detail Tests', () => {
     await page.goto('/contacts');
     await page.locator('a[class*="flex items-center gap-4"]:first').click();
 
-    // Verify contact information is displayed
     await expect(page.locator('dl')).toBeVisible();
   });
 
@@ -29,7 +27,6 @@ test.describe('Contact Detail Tests', () => {
     await page.goto('/contacts');
     await page.locator('a[class*="flex items-center gap-4"]:first').click();
 
-    // Verify email is displayed
     const email = page.locator('dl dt', { hasText: /Email/ });
     await expect(email).toBeVisible();
   });
@@ -39,7 +36,6 @@ test.describe('Contact Detail Tests', () => {
     await page.goto('/contacts');
     await page.locator('a[class*="flex items-center gap-4"]:first').click();
 
-    // Verify phone is displayed
     const phone = page.locator('dl dt', { hasText: /Phone/ });
     await expect(phone).toBeVisible();
   });
@@ -49,11 +45,9 @@ test.describe('Contact Detail Tests', () => {
     await page.goto('/contacts');
     await page.locator('a[class*="flex items-center gap-4"]:first').click();
 
-    // Click edit button (goes to contact form via URL pattern)
     const editBtn = page.locator('a', { hasText: /Edit|Edit Contact/ }).first();
     await editBtn.click();
 
-    // Verify we're on the edit form
     await expect(page.locator('h1', { hasText: /Edit Contact/ })).toBeVisible();
   });
 
@@ -62,11 +56,9 @@ test.describe('Contact Detail Tests', () => {
     await page.goto('/contacts');
     await page.locator('a[class*="flex items-center gap-4"]:first').click();
 
-    // Click back link
     const backLink = page.locator('a', { hasText: /Back/ });
     await backLink.click();
 
-    // Verify we're back on contact list
     await expect(page.locator('h1', { hasText: /Contacts/ })).toBeVisible();
   });
 });
