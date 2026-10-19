@@ -55,7 +55,7 @@ Components follow a hierarchical structure:
 State is managed through Redux Toolkit with individual slices:
 
 - **Store Configuration**: `src/store/` — Store setup and configuration
-- **Redux Slices**: `src/stores/` — Individual slices (tasksSlice, contactsSlice, companiesSlice, activitiesSlice, dashboardSlice, searchSlice, settingsSlice, kanbanSlice)
+- **Redux Slices**: `src/stores/` — Individual slices (authSlice, tasksSlice, contactsSlice, companiesSlice, activitiesSlice, dashboardSlice, searchSlice, settingsSlice, kanbanSlice)
 - **Custom Hooks**: `src/hooks/` — Custom hooks for accessing state and dispatching actions
 - **TypeScript Types**: `src/types/` — Entity and API type definitions
 
@@ -63,10 +63,11 @@ State is managed through Redux Toolkit with individual slices:
 
 The API layer bridges the frontend with the backend via RTK Query:
 
-- **RTK Query Endpoints**: Defined in `src/api/` — API endpoints for CRUD operations
-- **Mock Data**: `src/mock-data/` — Mock data generators and schemas for development
+- **RTK Query Endpoints**: Defined in `src/api/` — API endpoints for CRUD operations (`tasksApi`, `contactsApi`, `companiesApi`, `activitiesApi`, `authApi`)
+- **Typed Hooks**: Exported from each `src/api/*Api.ts` — typed RTK Query hooks consumed by views (e.g. `useGetTasksQueryTyped`)
+- **Interceptors**: `src/api/interceptors/` — base query wiring and the mock-mode switch
+- **Mock Data**: `src/mock-data/` — Mock data generators, schemas, persistence, and interceptors for development
 - **MSW Handlers**: `src/mock-msw/` — MSW handlers intercepting API calls during development
-- **Custom Hooks**: `src/api/` — Custom hooks for consuming API data
 
 ### Loose Coupling
 
@@ -86,22 +87,26 @@ Modules are designed to be as loosely coupled as possible:
 ### Directory Structure
 
 ```
-aqua-crm/
+aqua-frontend/
 ├── docs/
 │   ├── ARCHITECTURE.md        # Architecture overview (this file)
-│   └── DEVELOPMENT.md         # Development guide
+│   ├── FEATURES.md            # Feature specification
+│   ├── api.md                 # API conventions
+│   ├── git-workflow.md        # Branch naming, commits, PR process
+│   └── testing.md             # Testing guidelines
 ├── src/
-│   ├── api/                   # API layer (RTK Query endpoints, hooks)
+│   ├── api/                   # API layer (RTK Query endpoints, typed hooks, interceptors)
 │   ├── components/            # React components
 │   │   ├── ui/                # Reusable UI primitives (Button, Table, Modal)
 │   │   ├── layout/            # Layout components (Sidebar, Header, MainLayout)
 │   │   ├── tasks/             # Task-specific components
 │   │   ├── activity/          # Activity-specific components
+│   │   ├── charts/            # Dashboard charts
 │   │   └── search/            # Search components
 │   ├── hooks/                 # Custom React hooks
-│   ├── i18n/                  # Internationalization (i18next)
+│   ├── i18n/                  # Internationalization (custom i18n context)
 │   ├── lib/                   # Utility libraries
-│   ├── mock-data/             # Mock data generators, schemas, persistence
+│   ├── mock-data/             # Mock data generators, schemas, persistence, interceptors
 │   ├── mock-msw/              # MSW handlers for intercepting API calls
 │   ├── router/                # React Router configuration
 │   ├── store/                 # Redux store configuration (index.ts, store.ts)
@@ -110,12 +115,15 @@ aqua-crm/
 │   ├── types/                 # TypeScript type definitions
 │   ├── utils/                 # Utility functions
 │   ├── views/                 # Page-level view components
-│   ├── main.tsx               # Application entry point
-│   └── index.html             # HTML entry point
-├── package.json              # Project configuration
-├── .env.example              # Environment variables template
-├── .eslintrc.js              # ESLint configuration
-└── tsconfig.json             # TypeScript configuration
+│   └── main.tsx               # Application entry point
+├── tests/
+│   └── e2e/                   # Playwright E2E specs and fixtures
+├── index.html                 # HTML entry point
+├── package.json               # Project configuration
+├── .env.example               # Environment variables template
+├── eslint.config.cjs          # ESLint configuration (flat config)
+├── playwright.config.ts       # Playwright configuration
+└── tsconfig.json              # TypeScript configuration
 ```
 
 ## Data Flow
@@ -129,7 +137,7 @@ aqua-crm/
 
 ### Activity Timeline Flow
 
-1. **Request**: Frontend requests `/api/contacts/:id/timeline`
+1. **Request**: Frontend requests the contact's timeline (planned backend endpoint `/api/contacts/:id/timeline`)
 2. **Aggregation**: Backend aggregates tasks and activities (or mock data returns aggregated data)
 3. **Response**: Return chronological timeline data
 
@@ -141,7 +149,7 @@ aqua-crm/
 
 ## Confirmed Technical Choices
 
-Based on the Technical Questionnaire and Feature Specifications:
+Based on the Feature Specifications (see `FEATURES.md`):
 
 - **API**: REST only
 - **Authentication**: JWT (JSON Web Tokens) with bcrypt for password hashing
@@ -167,12 +175,12 @@ Based on the Technical Questionnaire and Feature Specifications:
 - **API Layer**: RTK Query
 - **Routing**: React Router
 - **Styling**: Tailwind CSS + shadcn/ui components
-- **Internationalization**: i18next
+- **Internationalization**: custom i18n context (`src/i18n/`)
 - **Package Manager**: pnpm
 
 ### Development Tools
 - **Linting**: ESLint (frontend)
-- **Testing**: React Testing Library + MSW
+- **Testing**: Playwright (E2E) + MSW (mock data)
 - **CI/CD**: Jenkins
 - **Build Tool**: Vite
 
@@ -258,11 +266,7 @@ All API responses follow a consistent format:
 {
   "success": false,
   "data": null,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Description of the error",
-    "details": []
-  }
+  "error": "Description of the error"
 }
 ```
 
