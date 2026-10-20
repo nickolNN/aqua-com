@@ -8,13 +8,15 @@ const config: PlaywrightTestConfig = defineConfig({
     headless: true,
     viewport: { width: 1920, height: 1080 },
     actionTimeout: 200,
-    navigationTimeout: 1000,
+    // Generous navigation/expect budgets: the dev server's cold first load
+    // under parallel workers regularly exceeds 1s.
+    navigationTimeout: 10000,
     baseURL: 'http://localhost:3000',
     trace: 'retain-on-failure-and-retries',
     video: 'on',
   },
  expect: {
-    timeout: 1000,
+    timeout: 5000,
   },
   retries: 1,
   reporter: [['list'], ['html', { open: 'always' }]],

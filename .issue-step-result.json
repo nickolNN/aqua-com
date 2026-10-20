@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "summary": "Fixed the test step's minor finding: the raw // developer comment in TaskForm.tsx:209-210 (JSX children of <Card>, rendered as visible text on /tasks/new and /tasks/:id) is now a JSX expression comment {/* ... */}. pnpm build green; live browser confirms both pages render clean with no comment text and a clean console. Working copy left uncommitted.",
+  "scenarios": [
+    { "name": "pnpm build (tsc strict + vite)", "expected": "exit 0", "actual": "exit 0 (chunk-size warning is pre-existing, not a regression)" },
+    { "name": "Live browser /tasks/new after fix", "expected": "no visible 'noValidate' / 'validation messages' / 'source of truth' text under CardHeader", "actual": "snapshot contains none of that text; Create Task form renders cleanly" },
+    { "name": "Live browser /tasks/:id (edit) after fix", "expected": "no visible comment text", "actual": "snapshot contains none of that text; Edit Task form renders cleanly" },
+    { "name": "Login flow (test@example.com / password123)", "expected": "kanban board", "actual": "board with 10 task cards across 4 columns" },
+    { "name": "Browser console", "expected": "clean", "actual": "only vite-debug lines + React DevTools info" },
+    { "name": "LoginView.tsx:76-77 analogous comment audit", "expected": "not rendered (outside JSX children)", "actual": "comment sits inside return (…) parentheses, valid JS, not rendered — confirmed in browser, left unchanged" }
+  ],
+  "findings": [
+    { "severity": "info", "title": "pnpm lint broken repo-wide (pre-existing)", "detail": "eslint.config.cjs string-array plugins vs ESLint 10 flat config — pre-existing before iteration #1; build remains the gate" },
+    { "severity": "info", "title": "HMR caching gotcha for browser verification", "detail": "dev server :5100 serves fresh code, but long-lived agent-browser sessions cache stale bundles — use agent-browser close + fresh open before re-checking (done in this iteration)" }
+  ]
+}

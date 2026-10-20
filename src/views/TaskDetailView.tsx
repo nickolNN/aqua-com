@@ -70,7 +70,7 @@ export function TaskDetailView() {
         <div className="text-destructive mb-4">{error}</div>
       )}
       <div className="mb-6 flex items-center">
-        <Link to="/tasks" className="text-primary hover:text-primary/80 transition-colors">
+        <Link to="/tasks" aria-label="Back to tasks" className="text-primary hover:text-primary/80 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
@@ -122,7 +122,7 @@ export function TaskDetailView() {
               <div>
                 <dt className="text-sm text-muted-foreground">Parent Task</dt>
                 <dd className="text-base">
-                  <Link to={`/tasks/${task.parent_task_id}`} className="text-primary hover:text-primary/80">
+                  <Link to={`/tasks/${task.parent_task_id}/details`} className="text-primary hover:text-primary/80">
                     View parent task
                   </Link>
                 </dd>
@@ -152,7 +152,7 @@ export function TaskDetailView() {
                   <ul className="space-y-1">
                     {task.dependencies.map((dep: TaskDependency) => (
                       <li key={`${dep.predecessor_task_id}-${dep.dependency_type}`} className="text-sm text-muted-foreground">
-                        <Link to={`/tasks/${dep.predecessor_task_id}`} className="text-primary hover:text-primary/80">
+                        <Link to={`/tasks/${dep.predecessor_task_id}/details`} className="text-primary hover:text-primary/80">
                           {dep.dependency_type} - {dep.predecessor_task_id}
                         </Link>
                       </li>

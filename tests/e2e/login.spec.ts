@@ -17,7 +17,7 @@ test.describe('Login Tests', () => {
   });
 
   test('login with invalid credentials shows error', async ({ page }) => {
-    await login(page);
+    await page.goto('/login');
 
     await page.locator('#email').fill('invalid@example.com');
     await page.locator('#password').fill('wrongpassword');
@@ -25,6 +25,7 @@ test.describe('Login Tests', () => {
     await page.locator('button[type="submit"]').click();
 
     await expect(page.locator('div.rounded-md.border.border-destructive')).toBeVisible();
+    await expect(page.locator('div.rounded-md.border.border-destructive')).toContainText('Invalid email or password');
   });
 
   test('login form validation shows errors for empty fields', async ({ page }) => {

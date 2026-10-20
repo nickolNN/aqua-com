@@ -9,7 +9,7 @@ test.describe('Navigation Tests', () => {
   test('sidebar renders correctly', async ({ page }) => {
     await login(page);
 
-    await expect(page.locator('[role="navigation"], [class*="sidebar"], nav')).toBeVisible();
+    await expect(page.getByRole('navigation')).toBeVisible();
   });
 
   test('sidebar menu items exist', async ({ page }) => {
@@ -31,11 +31,12 @@ test.describe('Navigation Tests', () => {
 
   test('breadcrumb navigation works', async ({ page }) => {
     await login(page);
-    await page.goto('/contacts');
+    await page.goto('/tasks');
 
-    await expect(page.locator('[role="navigation"], [class*="sidebar"], nav')).toBeVisible();
+    const sidebar = page.getByRole('navigation');
+    await expect(sidebar).toBeVisible();
 
-    const sidebarLink = page.locator('[role="navigation"] a, [class*="sidebar"] a').first();
+    const sidebarLink = sidebar.locator('a').first();
     await sidebarLink.click();
 
     await expect(page).toHaveURL(/\/\w+/);

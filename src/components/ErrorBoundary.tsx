@@ -100,7 +100,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps> {
               variant="link"
               className="mt-3"
             >
-              Return to Dashboard
+              Return to Tasks
             </Button>
           </div>
         </div>
