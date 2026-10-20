@@ -9,11 +9,6 @@ export type LoginResponse = {
     role: string;
   };
 }
-export type RegisterRequest = {
-  email: string;
-  password: string;
-  name: string;
-}
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
@@ -39,20 +34,13 @@ export interface QueryParams {
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: mockBaseQuery,
-  tagTypes: ['Contact', 'Company', 'Task', 'Activity', 'Auth', 'Dashboard', 'Search'],
+  tagTypes: ['Task', 'Auth'],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, { email: string; password: string }>({
       query: (credentials) => ({
         url: '/auth/login',
         method: 'POST',
         body: credentials,
-      }),
-    }),
-    register: builder.mutation<LoginResponse, RegisterRequest>({
-      query: (data) => ({
-        url: '/auth/register',
-        method: 'POST',
-        body: data,
       }),
     }),
     logout: builder.mutation<void, void>({
@@ -67,6 +55,5 @@ export const api = createApi({
 
 export const {
   useLoginMutation,
-  useRegisterMutation,
   useLogoutMutation,
 } = api;

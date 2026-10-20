@@ -26,12 +26,12 @@ test.describe('Task Form Tests', () => {
     await login(page);
     await page.goto('/tasks/new');
 
-    await page.locator('label', { hasText: /Priority/ }).locator('..').locator('select').click();
-    await page.locator('div[role="option"]:first').click();
+    await page.getByRole('combobox', { name: /priority/i }).click();
+    await page.locator('div[role="option"]').first().click();
 
     await page.locator('button', { hasText: /Create Task/ }).click();
 
-    await expect(page.locator('label', { hasText: /Title is required/ })).toBeVisible();
+    await expect(page.locator('p', { hasText: /Title is required/ })).toBeVisible();
   });
 
   test('task form with valid data creates task', async ({ page }) => {
@@ -40,22 +40,22 @@ test.describe('Task Form Tests', () => {
 
     await page.locator('input[id="title"]').fill('Test Task');
 
-    await page.locator('label', { hasText: /Priority/ }).locator('..').locator('select').click();
-    await page.locator('div[role="option"]', { hasText: /Medium/ }).click();
+    await page.getByRole('combobox', { name: /priority/i }).click();
+    await page.locator('div[role="option"]', { hasText: 'Medium' }).click();
 
-    await page.locator('label', { hasText: /Status/ }).locator('..').locator('select').click();
-    await page.locator('div[role="option"]', { hasText: /Open/ }).click();
+    await page.getByRole('combobox', { name: /status/i }).click();
+    await page.locator('div[role="option"]', { hasText: 'Open' }).click();
 
     await page.locator('button', { hasText: /Create Task/ }).click();
 
-    await expect(page.locator('h1', { hasText: /Task/ })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /Kanban Board/ })).toBeVisible();
   });
 
   test('task form shows priority options', async ({ page }) => {
     await login(page);
     await page.goto('/tasks/new');
 
-    await page.locator('label', { hasText: /Priority/ }).locator('..').locator('select').click();
+    await page.getByRole('combobox', { name: /priority/i }).click();
 
     const options = page.locator('div[role="option"]');
     await expect(options).toHaveCount(4);
@@ -65,7 +65,7 @@ test.describe('Task Form Tests', () => {
     await login(page);
     await page.goto('/tasks/new');
 
-    await page.locator('label', { hasText: /Status/ }).locator('..').locator('select').click();
+    await page.getByRole('combobox', { name: /status/i }).click();
 
     const options = page.locator('div[role="option"]');
     await expect(options).toHaveCount(4);
@@ -81,15 +81,16 @@ test.describe('Task Form Tests', () => {
 
     await page.locator('button', { hasText: /Create Task/ }).click();
 
-    await expect(page.locator('h1', { hasText: /Task/ })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /Kanban Board/ })).toBeVisible();
   });
 
   test('task form has cancel button', async ({ page }) => {
     await login(page);
     await page.goto('/tasks/new');
 
-    await page.locator('a', { hasText: /Cancel/ }).click();
+    // Two Cancel links (header + footer) — take the first.
+    await page.locator('a', { hasText: /Cancel/ }).first().click();
 
-    await expect(page.locator('h1', { hasText: /Tasks/ })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /Kanban Board/ })).toBeVisible();
   });
 });

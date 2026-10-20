@@ -10,18 +10,12 @@ test.describe('Task Kanban Tests', () => {
     await login(page);
     await page.goto('/tasks');
 
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
-
     await expect(page.locator('h1', { hasText: /Kanban Board/ })).toBeVisible();
   });
 
   test('kanban board shows columns', async ({ page }) => {
     await login(page);
     await page.goto('/tasks');
-
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
 
     const kanbanBoard = page.locator('div[class*="grid grid-cols-1 md:grid-cols-4"]');
     await expect(kanbanBoard).toBeVisible();
@@ -31,33 +25,24 @@ test.describe('Task Kanban Tests', () => {
     await login(page);
     await page.goto('/tasks');
 
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
-
-    const taskCards = page.locator('div[class*="rounded-lg p-3"]:first');
-    await expect(taskCards).toBeVisible();
+    const taskCards = page.locator('[data-testid="kanban-task-card"]');
+    await expect(taskCards.first()).toBeVisible();
   });
 
   test('kanban column has add task button', async ({ page }) => {
     await login(page);
     await page.goto('/tasks');
 
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
-
     const addTaskBtn = page.locator('button', { hasText: /Add Task/ });
-    await expect(addTaskBtn).toBeVisible();
+    await expect(addTaskBtn.first()).toBeVisible();
   });
 
   test('clicking task card navigates to detail', async ({ page }) => {
     await login(page);
     await page.goto('/tasks');
 
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
-
-    const taskCard = page.locator('div[class*="rounded-lg p-3"]:first');
-    await taskCard.click();
+    const taskCard = page.locator('[data-testid="kanban-task-card"]');
+    await taskCard.first().click();
 
     await expect(page.locator('h1', { hasText: /Task Details/ })).toBeVisible();
   });
@@ -66,24 +51,8 @@ test.describe('Task Kanban Tests', () => {
     await login(page);
     await page.goto('/tasks');
 
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
-
     const kanbanBoard = page.locator('div[class*="grid grid-cols-1 md:grid-cols-4"]');
-    const columns = kanbanBoard.locator('div[class*="rounded-lg p-3"]');
-    await expect(columns).toHaveCountGreaterThan(0);
-  });
-
-  test('back to list button works', async ({ page }) => {
-    await login(page);
-    await page.goto('/tasks');
-
-    const kanbanBtn = page.locator('button', { hasText: /Kanban Board/ });
-    await kanbanBtn.click();
-
-    const backBtn = page.locator('button', { hasText: /Back to List/ });
-    await backBtn.click();
-
-    await expect(page.locator('h1', { hasText: /Tasks/ })).toBeVisible();
+    const columns = kanbanBoard.locator('div[role="group"]');
+    await expect(columns).toHaveCount(4);
   });
 });

@@ -15,7 +15,6 @@ import {
 import { SortableContext, arrayMove, useSortable } from '@dnd-kit/sortable';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { KanbanQuickAdd } from './KanbanQuickAdd';
 import { useCreateTaskMutation, useUpdateTaskMutation, useUpdateTaskStatusMutation } from '@/api/tasksApi';
@@ -310,6 +309,7 @@ function KanbanTaskCard({ task, column, onTaskClick, cardRef, registerCard, offs
   // title + priority; aria-grabbed mirrors the drag state.
   return (
     <Card
+      data-testid="kanban-task-card"
       ref={(el) => {
         setNodeRef(el);
         cardRef?.(el);
@@ -558,13 +558,6 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
 
   return (
     <div className="py-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Kanban Board</h2>
-        <Button size="sm" variant="outline">
-          Filter
-        </Button>
-      </div>
-
       <DndContext
         sensors={sensors}
         collisionDetection={layoutCollisionDetection}
