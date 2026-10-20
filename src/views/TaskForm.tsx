@@ -143,7 +143,6 @@ export function TaskForm() {
         const result = await updateTask({ id: id as string, data: formData });
         if (result.data) {
           setSuccess('Task updated successfully');
-          navigate(`/tasks/${id}`);
         }
       } catch {
         setErrorMessage('Failed to update task');
@@ -178,7 +177,12 @@ export function TaskForm() {
     return (
       <div className="max-w-4xl mx-auto py-6 px-4">
         <div className="text-primary">{success}</div>
-        <Link to="/tasks" className="text-primary">Back to tasks</Link>
+        <div className="flex gap-4">
+          <Link to="/tasks" className="text-primary">Back to tasks</Link>
+          {isEdit && id && (
+            <Link to={`/tasks/${id}/details`} className="text-primary">Task details</Link>
+          )}
+        </div>
       </div>
     );
   }
@@ -190,7 +194,7 @@ export function TaskForm() {
           {isEdit ? 'Edit Task' : 'Create Task'}
         </h1>
         <Link
-          to={isEdit ? `/tasks/${id}` : '/tasks'}
+          to={isEdit ? `/tasks/${id}/details` : '/tasks'}
           className="text-primary hover:text-primary/80 transition-colors"
         >
           Cancel
@@ -206,8 +210,10 @@ export function TaskForm() {
           <CardTitle>{isEdit ? 'Edit Task' : 'Create Task'}</CardTitle>
           <CardDescription>Fill in the task details</CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
+        {/* noValidate: the form's own validation messages are the source of truth
+            (the browser's native required/email checks would swallow invalid submits). */}
+        <form noValidate onSubmit={handleSubmit}>
+          <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium mb-1">
@@ -232,7 +238,7 @@ export function TaskForm() {
                   Priority
                 </label>
                 <Select value={formData.priority} onValueChange={(value) => setFormData((prev) => ({ ...prev, priority: value as 'low' | 'medium' | 'high' | 'urgent' }))}>
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Priority">
                     <SelectValue placeholder="Select priority..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -249,7 +255,7 @@ export function TaskForm() {
                   Status
                 </label>
                 <Select value={formData.status} onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value as 'open' | 'in_progress' | 'completed' | 'cancelled' }))}>
-                  <SelectTrigger>
+                  <SelectTrigger aria-label="Status">
                     <SelectValue placeholder="Select status..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -384,20 +390,20 @@ export function TaskForm() {
                 />
               </div>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter>
-          <div className="flex gap-4">
-            <Button type="submit" disabled={isCreating || isUpdating}>
-              {isCreating ? 'Creating...' : isUpdating ? 'Updating...' : (isEdit ? 'Update Task' : 'Create Task')}
-            </Button>
-            <Link
-              to={isEdit ? `/tasks/${id}` : '/tasks'}
-            >
-              Cancel
-            </Link>
-          </div>
-        </CardFooter>
+          </CardContent>
+          <CardFooter>
+            <div className="flex gap-4">
+              <Button type="submit" disabled={isCreating || isUpdating}>
+                {isCreating ? 'Creating...' : isUpdating ? 'Updating...' : (isEdit ? 'Update Task' : 'Create Task')}
+              </Button>
+              <Link
+                to={isEdit ? `/tasks/${id}/details` : '/tasks'}
+              >
+                Cancel
+              </Link>
+            </div>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );

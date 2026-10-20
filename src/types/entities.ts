@@ -1,26 +1,3 @@
-export interface Contact {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone?: string;
-  company_id?: string;
-  custom_fields?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Company {
-  id: string;
-  name: string;
-  website?: string;
-  industry?: string;
-  address?: string;
-  custom_fields?: Record<string, unknown>;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface TaskSubtask {
   id: string;
   title: string;
@@ -81,19 +58,6 @@ export interface TaskUpdateInput {
   position?: number;
   subtasks?: TaskDependencyInput[];
   dependencies?: TaskDependencyInput[];
-}
-
-export interface Activity {
-  id: string;
-  type: 'call' | 'meeting' | 'email' | 'note' | 'task' | 'deal' | 'other';
-  title: string;
-  description?: string;
-  contact_id?: string;
-  company_id?: string;
-  date: string;
-  duration?: number;
-  created_by: string;
-  created_at: string;
 }
 
 export interface User {

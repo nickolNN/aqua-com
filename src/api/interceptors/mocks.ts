@@ -1,14 +1,10 @@
-import {
-  generateContact,
-  generateContacts,
-  generateCompany,
-  generateCompanies,
-  generateTask,
-  generateTasks,
-  generateActivity,
-  generateActivities,
-} from '../../mock-data/generators';
+import { generateTask, generateTasks } from '../../mock-data/generators';
 import { getStoredTasks, saveTasks } from '../../mock-data/persistence';
+
+// Single mock account: the e2e login fixture uses these exact credentials.
+const MOCK_EMAIL = 'test@example.com';
+const MOCK_PASSWORD = 'password123';
+const MOCK_USER = { id: 'mock-user-id', email: MOCK_EMAIL, role: 'admin' } as const;
 
 let mockMode = false;
 
@@ -20,17 +16,35 @@ export function isMockMode(): boolean {
   return mockMode;
 }
 
+type RequestArgs = {
+  url: string;
+  method?: string;
+  body?: Record<string, unknown> | object;
+  params?: Record<string, string>;
+};
+
+type QueryResultUnion = { error: unknown } | { data: unknown };
+
 export async function mockBaseQuery(
-  request: { url: string; method?: string; body?: Record<string, unknown>; params?: Record<string, string> }
-): Promise<{ data?: unknown; error?: unknown } | { data: unknown; error?: unknown }> {
+  request: string | RequestArgs
+): Promise<QueryResultUnion> {
   if (!mockMode) {
     return { error: 'Mock mode is disabled' };
   }
 
-  const { url, method = 'GET', body: _body, params: _params } = request;
+  const req = typeof request === 'string' ? { url: request, method: 'GET' as const } : request;
+  const { url, method = 'GET', body, params } = req;
+
+  if (url === '/auth/login' && method === 'POST') {
+    const bodyRecord = body as Record<string, unknown> | undefined;
+    if (bodyRecord?.['email'] === MOCK_EMAIL && bodyRecord?.['password'] === MOCK_PASSWORD) {
+      return { data: { token: 'mock-jwt-token', user: MOCK_USER } };
+    }
+    return { error: { message: 'Invalid email or password' } };
+  }
 
   try {
-    const result = interceptMockRequest(url, { method, body: _body, params: _params });
+    const result = interceptMockRequest(url, { method, body, params });
 
     if (result === null || result === undefined) {
       return { error: 'No mock data found for request' };
@@ -44,39 +58,9 @@ export async function mockBaseQuery(
 
 export function interceptMockRequest(
   url: string,
-  request: { method?: string; body?: Record<string, unknown>; params?: Record<string, string> }
+  request: { method?: string; body?: object; params?: Record<string, string> }
 ): unknown {
-  const { method, body: _body } = request;
-
-  if (url === '/contacts' && method === 'GET') {
-    return generateContacts(10);
-  }
-  if (url === '/contacts' && _body && method === 'POST') {
-    const newContact = generateContact();
-    return newContact;
-  }
-  if (url === '/contacts' && _body && method === 'PUT') {
-    const updatedContact = generateContact();
-    return updatedContact;
-  }
-  if (url.startsWith('/contacts/') && method === 'DELETE') {
-    return true;
-  }
-
-  if (url === '/companies' && method === 'GET') {
-    return generateCompanies(10);
-  }
-  if (url === '/companies' && _body && method === 'POST') {
-    const newCompany = generateCompany();
-    return newCompany;
-  }
-  if (url === '/companies' && _body && method === 'PUT') {
-    const updatedCompany = generateCompany();
-    return updatedCompany;
-  }
-  if (url.startsWith('/companies/') && method === 'DELETE') {
-    return true;
-  }
+  const { method } = request;
 
   const tasksResult = interceptTasksMockRequest(url, request);
   if (tasksResult !== null) {
@@ -90,32 +74,8 @@ export function interceptMockRequest(
     return true;
   }
 
-  if (url === '/activities' && method === 'GET') {
-    return generateActivities(10);
-  }
-  if (url === '/activities' && _body && method === 'POST') {
-    const newActivity = generateActivity();
-    return newActivity;
-  }
-  if (url === '/activities' && _body && method === 'PUT') {
-    const updatedActivity = generateActivity();
-    return updatedActivity;
-  }
-  if (url.startsWith('/activities/') && method === 'DELETE') {
+  if (url === '/auth/logout' && method === 'POST') {
     return true;
-  }
-
-  if (url === '/auth/login' && method === 'POST') {
-    return {
-      token: 'mock-jwt-token',
-      user: { id: 'mock-user-id', email: 'user@example.com', role: 'admin' },
-    };
-  }
-  if (url === '/auth/register' && method === 'POST') {
-    return {
-      token: 'mock-jwt-token',
-      user: { id: 'mock-user-id', email: 'user@example.com', role: 'user' },
-    };
   }
 
   return null;
@@ -147,7 +107,7 @@ function parseTasksListUrl(url: string): { isList: boolean; search: string | nul
 
 export function interceptTasksMockRequest(
   url: string,
-  request: { method?: string; body?: Record<string, unknown>; params?: Record<string, string> },
+  request: { method?: string; body?: object; params?: Record<string, string> },
 ): TaskRecord[] | TaskRecord | boolean | null {
   const { method, body } = request;
   const bodyRecord = body as TaskRecord | undefined;

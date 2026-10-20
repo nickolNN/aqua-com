@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useLoginMutation } from '@/api/authApi';
 import { Button } from '@/components/ui/Button';
@@ -66,14 +66,16 @@ export function LoginView() {
       navigate('/');
     } catch (err: unknown) {
       const error = err as { message?: string; response?: { data?: { message?: string } } };
-      setServerError(error.response?.data?.message || 'Login failed. Please try again.');
+      setServerError(error.message || error.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    // noValidate: the form's own validation messages are the source of truth
+    // (the browser's native type="email" check would swallow invalid submits).
+    <form noValidate onSubmit={handleSubmit} className="space-y-6">
       {serverError && (
         <div className="rounded-md border border-destructive bg-destructive/10 p-3 text-sm text-destructive-foreground">
           {serverError}
@@ -111,20 +113,9 @@ export function LoginView() {
             <p className="text-xs text-destructive">{errors.password}</p>
           )}
       </div>
-      <div className="flex items-center justify-between">
-        <Link to="/password-reset" className="text-sm text-primary hover:underline">
-          Forgot password?
-        </Link>
-      </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Signing in...' : 'Sign in'}
       </Button>
-      <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{' '}
-        <Link to="/register" className="text-primary hover:underline">
-          Register
-        </Link>
-      </p>
     </form>
   );
 }
