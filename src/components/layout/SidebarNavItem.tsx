@@ -7,6 +7,8 @@ export interface SidebarNavItemProps {
   label: string;
   icon?: React.ReactNode;
   onClick?: () => void;
+  'data-testid'?: string;
+  'aria-label'?: string;
 }
 
 export const SidebarNavItem = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, SidebarNavItemProps>(

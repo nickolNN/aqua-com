@@ -2,33 +2,21 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import { api } from '@/api';
-import {
-  authReducer,
-  contactsReducer,
-  companiesReducer,
-  tasksReducer,
-  kanbanReducer,
-  activitiesReducer,
-  dashboardReducer,
-  searchReducer,
-  settingsReducer,
-} from '@/stores';
+import { authReducer, settingsReducer } from '@/stores';
 
+// Only `auth` is persisted through redux-persist. The settings slice
+// persists its theme directly to `localStorage.theme` (see
+// settingsSlice.setTheme), so keeping `settings` in the whitelist would
+// let a throttled/stale `persist:root` payload overwrite the fresh theme
+// on rehydrate after a quick reload.
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'settings'],
+  whitelist: ['auth'],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  contacts: contactsReducer,
-  companies: companiesReducer,
-  tasks: tasksReducer,
-  kanban: kanbanReducer,
-  activities: activitiesReducer,
-  dashboard: dashboardReducer,
-  search: searchReducer,
   settings: settingsReducer,
   [api.reducerPath]: api.reducer,
 });
@@ -51,6 +39,6 @@ export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export type TypedReduxDispatch = AppDispatch;
-export type TypedReduxSelector = typeof store.dispatch;
+export type TypedReduxSelector = AppDispatch;
 
 export { api };

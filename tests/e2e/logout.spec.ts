@@ -38,7 +38,7 @@ test.describe('Logout Tests', () => {
   test('logged out user cannot access protected routes', async ({ page }) => {
     await login(page);
 
-    await page.goto('/contacts');
+    await page.goto('/tasks');
 
     const logoutButton = page.locator('button', { hasText: /Log out/i }).first();
     await logoutButton.click();

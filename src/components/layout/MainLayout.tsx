@@ -1,7 +1,6 @@
-import { LayoutDashboard, User, Building2, CheckSquare, MessageSquare, Sun, Moon, LogOut } from 'lucide-react';
+import { CheckSquare, Sun, Moon, LogOut } from 'lucide-react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar, SidebarHeader, SidebarContent } from '@/components/layout/Sidebar';
-import GlobalSearchBar from './GlobalSearchBar';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setTheme } from '@/stores/settingsSlice';
@@ -45,12 +44,14 @@ export function MainLayout() {
           <SidebarHeader logo="Aqua CRM" />
           <SidebarContent>
             <nav className="flex flex-col gap-1 p-2">
-              <SidebarNavItem to="/" label="Dashboard" icon={<LayoutDashboard size={16} />} />
-              <SidebarNavItem to="/contacts" label="Contacts" icon={<User size={16} />} />
-              <SidebarNavItem to="/companies" label="Companies" icon={<Building2 size={16} />} />
               <SidebarNavItem to="/tasks" label="Tasks" icon={<CheckSquare size={16} />} />
-              <SidebarNavItem to="/activities" label="Activities" icon={<MessageSquare size={16} />} />
-              <SidebarNavItem onClick={handleThemeToggle} icon={currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />} label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} />
+              <SidebarNavItem
+                onClick={handleThemeToggle}
+                icon={currentTheme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+                label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                data-testid="theme-toggle"
+                aria-label={currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              />
               <SidebarNavItem onClick={handleLogout} icon={<LogOut size={16} />} label="Log out" />
             </nav>
           </SidebarContent>
@@ -58,10 +59,6 @@ export function MainLayout() {
       </aside>
 
       <div className="flex-1 flex flex-col min-h-screen">
-        <div className="sticky top-0 z-50 border-b bg-background/80 px-6 py-4 backdrop-blur-md">
-          <GlobalSearchBar />
-        </div>
-
         <main className="flex-1 p-6">
           <Outlet />
         </main>
