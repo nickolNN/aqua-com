@@ -37,14 +37,17 @@ test.describe('Task Kanban Tests', () => {
     await expect(addTaskBtn.first()).toBeVisible();
   });
 
-  test('clicking task card navigates to detail', async ({ page }) => {
+  test('clicking task card opens the detail modal', async ({ page }) => {
     await login(page);
     await page.goto('/tasks');
 
     const taskCard = page.locator('[data-testid="kanban-task-card"]');
     await taskCard.first().click();
 
-    await expect(page.locator('h1', { hasText: /Task Details/ })).toBeVisible();
+    // Stage 2: card click is URL-linked modal state (/tasks?task=<id>),
+    // not a page navigation — the old /tasks/:id/details route is gone.
+    await expect(page).toHaveURL(/\/tasks\?task=/);
+    await expect(page.getByRole('dialog')).toBeVisible();
   });
 
   test('kanban board filters tasks by status column', async ({ page }) => {
