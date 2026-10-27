@@ -55,7 +55,12 @@ export function TaskDetailModal({ taskId, onDeleted, onCancel, onOpenTask, onEdi
   };
 
   return (
-    <Dialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
+    // While the nested ConfirmDialog is open, its portaled panel is outside
+    // this dialog's content: Radix's onInteractOutside would dismiss the
+    // outer modal on the confirm click (unmounting it before the click
+    // completes, so the delete never runs). Swallow close requests until
+    // the confirm dialog is gone.
+    <Dialog open onOpenChange={(open) => { if (!open && !showDeleteConfirm) onCancel(); }}>
       <DialogContent>
         {isLoading ? (
           <>
@@ -126,13 +131,13 @@ export function TaskDetailModal({ taskId, onDeleted, onCancel, onOpenTask, onEdi
                 <div>
                   <dt className="text-sm text-muted-foreground">Parent Task</dt>
                   <dd className="text-base">
-                    <button
+                    <Button
                       type="button"
+                      variant="link"
                       onClick={() => onOpenTask(task.parent_task_id!)}
-                      className="text-primary hover:text-primary/80 bg-transparent"
                     >
                       View parent task
-                    </button>
+                    </Button>
                   </dd>
                 </div>
               )}
@@ -160,13 +165,13 @@ export function TaskDetailModal({ taskId, onDeleted, onCancel, onOpenTask, onEdi
                     <ul className="space-y-1">
                       {task.dependencies.map((dep: TaskDependency, index) => (
                         <li key={`${dep.predecessor_task_id}-${dep.dependency_type}-${index}`} className="text-sm text-muted-foreground">
-                          <button
+                          <Button
                             type="button"
+                            variant="link"
                             onClick={() => onOpenTask(dep.predecessor_task_id)}
-                            className="text-primary hover:text-primary/80 bg-transparent"
                           >
                             {dep.dependency_type} - {dep.predecessor_task_id}
-                          </button>
+                          </Button>
                         </li>
                       ))}
                     </ul>

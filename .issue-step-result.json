@@ -1,0 +1,37 @@
+{
+  "status": "pass",
+  "summary": "Closed the Review step's loop-back defect: scripts/capture-screenshots.mjs's after-run board pinning now uses the literal 'mock_data_tasks' key inside the addInitScript (the init-script body is stringified and re-evaluated in the browser, so the Node-side TASKS_STORAGE_KEY const caused a silent ReferenceError and the pin never landed — the same root cause already fixed in verify-consistency.mjs). With the one-word fix, the pin provably lands (browser localStorage byte-identical to docs/screenshots/.mock-state.json, 10/10 tasks), all 11 after/ PNGs were re-captured with the pin active, and the before/after board pairs are now byte-identical (0 differing pixels) so the ticket's before/after evidence is no longer confounded. This pass (self-retry 3/3) re-verified the working copy with fresh evidence and required no new edits: the literal 'mock_data_tasks' fix is present in scripts/capture-screenshots.mjs (node --check OK), .mock-state.json md5 906c7c92a4c0abd0c4a9026d5df31ddf is unchanged, all 11 after/ PNGs are fresh (19:48, newer than any src edit) while before/ PNGs are untouched (08:40), and a fresh ImageMagick compare confirms 8 before/after pairs byte-identical (0px) with only the three fixed modals differing at anti-aliasing-noise scale (4036/3609/4054 px) — the before/after evidence is no longer confounded.",
+  "scenarios": [
+    {
+      "name": "pin lands in the browser (root-cause fix)",
+      "expected": "browser localStorage['mock_data_tasks'] equals docs/screenshots/.mock-state.json after login",
+      "actual": "byte-identical; 10/10 tasks; first card 'Update documentation' matches the pinned board"
+    },
+    {
+      "name": "after shots re-captured with the pin active",
+      "expected": "node scripts/capture-screenshots.mjs after re-took all 11 PNGs from the pinned board",
+      "actual": "log shows 'Seeded board pinned from docs/screenshots/.mock-state.json (10 tasks)'; all 11 after/ PNGs rewritten (19:48, newer than any src edit)"
+    },
+    {
+      "name": "before/after boards render the identical board",
+      "expected": "board pairs show 0 (or baseline-noise-level) differing pixels, not a board mismatch",
+      "actual": "compare -metric AE: board-light 0, board-dark 0, login-light 0, login-dark 0, quick-add-open 0, task-detail-modal 0, task-detail-modal-dark 0, delete-confirm-dialog 0 — all byte-identical (was 282k-438kpx before the fix)"
+    },
+    {
+      "name": "only the fixed modals differ between before/after",
+      "expected": "diffs confined to the modals carrying the UI fixes, at anti-aliasing-noise scale",
+      "actual": "task-create-modal 4036px, task-create-modal-select-open 3609px, task-edit-modal 4054px (~0.2% of canvas, below the 20k-127kpx same-board baseline)"
+    },
+    {
+      "name": "local self-checks",
+      "expected": "syntax + lint clean on the edited script; state file untouched",
+      "actual": "node --check scripts/capture-screenshots.mjs OK; pnpm lint clean (eslint covers ts/tsx); .mock-state.json md5 906c7c92a4c0abd0c4a9026d5df31ddf unchanged"
+    },
+    {
+      "name": "no app edits, working copy uncommitted",
+      "expected": "only scripts/capture-screenshots.mjs changed this step; nothing committed",
+      "actual": "git status: same 7 modified files (5 UI + playwright.config.ts + eslint.config.cjs) as before, untracked scripts/, docs/screenshots/, iterations/, .issue-step-result.json; src/ untouched this step"
+    }
+  ],
+  "findings": []
+}
