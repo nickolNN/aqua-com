@@ -6,7 +6,7 @@ test.describe('Logout Tests', () => {
     await setupTestEnvironment(page);
   });
 
-  test('logout button exists in sidebar footer', async ({ page }) => {
+  test('logout button exists in header', async ({ page }) => {
     await login(page);
 
     const logoutButton = page.locator('button', { hasText: /Log out/i }).first();

@@ -3,7 +3,6 @@ import { useGetTasksQueryTyped } from '@/api/tasksApi';
 import { KanbanBoard } from '@/components/tasks/KanbanBoard';
 import { TaskDetailModal } from '@/components/tasks/TaskDetailModal';
 import { TaskFormModal } from '@/components/tasks/TaskFormModal';
-import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 export function TasksView() {
@@ -40,12 +39,6 @@ export function TasksView() {
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Kanban Board</h1>
-        <Button onClick={() => navigate('/tasks?new')}>
-          New Task
-        </Button>
-      </div>
       <KanbanBoard
         tasks={tasks || []}
         onTaskClick={(id) => {

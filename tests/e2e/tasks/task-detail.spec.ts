@@ -124,6 +124,9 @@ test.describe('Task Detail Modal Tests', () => {
   test('delete confirm button works', async ({ page }) => {
     await login(page);
     const title = await openFirstTaskModal(page);
+    const cardsBefore = await page
+      .locator('[data-testid="kanban-task-card"]')
+      .count();
 
     await page.getByRole('dialog').getByRole('button', { name: 'Delete' }).click();
     await page
@@ -136,6 +139,11 @@ test.describe('Task Detail Modal Tests', () => {
     await expect(
       page.locator('[data-testid="kanban-task-card"]', { hasText: title }),
     ).toHaveCount(0);
+    // Identity-based guard: exactly one card (the deleted one) is gone,
+    // independent of any title collision in the seeded data.
+    await expect(
+      page.locator('[data-testid="kanban-task-card"]'),
+    ).toHaveCount(cardsBefore - 1);
   });
 
   test('close button closes the detail modal', async ({ page }) => {

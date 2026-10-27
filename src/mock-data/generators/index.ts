@@ -55,8 +55,8 @@ const taskTitles = [
   'Review security logs',
 ];
 
-export function generateTask(position?: number): Task {
-  const title = randomChoice(taskTitles);
+export function generateTask(position?: number, title?: string): Task {
+  const finalTitle = title ?? randomChoice(taskTitles);
 
   const statuses: Array<'open' | 'in_progress' | 'completed' | 'cancelled'> = ['open', 'in_progress', 'completed', 'cancelled'];
   const priorities: Array<'low' | 'medium' | 'high' | 'urgent'> = ['low', 'medium', 'high', 'urgent'];
@@ -66,8 +66,8 @@ export function generateTask(position?: number): Task {
 
   return {
     id: generateUuid(),
-    title,
-    description: `Description for task: ${title}`,
+    title: finalTitle,
+    description: `Description for task: ${finalTitle}`,
     status,
     priority,
     // Always set: the e2e suite opens the first seeded card and asserts its due date.
@@ -87,6 +87,19 @@ export function generateTask(position?: number): Task {
   };
 }
 
+/**
+ * Seeds `count` tasks with unique titles: the title pool is shuffled and
+ * drawn without replacement, so no two seeded cards share a title (the
+ * title-based e2e locators rely on that). Cycles the pool if `count`
+ * exceeds its size.
+ */
 export function generateTasks(count: number = 10): Task[] {
-  return Array.from({ length: count }, (_, i) => generateTask(i));
+  const titles = [...taskTitles];
+  for (let i = titles.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [titles[i], titles[j]] = [titles[j], titles[i]];
+  }
+  return Array.from({ length: count }, (_, i) =>
+    generateTask(i, titles[i % titles.length]),
+  );
 }

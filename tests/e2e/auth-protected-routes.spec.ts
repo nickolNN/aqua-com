@@ -27,6 +27,6 @@ test.describe('Protected Route Tests', () => {
   test('authenticated user can access tasks', async ({ page }) => {
     await login(page);
     await page.goto('/tasks');
-    await expect(page.locator('h1', { hasText: /Kanban Board/i })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('button', { name: 'New Task' })).toBeVisible({ timeout: 5000 });
   });
 });

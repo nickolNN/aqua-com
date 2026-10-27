@@ -10,7 +10,11 @@ test.describe('Login Tests', () => {
     await login(page);
 
     await expect(page).toHaveURL('/');
-    await expect(page.locator('h1')).toBeVisible();
+    // The dashboard no longer has a page heading — the one-line header
+    // (New Task + theme toggle + Log out) is the logged-in layout's marker.
+    await expect(
+      page.getByRole('button', { name: 'New Task' }),
+    ).toBeVisible();
 
     const token = await page.evaluate(() => localStorage.getItem('token'));
     expect(token).toBeTruthy();

@@ -6,39 +6,24 @@ test.describe('Navigation Tests', () => {
     await setupTestEnvironment(page);
   });
 
-  test('sidebar renders correctly', async ({ page }) => {
+  test('header renders correctly', async ({ page }) => {
     await login(page);
 
-    await expect(page.getByRole('navigation')).toBeVisible();
+    await expect(page.locator('header')).toBeVisible();
   });
 
-  test('sidebar menu items exist', async ({ page }) => {
+  test('header navigation buttons exist', async ({ page }) => {
     await login(page);
 
-    await expect(
-      page.locator('[role="navigation"] a, [class*="sidebar"] a, nav a').first()
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'New Task' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Log out' })).toBeVisible();
   });
 
-  test('sidebar navigation routes correctly', async ({ page }) => {
+  test('header navigation routes correctly', async ({ page }) => {
     await login(page);
 
-    const sidebarLink = page.locator('[role="navigation"] a, [class*="sidebar"] a').first();
-    await sidebarLink.click();
+    await page.getByRole('button', { name: 'New Task' }).click();
 
-    await expect(page).toHaveURL(/\/\w+/);
-  });
-
-  test('breadcrumb navigation works', async ({ page }) => {
-    await login(page);
-    await page.goto('/tasks');
-
-    const sidebar = page.getByRole('navigation');
-    await expect(sidebar).toBeVisible();
-
-    const sidebarLink = sidebar.locator('a').first();
-    await sidebarLink.click();
-
-    await expect(page).toHaveURL(/\/\w+/);
+    await expect(page).toHaveURL(/\/tasks\?new/);
   });
 });
