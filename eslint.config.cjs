@@ -113,6 +113,9 @@ module.exports = [
       "tailwind.config.ts",
       "vite.config.ts",
       "eslint.config.cjs",
+      // Standalone operational scripts (screenshot capture / consistency
+      // verification) — not part of the app source.
+      "scripts/",
     ],
   },
 ];

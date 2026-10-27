@@ -1,4 +1,12 @@
 import { Button } from './Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from './Dialog';
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -9,23 +17,29 @@ interface ConfirmDialogProps {
   confirmLabel?: string;
 }
 
+/**
+ * Delete/confirmation dialog built on the shared Dialog primitive, so it
+ * renders the same glass panel, blurred backdrop, entry animation, focus
+ * trap and Esc-to-close behaviour as every other modal. `max-w-md` keeps
+ * the confirm panel narrower than the content dialogs.
+ */
 export function ConfirmDialog({ isOpen, onClose, onConfirm, title, description, confirmLabel = 'Confirm' }: ConfirmDialogProps) {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-      <div data-testid="confirm-dialog" className="glass rounded-lg p-6 max-w-md w-full mx-4">
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
-        <div className="flex justify-end gap-2">
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent data-testid="confirm-dialog" className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
             {confirmLabel}
           </Button>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

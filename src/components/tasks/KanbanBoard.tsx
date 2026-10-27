@@ -332,7 +332,7 @@ function KanbanTaskCard({ task, column, onTaskClick, cardRef, registerCard, offs
         onTaskClick(task.id);
       }}
       className={cn(
-        'p-3 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
+        'cursor-pointer p-3 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
         isDragging && 'opacity-50 ring-2 ring-primary/40',
       )}
     >

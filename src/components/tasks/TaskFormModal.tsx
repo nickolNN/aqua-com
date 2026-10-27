@@ -304,7 +304,7 @@ export function TaskFormModal({ taskId, onDone, onCancel }: TaskFormModalProps) 
                   onChange={(e) => {
                     setIsSubtask(e.target.checked);
                   }}
-                  className="h-4 w-4 accent-primary"
+                  className="h-4 w-4 cursor-pointer accent-primary"
                 />
                 <label htmlFor="is_subtask" className="text-sm font-medium">
                   Create as subtask
@@ -349,7 +349,7 @@ export function TaskFormModal({ taskId, onDone, onCancel }: TaskFormModalProps) 
                         value={dep.predecessor_task_id}
                         onValueChange={(value) => handleDependencyChange(dep.id, 'predecessor_task_id', value)}
                       >
-                        <SelectTrigger className="flex-1">
+                        <SelectTrigger className="flex-1 min-w-0">
                           <SelectValue placeholder="Select task..." />
                         </SelectTrigger>
                         <SelectContent>
@@ -361,7 +361,7 @@ export function TaskFormModal({ taskId, onDone, onCancel }: TaskFormModalProps) 
                         value={dep.dependency_type}
                         onValueChange={(value) => handleDependencyChange(dep.id, 'dependency_type', value)}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-44">
                           <SelectValue placeholder="Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -406,14 +406,12 @@ export function TaskFormModal({ taskId, onDone, onCancel }: TaskFormModalProps) 
             </div>
           </div>
           <DialogFooter>
-            <div className="flex gap-4">
-              <Button type="submit" disabled={isCreating || isUpdating}>
-                {isCreating ? 'Creating...' : isUpdating ? 'Updating...' : (isEdit ? 'Update Task' : 'Create Task')}
-              </Button>
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-            </div>
+            <Button type="submit" disabled={isCreating || isUpdating}>
+              {isCreating ? 'Creating...' : isUpdating ? 'Updating...' : (isEdit ? 'Update Task' : 'Create Task')}
+            </Button>
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Cancel
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
