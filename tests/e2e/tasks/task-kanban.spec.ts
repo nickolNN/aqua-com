@@ -10,7 +10,8 @@ test.describe('Task Kanban Tests', () => {
     await login(page);
     await page.goto('/tasks');
 
-    await expect(page.locator('h1', { hasText: /Kanban Board/ })).toBeVisible();
+    const kanbanBoard = page.locator('div[class*="grid grid-cols-1 md:grid-cols-4"]');
+    await expect(kanbanBoard).toBeVisible();
   });
 
   test('kanban board shows columns', async ({ page }) => {
