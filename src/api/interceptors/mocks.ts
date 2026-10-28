@@ -1,11 +1,6 @@
 import { generateTask, generateTasks } from '../../mock-data/generators';
 import { getStoredTasks, saveTasks } from '../../mock-data/persistence';
 
-// Single mock account: the e2e login fixture uses these exact credentials.
-const MOCK_EMAIL = 'test@example.com';
-const MOCK_PASSWORD = 'password123';
-const MOCK_USER = { id: 'mock-user-id', email: MOCK_EMAIL, role: 'admin' } as const;
-
 let mockMode = false;
 
 export function setMockMode(enabled: boolean): void {
@@ -36,9 +31,14 @@ export async function mockBaseQuery(
   const { url, method = 'GET', body, params } = req;
 
   if (url === '/auth/login' && method === 'POST') {
+    // The mock login accepts any non-empty credentials; the frontend
+    // validation in LoginView is the only gate. The empty-field error is
+    // defensive — unreachable from the UI.
     const bodyRecord = body as Record<string, unknown> | undefined;
-    if (bodyRecord?.['email'] === MOCK_EMAIL && bodyRecord?.['password'] === MOCK_PASSWORD) {
-      return { data: { token: 'mock-jwt-token', user: MOCK_USER } };
+    const email = typeof bodyRecord?.['email'] === 'string' ? bodyRecord['email'] : '';
+    const password = typeof bodyRecord?.['password'] === 'string' ? bodyRecord['password'] : '';
+    if (email && password) {
+      return { data: { token: 'mock-jwt-token', user: { id: 'mock-user-id', email, role: 'admin' } } };
     }
     return { error: { message: 'Invalid email or password' } };
   }
