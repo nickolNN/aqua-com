@@ -332,7 +332,7 @@ function KanbanTaskCard({ task, column, onTaskClick, cardRef, registerCard, offs
         onTaskClick(task.id);
       }}
       className={cn(
-        'cursor-pointer p-3 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
+        'cursor-pointer p-3 select-none focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
         isDragging && 'opacity-50 ring-2 ring-primary/40',
       )}
     >
@@ -597,7 +597,7 @@ export function KanbanBoard({ tasks, onTaskClick }: KanbanBoardProps) {
         {/* Drag ghost following the pointer. */}
         <DragOverlay>
           {activeTask ? (
-            <Card className="p-3 opacity-80 scale-105 shadow-lg" aria-hidden="true">
+            <Card className="p-3 select-none opacity-80 scale-105 shadow-lg" aria-hidden="true">
               <KanbanCardContent task={activeTask} />
             </Card>
           ) : null}
